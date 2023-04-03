@@ -73,7 +73,7 @@ def main():
     routing.AddDimension(
         transit_callback_index,
         0,  # no slack
-        100000,  # vehicle maximum travel distance
+        50000,  # vehicle maximum travel distance
         True,  # start cumul to zero
         dimension_name)
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
@@ -85,11 +85,14 @@ def main():
         delivery_index = manager.NodeToIndex(request[1])
         routing.AddPickupAndDelivery(pickup_index, delivery_index)
         routing.solver().Add(
-            routing.VehicleVar(pickup_index) == routing.VehicleVar(
-                delivery_index))
+            # Same vehicle must do both
+            routing.VehicleVar(pickup_index) == routing.VehicleVar(delivery_index))
         routing.solver().Add(
-            distance_dimension.CumulVar(pickup_index) <=
-            distance_dimension.CumulVar(delivery_index))
+            # Must be done by same vehicle
+            distance_dimension.CumulVar(pickup_index) <= distance_dimension.CumulVar(delivery_index))
+        routing.solver().Add(routing.NextVar(pickup_index) == delivery_index)
+        
+        
 
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
