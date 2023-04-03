@@ -123,6 +123,8 @@ class Graph:
 
 
 def add_nodes_to_graph(graph):
+
+    count = 5
     # Open file
     with open('myfile.csv') as file_obj:
         # Create reader object by passing the file object to reader method
@@ -132,8 +134,9 @@ def add_nodes_to_graph(graph):
         for row in reader_obj:
             x = row[0] if row[0] != "Point 18" else "Point_18"
             y = row[1] if row[1] != "Point 18" else "Point_18"
-
+            count += 1
             graph.add_edge(Waypoints[x].value, Waypoints[y].value)
+            if count == 15: return graph
 
     return graph
 
