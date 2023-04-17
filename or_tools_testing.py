@@ -3,12 +3,17 @@
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 from distance_matrix import distance_matrix
+from distance_matrix import old_distance_matrix
+
+
+MAX_DISTANCE = 10000
 
 def create_data_model():
     """Stores the data for the problem."""
     data = {}
-    data['distance_matrix'] = distance_matrix()
-    data['pickups_deliveries'] = [
+
+    # ignore
+    paths = [
         [1, 6],
         [2, 10],
         [4, 3],
@@ -18,7 +23,21 @@ def create_data_model():
         [13, 12],
         [16, 14],
     ]
-    data['num_vehicles'] = 4
+
+    data['distance_matrix'] = distance_matrix()
+    data['pickups_deliveries'] = [
+        [1, 2],
+        [3, 4],
+        [5, 6],
+        [7, 8],
+        [9, 10],
+        [11, 12],
+        [13, 14],
+        [15, 16],
+    ]
+    # this is how many "trips" we're taking. solution is kind of jank but whatever lol
+    data['num_vehicles'] = 3
+    # i have no idea what this does
     data['depot'] = 0
     return data
 
@@ -56,6 +75,10 @@ def main():
     # Create Routing Model.
     routing = pywrapcp.RoutingModel(manager)
 
+    # for node in [i for i in range(0,20)]:
+    #     routing.AddDisjunction(
+    #         nodes=[node],
+    #         penalty=0)
 
     # Define cost of each arc.
     def distance_callback(from_index, to_index):
@@ -73,7 +96,7 @@ def main():
     routing.AddDimension(
         transit_callback_index,
         0,  # no slack
-        50000,  # vehicle maximum travel distance
+        MAX_DISTANCE,  # vehicle maximum travel distance
         True,  # start cumul to zero
         dimension_name)
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
