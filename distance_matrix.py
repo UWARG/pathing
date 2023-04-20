@@ -1,5 +1,6 @@
 import math
 import data_structure_gen
+from pprint import pprint
 
 
 def compute_euclidean_distance_matrix(locations):
@@ -18,26 +19,32 @@ def compute_euclidean_distance_matrix(locations):
                                (from_node[1] - to_node[1]))))
     return distances
 
+
 paths = [
     ['Alpha', 'Foxtrot'],
+    ['Alpha', 'Juliette'],
     ['Bravo', 'Juliette'],
-    ['Delta', 'Charlie'],
-    ['Echo', 'India'],
-    ['Golf', 'Hotel'],
-    ['Oscar', 'Kilo'],
-    ['Mike', 'Lima'],
-    ['Papa', 'November'],
+    # ['Delta', 'Charlie'],
+    # ['Echo', 'India'],
+    # ['Golf', 'Hotel'],
+    # ['Oscar', 'Kilo'],
+    # ['Mike', 'Lima'],
+    # ['Papa', 'November'],
 ]
+
 
 def distance_matrix():
     # for every point in list of paths
     dict = data_structure_gen.dictionary(False, False)
+    # print("dict is", dict)
     points = []
     points.append(dict['Alpha'])
+    # print("points are inititally", points)
     for i in paths:
         points.append(dict[i[0]])
         points.append(dict[i[1]])
 
+    # print("points are now", points)
     computed_matrix_dict = compute_euclidean_distance_matrix(points)
 
     computed_matrix_list = []
