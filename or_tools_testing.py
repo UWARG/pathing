@@ -2,35 +2,18 @@
 
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from distance_matrix import distance_matrix, old_distance_matrix, paths
+from distance_matrix import distance_matrix, paths
 
 
-MAX_DISTANCE = 5000
+MAX_DISTANCE = 10000
+
 
 def create_data_model():
     """Stores the data for the problem."""
     data = {}
-
-    # ignore
-    # paths = [
-    #     [1, 6],
-    #     [2, 10],
-    #     [4, 3],
-    #     [5, 9],
-    #     [7, 8],
-    #     [15, 11],
-    #     [13, 12],
-    #     [16, 14],
-    # ]
-
     data['distance_matrix'] = distance_matrix()
-    data['pickups_deliveries'] = [[i*2 + 1, i*2 + 2] for i in range(len(paths))]
-    # data['demands'] = [1 if num % 2 == 1 else -1 for num in range(len(data['distance_matrix']))]
-    # data['vehicle_capacities'] = [1]
-
-    # this is how many "trips" we're taking. solution is kind of jank but whatever lol
-    # i have no idea what this does
-    data['depot'] = 0
+    data['pickups_deliveries'] = [[i*2 + 1, i*2 + 2] for i in range(len(paths))]  # [[1,2], [3,4], [5,6]...]]
+    data['depot'] = 0  # location that vehicles must start and end at
     return data
 
 
@@ -56,7 +39,7 @@ def print_solution(num_vehicles, manager, routing, solution):
 
 
 def path_list(num_vehicles, manager, routing, solution):
-    # okay for this, just ingore the first location/name/wtv since its always just gonna be the start node
+    # okay for this, just ignore the first location/name/wtv since its always just gonna be the start node
     drone_path_list = []
     drone_path_list_named = []
     for vehicle_id in range(num_vehicles):
@@ -76,7 +59,22 @@ def path_list(num_vehicles, manager, routing, solution):
     return drone_path_list
 
 
-def aaa(num_vehicles, data_model):
+"""
+ALRIGHT HERE IS MY LINE OF THOUGHT
+
+i couldn't figure out how to get the node dropping thing to work with this stupid line of code
+routing.solver().Add(routing.NextVar(pickup_index) == delivery_index)...
+
+so instead whats happening rn is that we start with a single vehicle, and we increase the vehicle number by 1
+everytime until there is a viable route
+
+we should know how far the drone can travel in one go (which will be the MAX_DISTANCE) and then also approximately
+how long it takes the drone to travel the MAX_DISTANCE. so then we know how many times the drone can fly in the hour,
+lets call that x, so then we just take the first x routes.
+"""
+
+
+def main(num_vehicles, data_model):
     """Entry point of the program."""
     # Instantiate the data problem.
     data = data_model
@@ -87,11 +85,6 @@ def aaa(num_vehicles, data_model):
 
     # Create Routing Model.
     routing = pywrapcp.RoutingModel(manager)
-
-    # for node in [i for i in range(0,20)]:
-    #     routing.AddDisjunction(
-    #         nodes=[node],
-    #         penalty=0)
 
     # Define cost of each arc.
     def distance_callback(from_index, to_index):
@@ -116,62 +109,35 @@ def aaa(num_vehicles, data_model):
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
     distance_dimension.SetGlobalSpanCostCoefficient(100)
 
-    # def demand_callback(from_index):
-    #     """Returns the demand of the node."""
-    #     # Convert from routing variable Index to demands NodeIndex.
-    #     from_node = manager.IndexToNode(from_index)
-    #     return data['demands'][from_node]
-    #
-    # demand_callback_index = routing.RegisterUnaryTransitCallback(
-    #     demand_callback)
-    # routing.AddDimensionWithVehicleCapacity(
-    #     demand_callback_index,
-    #     0,  # null capacity slack
-    #     [40],  # vehicle maximum capacities
-    #     True,  # start cumul to zero
-    #     'Capacity')
-
-
     # Define Transportation Requests.
     for request in data['pickups_deliveries']:
         pickup_index = manager.NodeToIndex(request[0])
         delivery_index = manager.NodeToIndex(request[1])
         routing.AddPickupAndDelivery(pickup_index, delivery_index)
+        # Same vehicle must do both
         routing.solver().Add(
-            # Same vehicle must do both
             routing.VehicleVar(pickup_index) == routing.VehicleVar(delivery_index))
+        # Pickup before delivery
         routing.solver().Add(
-            # Must be done by same vehicle
             distance_dimension.CumulVar(pickup_index) <= distance_dimension.CumulVar(delivery_index))
+        # Delivery must happen right after pickup
         routing.solver().Add(routing.NextVar(pickup_index) == delivery_index)
-
-    # penalty = 10000000000
-    # for node in data['pickups_deliveries']:
-    #     start, end = node
-    #     routing.AddDisjunction(
-    #         [manager.NodeToIndex(end)], 0
-    #     )
-    #
-    #     routing.AddDisjunction(
-    #         [manager.NodeToIndex(start)], penalty
-    #     )
 
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION)
-    search_parameters.time_limit.FromSeconds(10)
+    search_parameters.time_limit.FromSeconds(1)
 
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
 
-
     # Print solution on console.
     if solution:
         print_solution(num_vehicles, manager, routing, solution)
-        path_list(num_vehicles, manager, routing, solution)
+        return path_list(num_vehicles, manager, routing, solution)
     else:
-        aaa(num_vehicles + 1, data_model)
+        return main(num_vehicles + 1, data_model)
 
 
 if __name__ == '__main__':
-    aaa(1, create_data_model())
+    path_list = main(1, create_data_model())
