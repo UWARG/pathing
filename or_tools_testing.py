@@ -2,18 +2,27 @@
 
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
-from distance_matrix import distance_matrix, paths
+from distance_matrix import distance_matrix, paths, dict
+import csv
+
+MAX_DISTANCE = 12000
 
 
-MAX_DISTANCE = 10000
+# class to keep track of things for each flight path
+class DronePaths:
+    def __init__(self, path, n_path, v_path, total_points, routes_completed):
+        self.path_list = path
+        self.path_list_name = n_path
+        self.visualization_path_list = v_path
+        self.total_points = total_points
+        self.routes_completed = routes_completed
 
 
-def create_data_model():
+def create_data_model() -> dict:
     """Stores the data for the problem."""
-    data = {}
-    data['distance_matrix'] = distance_matrix()
-    data['pickups_deliveries'] = [[i*2 + 1, i*2 + 2] for i in range(len(paths))]  # [[1,2], [3,4], [5,6]...]]
-    data['depot'] = 0  # location that vehicles must start and end at
+    data = {'distance_matrix': distance_matrix(dict),
+            'pickups_deliveries': [[i * 2 + 1, i * 2 + 2] for i in range(len(paths))],
+            'depot': 0}
     return data
 
 
@@ -23,7 +32,7 @@ def print_solution(num_vehicles, manager, routing, solution):
     total_distance = 0
     for vehicle_id in range(num_vehicles):
         index = routing.Start(vehicle_id)
-        plan_output = 'Route {}:\n'.format(vehicle_id+1)
+        plan_output = 'Route {}:\n'.format(vehicle_id + 1)
         route_distance = 0
         while not routing.IsEnd(index):
             plan_output += ' {} -> '.format(manager.IndexToNode(index))
@@ -38,25 +47,49 @@ def print_solution(num_vehicles, manager, routing, solution):
     print('Total Distance of all routes: {}m'.format(total_distance))
 
 
-def path_list(num_vehicles, manager, routing, solution):
+def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
     # okay for this, just ignore the first location/name/wtv since its always just gonna be the start node
-    drone_path_list = []
-    drone_path_list_named = []
+    flight_paths = []
+    route_points_dict = {}
+
+    with open('myfile.csv', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        index = 1
+        for row in reader:
+            route_points_dict[str(index) + " " + str(index + 1)] = row[2]
+            index += 2
+
     for vehicle_id in range(num_vehicles):
         index = routing.Start(vehicle_id)
-        drone_path_list.append([])
-        drone_path_list_named.append([])
+        drone_path_list = []
+        drone_path_list_named = []
+        visualization_list = []
+        route_points = 0
+        routes_completed = 0
         while not routing.IsEnd(index):
+
             cur_index = manager.IndexToNode(index)
-            drone_path_list[-1].append(cur_index)
-            if index == 0:
-                drone_path_list_named[-1].append('Alpha')
-            else:
-                drone_path_list_named[-1].append(paths[(cur_index - 1) // 2][(cur_index - 1) % 2])
+            drone_path_list.append(cur_index)
+            if cur_index == 0:
+                drone_path_list_named.append('Alpha')
+            elif paths[(cur_index - 1) // 2][(cur_index - 1) % 2] != drone_path_list_named[-1]:
+                drone_path_list_named.append(paths[(cur_index - 1) // 2][(cur_index - 1) % 2])
+
+            previous_index = index
             index = solution.Value(routing.NextVar(index))
-    print(drone_path_list)
-    print(drone_path_list_named)
-    return drone_path_list
+            if str(previous_index) + " " + str(index) in route_points_dict:
+                route_points += float(route_points_dict[str(previous_index) + " " + str(index)])
+                routes_completed += 1
+
+        drone_path_list.append(0)
+        drone_path_list_named.append('Alpha')
+        for index in range(len(drone_path_list_named) - 1):
+            visualization_list.append((drone_path_list_named[index], drone_path_list_named[index + 1]))
+
+        flight_paths.append(
+            DronePaths(drone_path_list, drone_path_list_named, visualization_list, route_points, routes_completed))
+
+    return flight_paths
 
 
 """
@@ -74,7 +107,7 @@ lets call that x, so then we just take the first x routes.
 """
 
 
-def main(num_vehicles, data_model):
+def calculate_route(num_vehicles, data_model) -> list[DronePaths]:
     """Entry point of the program."""
     # Instantiate the data problem.
     data = data_model
@@ -131,13 +164,26 @@ def main(num_vehicles, data_model):
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
 
-    # Print solution on console.
+    # return solution is there is one
     if solution:
-        print_solution(num_vehicles, manager, routing, solution)
         return path_list(num_vehicles, manager, routing, solution)
     else:
-        return main(num_vehicles + 1, data_model)
+        return calculate_route(num_vehicles + 1, data_model)
+
+
+def main() -> list[DronePaths]:
+    flight_paths = calculate_route(1, create_data_model())
+    # sort the flight paths based on the total points we receive from flying each path
+    flight_paths.sort(key=lambda p: p.total_points, reverse=True)
+    # we have an hour to fly and have a flight time of 12 minutes, so we take the top 5 paths
+    # that give us the most points
+    # TODO: if we can figure out how to drop routes we can change all of this but THERES NO TIME SO FOR NOW THIS WILL DO
+    return flight_paths[:5]
 
 
 if __name__ == '__main__':
-    path_list = main(1, create_data_model())
+    drone_paths = main()
+    for path in drone_paths:
+        print(path.path_list_name)
+        print(path.total_points)
+        print(path.routes_completed)
