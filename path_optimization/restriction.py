@@ -55,7 +55,9 @@ def restriction(start, end, bound):
         finalList.insert(0, prev[tempCurrent])
         tempCurrent = prev[tempCurrent]
 
-    return finalList
+    really_finallist = [utm.to_latlon(i[0],i[1],19,'U') for i in finalList]
+
+    return really_finallist
 
 
 def intersect(start, end, boundedArea):
