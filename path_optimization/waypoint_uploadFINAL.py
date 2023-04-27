@@ -14,7 +14,12 @@ clr.AddReference("MAVLink") # includes the Utilities class
 import MAVLink
 
 
-def create_command(command_id, latitude=0, longitude=0, altitude=0, hold=0, accept_radius=0, pass_radius=0, yaw=0):
+
+def create_waypoint(command_id, latitude=0, longitude=0, altitude=0, hold=0, accept_radius=0, pass_radius=0, yaw=0):
+
+    '''
+    Takes in appropriate values, and sets them to create a waypoint
+    '''
     waypoint = Locationwp()
     
     Locationwp.id.SetValue(waypoint, int(command_id))
@@ -31,16 +36,14 @@ def create_command(command_id, latitude=0, longitude=0, altitude=0, hold=0, acce
 
 
 def waypoint_upload(coordinates:"list[tuple[float]]"):
+    '''
+    Takes in a list of  tuples of floats (lat long values) and uploads 
+    them to missionplanner with their appropriate id, and reference frame
+    
+    '''
     index=0
     current_latitude= cs.lat
     current_longitude= cs.lng
-    
-    for coordinate in coordinates:
-        lat= coordinate[0]
-        lng= coordinate[1]
-        mav_waypoint = create_command(MAVLink.MAV_CMD.WAYPOINT, lat, lng)
-        MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
-        index += 1 
 
     index = 0
     takeoff = create_command(MAVLink.MAV_CMD.TAKEOFF, current_latitude, current_longitude)
@@ -50,11 +53,17 @@ def waypoint_upload(coordinates:"list[tuple[float]]"):
     MAV.setWP(takeoff, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
     index +=1
 
+    for coordinate in coordinates:
+        lat= coordinate[0]
+        lng= coordinate[1]
+        mav_waypoint = create_command(MAVLink.MAV_CMD.WAYPOINT, lat, lng)
+        MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
+        index += 1 
+    
     mav_waypoint = create_command(MAVLink.MAV_CMD.RETURN_TO_LAUNCH)
     MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.MISSION)
-
-
-MAV.setWPACK()
+        
+    MAV.setWPACK()
 
 
 
