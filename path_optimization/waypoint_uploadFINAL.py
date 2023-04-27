@@ -14,6 +14,23 @@ clr.AddReference("MAVLink") # includes the Utilities class
 import MAVLink
 
 
+def create_command(command_id, index, p1=0, p2=0, p3=0, p4=0, lat=0, lng=0, alt=0):
+    '''
+    Used to create any command in mission planner
+    
+    '''
+    command=Locationwp()
+    command.id=index
+    command.command=command_id
+    command.p1=p1
+    command.p2=p2
+    command.p3=p3
+    command.p4=p4
+    command.lat=lat
+    command.lng=lng
+    command.alt=alt
+    return command
+
 
 def create_waypoint(command_id, latitude=0, longitude=0, altitude=0, hold=0, accept_radius=0, pass_radius=0, yaw=0):
 
@@ -32,6 +49,8 @@ def create_waypoint(command_id, latitude=0, longitude=0, altitude=0, hold=0, acc
     Locationwp.alt.SetValue(waypoint, altitude)
     
     return waypoint
+
+
 
 
 
