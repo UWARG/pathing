@@ -41,7 +41,7 @@ def waypoint_upload(coordinates:"list[tuple[float]]"):
     them to missionplanner with their appropriate id, and reference frame
     
     '''
-    index=0
+    
     current_latitude= cs.lat
     current_longitude= cs.lng
 
