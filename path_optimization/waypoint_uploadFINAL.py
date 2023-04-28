@@ -64,6 +64,8 @@ def waypoint_upload(coordinates:"list[tuple[float]]"):
     current_latitude= cs.lat
     current_longitude= cs.lng
 
+    MAVLink.MAV_VTOL_STATE_MC
+
     index = 0
     takeoff = create_waypoint(MAVLink.MAV_CMD.TAKEOFF, current_latitude, current_longitude)
     MAV.setWP(takeoff, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
@@ -72,12 +74,21 @@ def waypoint_upload(coordinates:"list[tuple[float]]"):
     MAV.setWP(takeoff, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
     index +=1
 
+    MAVLink.MAV_VTOL_STATE_TRANSITION_TO_FW
+
+    MAVLink.MAV_VTOL_STATE_FW
+
     for coordinate in coordinates:
+        
         lat= coordinate[0]
         lng= coordinate[1]
         mav_waypoint = create_waypoint(MAVLink.MAV_CMD.WAYPOINT, lat, lng)
         MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
         index += 1 
+    
+    MAVLink.MAV_VTOL_STATE_TRANSITION_TO_MC
+
+    MAVLink.MAV_VTOL_STATE_MC
     
     mav_waypoint = create_waypoint(MAVLink.MAV_CMD.RETURN_TO_LAUNCH)
     MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.MISSION)
