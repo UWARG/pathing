@@ -54,7 +54,7 @@ def create_waypoint(command_id, latitude=0, longitude=0, altitude=0, hold=0, acc
 
 
 
-def waypoint_upload(coordinates:"list[tuple[float]]"):
+def waypoint_upload(coordinates):
     '''
     Takes in a list of  tuples of floats (lat long values) and uploads 
     them to missionplanner with their appropriate id, and reference frame
@@ -95,8 +95,21 @@ def waypoint_upload(coordinates:"list[tuple[float]]"):
         
     MAV.setWPACK()
 
+filename = "C:\\Users\\Mihir\\vscode_workspace\\WARG\\path-optimization\\IMACS\\path_optimization\\paths.txt"
 
+while True:
+    input_file = open(filename, "r")
+    line = input_file.read()
 
+    if not line:
+        print("Empty Line")
+    else:
+        print(line)
+        break
+
+    time.sleep(2)
+
+print("Done")
     
 
 
