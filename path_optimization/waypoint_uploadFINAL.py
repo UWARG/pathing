@@ -64,7 +64,8 @@ def waypoint_upload(coordinates):
     current_latitude= cs.lat
     current_longitude= cs.lng
 
-    MAVLink.MAV_VTOL_STATE_MC
+    # The line below throws an error
+    #MAVLink.MAV_VTOL_STATE_MC
 
     index = 0
     takeoff = create_waypoint(MAVLink.MAV_CMD.TAKEOFF, current_latitude, current_longitude)
@@ -108,6 +109,15 @@ while True:
         break
 
     time.sleep(2)
+
+print("Received Waypoints")
+waypoints = list(eval(line))
+print(type(waypoints))
+
+# Erase the contents of the paths.txt file
+open(filename, 'w').close()
+
+waypoint_upload(waypoints)
 
 print("Done")
     
