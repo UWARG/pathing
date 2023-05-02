@@ -60,6 +60,28 @@ class PathOptim:
         image = cv2.imread(imagePath)
         image, output = self.scanner.main(image)
 
+    def update_path_file(self, output_list):
+        '''
+        Update the paths.txt file (Be sure to change the pathing depending on device)
+        '''
+        if(output_list[0] == True): # Normal route
+            for i in output_list[1]:
+                self.node_list.append(i[1])
+        else: # Diversion route
+            start = () # Need to figure out how we can get this information
+            end = output_list[1][-1]
+            bound = []
+            for i in range(0,len(output_list[1])-1):
+                bound.append(output_list[1][i])
+                # remember to pass in UTM coordinates, or set up a checker in the restriction function
+                # restriction(start,end,bound)
+        
+        print(self.node_list)
+
+        filename = "C:\\Users\\aaron\Desktop\\repos\\UWARG-Path-Optimization\\paths.txt"
+        output_file = open(filename, 'w')
+        output_file.write(str(self.node_list))
+        
     def run_video_test(self):
         """
         Runs QR Scanner on live video feed
@@ -86,26 +108,11 @@ class PathOptim:
             output = output.replace("Follow route: ", "")
 
         output_list = (ispath, [(element, self.thisdict[element]) for element in output.split("; ")])
-
         print(output_list)
-
-        if(output_list[0] == True): # Normal route
-            for i in output_list[1]:
-                self.node_list.append(i[1])
-        else: # Diversion route
-            start = () # Need to figure out how we can get this information
-            end = output_list[1][-1]
-            bound = []
-            for i in range(0,len(output_list[1])-1):
-                bound.append(output_list[1][i])
-            
-            # remember to pass in UTM coordinates, or set up a checker in the restriction function
-            restriction(start,end,bound)
-                
-        self.node_list = [self.thisdict[i] for i in output_list[1]]
-        # print(self.node_list)
+        self.update_path_file(output_list)
         
         self.videoStream.stop()
+    
 
 if __name__ == "__main__":
     PathOptim()
