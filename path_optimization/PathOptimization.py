@@ -38,7 +38,7 @@ class PathOptim:
         Initializes module, runs single image test & video test
         """
 
-        self.thisdict = data_structure_gen.dictionary(True)
+        self.thisdict = data_structure_gen.dictionary("Waypoints.csv", True)
         self.scanner = QR.QRScanner()
         self.node_list = []
         # imagePath = "task1QR1.png"
@@ -68,18 +68,21 @@ class PathOptim:
             for i in output_list[1]:
                 self.node_list.append(i[1])
         else: # Diversion route
-            start = () # Need to figure out how we can get this information
+            start = ("Zulu", (-71.6664874,48.4932846)) # Need to figure out how we can get this information
             end = output_list[1][-1]
+            print(end)
             bound = []
             for i in range(0,len(output_list[1])-1):
-                bound.append(output_list[1][i])
+                bound.append(output_list[1][i][1])
                 # remember to pass in UTM coordinates, or set up a checker in the restriction function
-                # restriction(start,end,bound)
+                a = restriction.restriction(start,end,bound)
+                print("Restriction:")
+                print(a)
         
         print(self.node_list)
 
         # CHANGE THE FILE PATH TO paths.txt HERE. USE THE ABSOLUTE PATH
-        filename = "C:\\Users\\WARG\\Documents\\WARG\\IMACS\\path_optimization\\paths.txt"
+        filename = "D:/Repositories/WARG/IMACS/path_optimization/paths.txt"
         output_file = open(filename, 'w')
         output_file.write(str(self.node_list))
         

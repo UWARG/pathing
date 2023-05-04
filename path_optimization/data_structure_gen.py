@@ -2,10 +2,9 @@ import utm
 
 diction = {}
 
-file = open("Waypoints.csv")
-
-def list(latlon):
+def list(filename: str, latlon: bool):
     temp_list = []
+    file = open(filename)
     for line in file:
         a,x,y,z = line.split(',')
         if latlon == True:
@@ -14,8 +13,9 @@ def list(latlon):
             temp_list.append(tuple(z,utm.from_latlon(float(y),float(x))[:2]))
     return temp_list
 
-def dictionary(latlon):
+def dictionary(filename: str, latlon: bool):
     temp_dict = {}
+    file = open(filename)
     for line in file:
         a,x,y,z = line.split(',')
         if latlon == True:
