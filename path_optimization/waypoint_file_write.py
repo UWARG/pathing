@@ -47,19 +47,25 @@ if __name__ == "__main__":
         output = output.replace("Follow route: ", "")
 
     mission = "QGC WPL 110\n"
+    # TODO: Home lat lon alt
+    mission += "0\t1\t0\t16\t0\t0\t0\t0\t48.5084877\t-71.6480041\t128\t1\n"  # Home
+    mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_TAKEOFF
 
     waypoint_names_to_coordinates = data_structure_gen.dictionary(WAYPOINT_NAMES_FILE, True)
     waypoints = output.split("; ")
-    index = 0
+    index = 2
     for waypoint_name in waypoints:
         latitude = waypoint_names_to_coordinates[waypoint_name][0]
         longitude = waypoint_names_to_coordinates[waypoint_name][1]
 
         # 3 is MAV_FRAME_GLOBAL_RELATIVE_ALT (home altitude = 0)
         # 16 is MAV_CMD_NAV_WAYPOINT
-        mission += str(index) + "\t" + str(int(index == 0)) + "\t3\t16\t0\t10\t10\tNaN\t" + str(latitude) + "\t" + str(longitude) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
+        mission += str(index) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(latitude) + "\t" + str(longitude) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
         index += 1
 
+    mission += str(index) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
+
+    # Write mission
     base_path = os.path.realpath(os.path.dirname(__file__))
     output_file = open(base_path + "/" + MISSION_FILE, "w")
     output_file.write(mission)
