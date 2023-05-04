@@ -39,7 +39,7 @@ class QR_CSV:
             if int(re.findall("\d+",temp[1])[0]) > MAX_PASSENGER: continue
             if WEIGHT_LIMIT > int(re.findall("\d+",temp[4])[0]) : continue
             # Most disgusting thing ive written in a long time
-            lst.append((temp[2].strip()+temp[3].replace(" ",",")+","+re.findall("\d+",temp[6])[0]))
+            lst.append((temp[2].strip()+temp[3].replace(" ",",")+","+re.findall("\d+",temp[6])[0])+','+re.findall("\d+",temp[0])[0])
 
         file = open(OUTPUT_FILE, 'w')
         for i in lst: file.write(i+"\n")
