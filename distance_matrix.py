@@ -5,7 +5,7 @@ import csv
 dict = data_structure_gen.dictionary(False, False)
 paths = []
 
-with open('myfile.csv', newline='') as csvfile:
+with open('QRpaths.csv', newline='') as csvfile:
     reader = csv.reader(csvfile)
     for row in reader:
         paths.append(row[:2])

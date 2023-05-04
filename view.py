@@ -2,7 +2,7 @@
 
 import pygame
 from enum import Enum
-from or_tools_testing import main, create_data_model
+from or_tools_algo import main, create_data_model
 from distance_matrix import dict
 
 waypoints_dict = dict

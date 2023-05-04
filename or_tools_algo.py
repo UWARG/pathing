@@ -5,6 +5,8 @@ from ortools.constraint_solver import pywrapcp
 from distance_matrix import distance_matrix, paths, dict
 import csv
 
+import QR_CSV
+
 MAX_DISTANCE = 12000
 
 
@@ -26,7 +28,8 @@ def create_data_model() -> dict:
     return data
 
 
-def print_solution(num_vehicles, manager, routing, solution):
+def print_solution(data, manager, routing, solution):
+    # will fix this when i have time
     """Prints solution on console."""
     print(f'Objective: {solution.ObjectiveValue()}')
     total_distance = 0
@@ -52,7 +55,7 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
     flight_paths = []
     route_points_dict = {}
 
-    with open('myfile.csv', newline='') as csvfile:
+    with open('QRpaths.csv', newline='') as csvfile:
         reader = csv.reader(csvfile)
         index = 1
         for row in reader:
@@ -67,7 +70,6 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
         route_points = 0
         routes_completed = 0
         while not routing.IsEnd(index):
-
             cur_index = manager.IndexToNode(index)
             drone_path_list.append(cur_index)
             if cur_index == 0:
@@ -134,9 +136,9 @@ def calculate_route(num_vehicles, data_model) -> list[DronePaths]:
     dimension_name = 'Distance'
     routing.AddDimension(
         transit_callback_index,
-        0,  # no slack
+        0,  # no slack  (idk what this does)
         MAX_DISTANCE,  # vehicle maximum travel distance
-        True,  # start cumul to zero
+        True,  # start cumul to zero (i also dk what this does)
         dimension_name)
 
     distance_dimension = routing.GetDimensionOrDie(dimension_name)
@@ -146,14 +148,19 @@ def calculate_route(num_vehicles, data_model) -> list[DronePaths]:
     for request in data['pickups_deliveries']:
         pickup_index = manager.NodeToIndex(request[0])
         delivery_index = manager.NodeToIndex(request[1])
+
+        # Using pickup and delivery feature for our case, where pickup is the starting node and delivery is end
+
         routing.AddPickupAndDelivery(pickup_index, delivery_index)
-        # Same vehicle must do both
+
         routing.solver().Add(
+            # Same vehicle must do both pickup and delivery
             routing.VehicleVar(pickup_index) == routing.VehicleVar(delivery_index))
         # Pickup before delivery
         routing.solver().Add(
+            # Pickup and delivery must be done by same vehicle
             distance_dimension.CumulVar(pickup_index) <= distance_dimension.CumulVar(delivery_index))
-        # Delivery must happen right after pickup
+        # Pickup and delivery must be consequetive
         routing.solver().Add(routing.NextVar(pickup_index) == delivery_index)
 
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
@@ -182,8 +189,12 @@ def main() -> list[DronePaths]:
 
 
 if __name__ == '__main__':
+
+    # QR_CSV.QR_CSV()
+
     drone_paths = main()
     for path in drone_paths:
         print(path.path_list_name)
         print(path.total_points)
         print(path.routes_completed)
+ 
