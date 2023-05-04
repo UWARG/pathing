@@ -79,7 +79,7 @@ class PathOptim:
         print(self.node_list)
 
         # CHANGE THE FILE PATH TO paths.txt HERE. USE THE ABSOLUTE PATH
-        filename = "C:\\Users\\Mihir\\vscode_workspace\\WARG\\path-optimization\\IMACS\\path_optimization\\paths.txt"
+        filename = "C:\\Users\\WARG\\Documents\\WARG\\IMACS\\path_optimization\\paths.txt"
         output_file = open(filename, 'w')
         output_file.write(str(self.node_list))
         

@@ -14,7 +14,7 @@ clr.AddReference("MAVLink") # includes the Utilities class
 import MAVLink
 
 
-def create_command(command_id, index, p1=0, p2=0, p3=0, p4=0, lat=0, lng=0, alt=0):
+def create_command(command_id, index, p1=0, p2=0, p3=0, p4=0, lat=0, lng=0, alt=50):
     '''
     Used to create any command in mission planner
     
@@ -32,10 +32,19 @@ def create_command(command_id, index, p1=0, p2=0, p3=0, p4=0, lat=0, lng=0, alt=
     return command
 
 
-def create_waypoint(command_id, latitude=0, longitude=0, altitude=0, hold=0, accept_radius=0, pass_radius=0, yaw=0):
+def create_waypoint(command_id, latitude=0, longitude=0, altitude=50, hold=0, accept_radius=0, pass_radius=0, yaw=0):
 
     '''
     Takes in appropriate values, and sets them to create a waypoint
+
+    https://mavlink.io/en/messages/common.html#MAV_CMD_NAV_WAYPOINT
+    1: Hold	Hold time. (ignored by fixed wing, time to stay at waypoint for rotary wing)	min:0	s
+    2: Accept Radius	Acceptance radius (if the sphere with this radius is hit, the waypoint counts as reached)	min:0	m
+    3: Pass Radius	0 to pass through the WP, if > 0 radius to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.		m
+    4: Yaw	Desired yaw angle at waypoint (rotary wing). NaN to use the current system yaw heading mode (e.g. yaw towards next waypoint, yaw to home, etc.).		deg
+    5: Latitude	Latitude		
+    6: Longitude	Longitude		
+    7: Altitude
     '''
     waypoint = Locationwp()
     
@@ -71,13 +80,13 @@ def waypoint_upload(coordinates):
     takeoff = create_waypoint(MAVLink.MAV_CMD.TAKEOFF, current_latitude, current_longitude)
     MAV.setWP(takeoff, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
     index += 1
-    takeoff = create_waypoint(MAVLink.MAV_CMD.TAKEOFF, current_latitude, current_longitude)
-    MAV.setWP(takeoff, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
-    index +=1
+    # takeoff = create_waypoint(MAVLink.MAV_CMD.TAKEOFF, current_latitude, current_longitude)
+    # MAV.setWP(takeoff, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
+    # index +=1
 
-    MAVLink.MAV_VTOL_STATE_TRANSITION_TO_FW
+    #MAVLink.MAV_VTOL_STATE_TRANSITION_TO_FW
 
-    MAVLink.MAV_VTOL_STATE_FW
+    #MAVLink.MAV_VTOL_STATE_FW
 
     for coordinate in coordinates:
         
@@ -87,16 +96,16 @@ def waypoint_upload(coordinates):
         MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.GLOBAL_RELATIVE_ALT)
         index += 1 
     
-    MAVLink.MAV_VTOL_STATE_TRANSITION_TO_MC
+    #MAVLink.MAV_VTOL_STATE_TRANSITION_TO_MC
 
-    MAVLink.MAV_VTOL_STATE_MC
+    #MAVLink.MAV_VTOL_STATE_MC
     
     mav_waypoint = create_waypoint(MAVLink.MAV_CMD.RETURN_TO_LAUNCH)
     MAV.setWP(mav_waypoint, index, MAVLink.MAV_FRAME.MISSION)
         
     MAV.setWPACK()
 
-filename = "C:\\Users\\Mihir\\vscode_workspace\\WARG\\path-optimization\\IMACS\\path_optimization\\paths.txt"
+filename = "C:\\Users\\WARG\\Documents\\WARG\\IMACS\\path_optimization\\paths.txt"
 
 while True:
     input_file = open(filename, "r")
