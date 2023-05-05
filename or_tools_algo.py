@@ -13,7 +13,7 @@ TOTAL_PATHS = 0
 
 # class to keep track of things for each flight path
 class DronePaths:
-    def __init__(self, path, path_order, n_path, v_path, total_points, routes_completed, routes_flown):
+    def __init__(self, path, path_order, n_path, v_path, total_points, routes_completed, routes_flown, distance_flown):
         self.path_list = path
         self.path_order = path_order
         self.path_list_name = n_path
@@ -21,6 +21,7 @@ class DronePaths:
         self.total_points = total_points
         self.routes_completed = routes_completed
         self.routes_flown = routes_flown
+        self.distance_flown = distance_flown
 
 
 def create_data_model() -> dict:
@@ -76,6 +77,7 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
         route_points = 0
         routes_completed = 0
         routes_flown = 0
+        route_distance = 0
         while not routing.IsEnd(index):
             cur_index = manager.IndexToNode(index)
             drone_path_list.append(cur_index)
@@ -87,6 +89,8 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
 
             previous_index = index
             index = solution.Value(routing.NextVar(index))
+            route_distance += routing.GetArcCostForVehicle(
+                previous_index, index, vehicle_id)
             if str(previous_index) + " " + str(index) in route_points_dict:
                 route_points += float(route_points_dict[str(previous_index) + " " + str(index)][0])
                 drone_path_order.append(route_points_dict[str(previous_index) + " " + str(index)][1])
@@ -100,7 +104,7 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
             visualization_list.append((drone_path_list_named[index], drone_path_list_named[index + 1]))
 
         flight_paths.append(
-            DronePaths(drone_path_list, drone_path_order, drone_path_list_named, visualization_list, route_points, routes_completed, routes_flown))
+            DronePaths(drone_path_list, drone_path_order, drone_path_list_named, visualization_list, route_points, routes_completed, routes_flown, route_distance))
 
     return flight_paths
 
@@ -195,7 +199,7 @@ def main() -> list[DronePaths]:
     flight_paths = calculate_route(1, create_data_model())
 
     # sort the flight paths based on the total points we receive from flying each path
-    flight_paths.sort(key=lambda p: p.routes_flown / p.routes_completed if p.routes_completed > 0 else 0)
+    flight_paths.sort(key=lambda p: p.routes_completed / p.distance_flown if p.distance_flown > 0 else 0, reverse=True)
     # we have an hour to fly and have a flight time of 12 minutes, so we take the top 5 paths
     # that give us the most points
     for path in flight_paths:
