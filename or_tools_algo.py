@@ -7,18 +7,20 @@ import csv
 
 import QR_CSV
 
-MAX_DISTANCE = 12000
+MAX_DISTANCE = 8000
+TOTAL_PATHS = 0
 
 
 # class to keep track of things for each flight path
 class DronePaths:
-    def __init__(self, path, path_order, n_path, v_path, total_points, routes_completed):
+    def __init__(self, path, path_order, n_path, v_path, total_points, routes_completed, routes_flown):
         self.path_list = path
         self.path_order = path_order
         self.path_list_name = n_path
         self.visualization_path_list = v_path
         self.total_points = total_points
         self.routes_completed = routes_completed
+        self.routes_flown = routes_flown
 
 
 def create_data_model() -> dict:
@@ -53,6 +55,7 @@ def print_solution(data, manager, routing, solution):
 
 def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
     # okay for this, just ignore the first location/name/wtv since its always just gonna be the start node
+    global TOTAL_PATHS
     flight_paths = []
     route_points_dict = {}
 
@@ -62,6 +65,7 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
         for row in reader:
             route_points_dict[str(index) + " " + str(index + 1)] = [row[2],row[3]]
             index += 2
+            TOTAL_PATHS += 1
 
     for vehicle_id in range(num_vehicles):
         index = routing.Start(vehicle_id)
@@ -71,6 +75,7 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
         visualization_list = []
         route_points = 0
         routes_completed = 0
+        routes_flown = 0
         while not routing.IsEnd(index):
             cur_index = manager.IndexToNode(index)
             drone_path_list.append(cur_index)
@@ -78,6 +83,7 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
                 drone_path_list_named.append('Alpha')
             elif paths[(cur_index - 1) // 2][(cur_index - 1) % 2] != drone_path_list_named[-1]:
                 drone_path_list_named.append(paths[(cur_index - 1) // 2][(cur_index - 1) % 2])
+                routes_flown += 1
 
             previous_index = index
             index = solution.Value(routing.NextVar(index))
@@ -86,13 +92,15 @@ def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
                 drone_path_order.append(route_points_dict[str(previous_index) + " " + str(index)][1])
                 routes_completed += 1
 
+
+
         drone_path_list.append(0)
         drone_path_list_named.append('Alpha')
         for index in range(len(drone_path_list_named) - 1):
             visualization_list.append((drone_path_list_named[index], drone_path_list_named[index + 1]))
 
         flight_paths.append(
-            DronePaths(drone_path_list, drone_path_order, drone_path_list_named, visualization_list, route_points, routes_completed))
+            DronePaths(drone_path_list, drone_path_order, drone_path_list_named, visualization_list, route_points, routes_completed, routes_flown))
 
     return flight_paths
 
@@ -182,24 +190,27 @@ def calculate_route(num_vehicles, data_model) -> list[DronePaths]:
 
 
 def main() -> list[DronePaths]:
+    drone_paths = []
+    routes_completed = 0
     flight_paths = calculate_route(1, create_data_model())
+
     # sort the flight paths based on the total points we receive from flying each path
-    flight_paths.sort(key=lambda p: p.total_points, reverse=True)
+    flight_paths.sort(key=lambda p: p.routes_flown / p.routes_completed if p.routes_completed > 0 else 0)
     # we have an hour to fly and have a flight time of 12 minutes, so we take the top 5 paths
     # that give us the most points
-    # TODO: if we can figure out how to drop routes we can change all of this but THERES NO TIME SO FOR NOW THIS WILL DO
-    return flight_paths[:5]
+    for path in flight_paths:
+        if routes_completed > TOTAL_PATHS // 2:
+            return drone_paths
+        routes_completed += path.routes_completed
+        drone_paths.append(path.path_list_name)
+
+    return drone_paths
+
 
 
 if __name__ == '__main__':
 
-    # QR_CSV.QR_CSV()
+    QR_CSV.QR_CSV()
 
-    drone_paths = main()
-    total_path_order = []
-    for path in drone_paths:
-        print(path.path_list_name)
-        print(path.total_points)
-        print(path.routes_completed)
-        for i in path.path_order: total_path_order.append(i)
-    print(total_path_order)
+    drone_paths = str(main())
+    print(drone_paths)
