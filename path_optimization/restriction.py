@@ -4,60 +4,93 @@ import shapely.geometry  # pip install shapely
 import matplotlib.pyplot as plt  # pip install matplotlib
 from math import sqrt, pow
 
+
+BUFFER = 0.0001  # Planet Earth degrees (~11 metres)
+
+
 # A sample bounded area
 def restriction(start, end, bound):
     '''
     :type start, end: tuples(x,y) coordintes in UTM
     '''
+    print("restriction()")
     # Represents the bounded area
     bounded = polygon(bound)
 
-    boundedScaled = bounded.buffer(15, join_style=2)
+    boundedScaled = bounded.buffer(BUFFER, join_style=2)
 
     scaledPoints = list(boundedScaled.exterior.coords)
 
-    graph = [start, end]
+    vertices = [start, end]
 
-    for x in scaledPoints:
-        graph.append(x)
+    for points in scaledPoints:
+        vertices.append(points)
 
-    dist = {}
-    prev = {}
-    queue = []
+    # Modified Dijkstra's algorithm
 
-    for x in graph:
-        dist[x] = float('inf')
-        prev[x] = 0
-        queue.append(x)
+    distances = {}
+    parents = {}
+    queue = set()
 
-    dist[start] = 0
+    for vertex in vertices:
+        distances[vertex] = float("inf")
+        parents[vertex] = None
+        queue.add(vertex)
 
-    while queue:
-        unvisited = []
-        tempNode = min(queue)
+    distances[start] = 0
 
-        for node in graph:
-            if (node == tempNode): continue
-            if (intersect(tempNode, node, bounded) == False):
-                unvisited.append(node)
+    while len(queue) > 0:
+        print("Loop")
 
-        queue.remove(tempNode)
-        for node in unvisited:
-            tempDist = dist[tempNode] + distance(tempNode, node)
-            if (tempDist < dist[node]):
-                dist[node] = tempDist
-                prev[node] = tempNode
+        current_vertex = None
+        current_distance = float("inf")
+        for vertex in queue:
+            d = distances[vertex]
+            print(d)
+            if d < current_distance:
+                current_distance = d
+                current_vertex = vertex
 
-    finalList = [end]
-    tempCurrent = end
+        if current_vertex is None:
+            print("ERROR: -1")
+            print(len(queue))
+            break
 
-    while (tempCurrent != start):
-        finalList.insert(0, prev[tempCurrent])
-        tempCurrent = prev[tempCurrent]
+        queue.remove(current_vertex)
 
-    really_finallist = [utm.to_latlon(i[0],i[1],19,'U') for i in finalList]
+        for vertex in vertices:
+            if vertex == current_vertex:
+                continue
 
-    return really_finallist
+            if intersect(vertex, current_vertex, bounded):
+                print("Intersect, skip")
+                continue
+
+            if not vertex in queue:
+                continue
+
+            d = current_distance + distance(vertex, current_vertex)
+            if d < distances[vertex]:
+                distances[vertex] = d
+                parents[vertex] = current_vertex
+
+    sequence = [end]
+    current = end
+
+    while (current != start):
+        if parents[current] is None:
+            print("ERROR: -2")
+            break
+
+        sequence.insert(0, parents[current])
+        current = parents[current]
+
+    print(distances)
+    print(parents)
+
+    #really_finallist = [utm.to_latlon(i[0],i[1],19,'U') for i in finalList]
+
+    return sequence
 
 
 def intersect(start, end, boundedArea):

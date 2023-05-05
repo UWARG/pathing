@@ -68,16 +68,17 @@ class PathOptim:
             for i in output_list[1]:
                 self.node_list.append(i[1])
         else: # Diversion route
-            start = ("Zulu", (-71.6664874,48.4932846)) # Need to figure out how we can get this information
-            end = output_list[1][-1]
-            print(end)
+            start = (48.504569,-71.646339) # Need to figure out how we can get this information
+            end = output_list[1][-1][1]
             bound = []
             for i in range(0,len(output_list[1])-1):
-                bound.append(output_list[1][i][1])
-                # remember to pass in UTM coordinates, or set up a checker in the restriction function
-                a = restriction.restriction(start,end,bound)
-                print("Restriction:")
-                print(a)
+                bound.append(
+                    output_list[1][i][1]
+                )
+            # remember to pass in UTM coordinates, or set up a checker in the restriction function
+            a = restriction.restriction(start,end,bound)
+            print("Restriction:")
+            print(a)
         
         print(self.node_list)
 
