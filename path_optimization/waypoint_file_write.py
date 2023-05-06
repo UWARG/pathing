@@ -14,7 +14,7 @@ import restriction
 CAMERA = 0
 
 WAYPOINT_NAMES_FILE = "Waypoints.csv"
-RELATIVE_ALTITUDE = 60  # Metres TODO: Is this good?
+RELATIVE_ALTITUDE = 60  # Metres
 MISSION_FILE = "mission.waypoints"
 
 BUFFER = 0.0001  # Planet Earth degrees (~11 metres)
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     # Generate mission string
     mission = "QGC WPL 110\n"
     mission += "0\t1\t0\t16\t0\t0\t0\t0\t" + str(waypoint_names_to_coordinates["Alpha"][0]) + "\t" + str(waypoint_names_to_coordinates["Alpha"][1]) + "\t136\t1\n"  # Home
-    mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_TAKEOFF
+    mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t" + str(RELATIVE_ALTITUDE) + "\t1\n"  # VTOL_TAKEOFF
 
     for i in range(0, len(mission_path)):
         # 3 is MAV_FRAME_GLOBAL_RELATIVE_ALT (home altitude = 0)
