@@ -13,8 +13,8 @@ import restriction
 
 CAMERA = 0
 
-WAYPOINT_NAMES_FILE = "waypoint_test_points.csv"
-RELATIVE_ALTITUDE = 20  # Metres TODO: Is this good?
+WAYPOINT_NAMES_FILE = "Waypoints.csv"
+RELATIVE_ALTITUDE = 60  # Metres TODO: Is this good?
 MISSION_FILE = "mission.waypoints"
 
 BUFFER = 0.0001  # Planet Earth degrees (~11 metres)
@@ -77,18 +77,12 @@ if __name__ == "__main__":
 
     waypoint_names_to_coordinates = data_structure_gen.dictionary(WAYPOINT_NAMES_FILE, True)
 
-    mission = "QGC WPL 110\n"
-    # TODO: Home lat lon alt
-    mission += "0\t1\t0\t16\t0\t0\t0\t0\t" + str(waypoint_names_to_coordinates["Alpha"][0]) + "\t" + str(waypoint_names_to_coordinates["Alpha"][1]) + "\t136\t1\n"  # Home
-    mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_TAKEOFF
-
-    waypoints = output.split("; ")
+    waypoints = output.split("; ") + ["Alpha"]
     mission_path = restriction.restriction(waypoint_names_to_coordinates["Alpha"],
                                                  waypoint_names_to_coordinates[waypoints[0]],
                                                  None,
                                                  BUFFER,
                                                  NON_FLIGHT_AREAS)[1:]
-    # Debugging
     print(len(mission_path))
 
     for i in range(1, len(waypoints)):
@@ -98,17 +92,20 @@ if __name__ == "__main__":
                                              BUFFER,
                                              NON_FLIGHT_AREAS)
 
-        # Debugging
-        print(waypoint_names_to_coordinates["Quebec"])
-        print(waypoint_names_to_coordinates["Lima"])
-        print(waypoint_names_to_coordinates["Alpha"])
-        print(waypoint_names_to_coordinates["Tango"])
         print(len(path))
         mission_path += path[1:]
 
+    print(len(mission_path))
+
+    # Generate mission string
+    mission = "QGC WPL 110\n"
+    mission += "0\t1\t0\t16\t0\t0\t0\t0\t" + str(waypoint_names_to_coordinates["Alpha"][0]) + "\t" + str(waypoint_names_to_coordinates["Alpha"][1]) + "\t136\t1\n"  # Home
+    mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_TAKEOFF
+
+    for i in range(0, len(mission_path)):
         # 3 is MAV_FRAME_GLOBAL_RELATIVE_ALT (home altitude = 0)
         # 16 is MAV_CMD_NAV_WAYPOINT
-        #mission += str(index) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(latitude) + "\t" + str(longitude) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
+        mission += str(i + 2) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(mission_path[i][0]) + "\t" + str(mission_path[i][1]) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
 
     mission += str(len(mission_path) + 2) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
 

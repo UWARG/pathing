@@ -17,7 +17,6 @@ def restriction(start, end, bound, buffer, non_flight_areas):
     '''
     :type start, end: tuples(x,y) coordintes in UTM
     '''
-    print("restriction()")
 
     # Represents the bounded area
     bounded_areas = []
@@ -33,6 +32,18 @@ def restriction(start, end, bound, buffer, non_flight_areas):
         bounded_areas.append(bounded)
         vertices += points
 
+    # TODO: The modified Dijkstra's algorithm is incorrect,
+    # hack to not randomly divert even though there is a clear path between start and end
+    is_direct_allowed = True
+    for bounded in bounded_areas:
+        if intersect(start, end, bounded):
+            print("No direct, proceeding to diversion")
+            is_direct_allowed = False
+            break
+
+    if is_direct_allowed:
+        return [start, end]
+
     # Modified Dijkstra's algorithm
 
     distances = {}
@@ -47,13 +58,10 @@ def restriction(start, end, bound, buffer, non_flight_areas):
     distances[start] = 0
 
     while len(queue) > 0:
-        print("Loop")
-
         current_vertex = None
         current_distance = float("inf")
         for vertex in queue:
             d = distances[vertex]
-            print(d)
             if d < current_distance:
                 current_distance = d
                 current_vertex = vertex
@@ -66,9 +74,6 @@ def restriction(start, end, bound, buffer, non_flight_areas):
         queue.remove(current_vertex)
 
         for vertex in vertices:
-            if vertex == current_vertex:
-                continue
-
             is_intersect = False
             for bounded in bounded_areas:
                 if intersect(vertex, current_vertex, bounded):
@@ -99,6 +104,7 @@ def restriction(start, end, bound, buffer, non_flight_areas):
 
     print(distances)
     print(parents)
+    print(sequence)
 
     #really_finallist = [utm.to_latlon(i[0],i[1],19,'U') for i in finalList]
 
