@@ -8,12 +8,41 @@ import cv2
 
 import data_structure_gen
 import QR
+import restriction
 
 
 CAMERA = 0
+
 WAYPOINT_NAMES_FILE = "waypoint_test_points.csv"
 RELATIVE_ALTITUDE = 20  # Metres TODO: Is this good?
 MISSION_FILE = "mission.waypoints"
+
+BUFFER = 0.0001  # Planet Earth degrees (~11 metres)
+NON_FLIGHT_AREAS = [
+    # Top left
+    [
+        (48.512416,-71.65284),
+        (48.509293,-71.645411),
+        (48.504713,-71.647935)
+    ],
+    # Bottom left
+    [
+        (48.503332,-71.646455),
+        (48.503452,-71.644717),
+        (48.503754,-71.643126),
+        (48.493829,-71.632581)
+    ],
+    # Top right
+    [
+        (48.508742,-71.624235),
+        (48.512953,-71.638466),
+        (48.513599,-71.639174),
+        (48.51422,-71.640021),
+        (48.514693,-71.640968),
+        (48.515103,-71.64189)
+    ]
+]
+
 
 if __name__ == "__main__":
     camera = cv2.VideoCapture(CAMERA)
@@ -46,24 +75,42 @@ if __name__ == "__main__":
     else:
         output = output.replace("Follow route: ", "")
 
+    waypoint_names_to_coordinates = data_structure_gen.dictionary(WAYPOINT_NAMES_FILE, True)
+
     mission = "QGC WPL 110\n"
     # TODO: Home lat lon alt
-    mission += "0\t1\t0\t16\t0\t0\t0\t0\t48.5084877\t-71.6480041\t128\t1\n"  # Home
+    mission += "0\t1\t0\t16\t0\t0\t0\t0\t" + str(waypoint_names_to_coordinates["Alpha"][0]) + "\t" + str(waypoint_names_to_coordinates["Alpha"][1]) + "\t136\t1\n"  # Home
     mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_TAKEOFF
 
-    waypoint_names_to_coordinates = data_structure_gen.dictionary(WAYPOINT_NAMES_FILE, True)
     waypoints = output.split("; ")
-    index = 2
-    for waypoint_name in waypoints:
-        latitude = waypoint_names_to_coordinates[waypoint_name][0]
-        longitude = waypoint_names_to_coordinates[waypoint_name][1]
+    mission_path = restriction.restriction(waypoint_names_to_coordinates["Alpha"],
+                                                 waypoint_names_to_coordinates[waypoints[0]],
+                                                 None,
+                                                 BUFFER,
+                                                 NON_FLIGHT_AREAS)[1:]
+    # Debugging
+    print(len(mission_path))
+
+    for i in range(1, len(waypoints)):
+        path = restriction.restriction(waypoint_names_to_coordinates[waypoints[i - 1]],
+                                             waypoint_names_to_coordinates[waypoints[i]],
+                                             None,
+                                             BUFFER,
+                                             NON_FLIGHT_AREAS)
+
+        # Debugging
+        print(waypoint_names_to_coordinates["Quebec"])
+        print(waypoint_names_to_coordinates["Lima"])
+        print(waypoint_names_to_coordinates["Alpha"])
+        print(waypoint_names_to_coordinates["Tango"])
+        print(len(path))
+        mission_path += path[1:]
 
         # 3 is MAV_FRAME_GLOBAL_RELATIVE_ALT (home altitude = 0)
         # 16 is MAV_CMD_NAV_WAYPOINT
-        mission += str(index) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(latitude) + "\t" + str(longitude) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
-        index += 1
+        #mission += str(index) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(latitude) + "\t" + str(longitude) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
 
-    mission += str(index) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
+    mission += str(len(mission_path) + 2) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
 
     # Write mission
     base_path = os.path.realpath(os.path.dirname(__file__))
