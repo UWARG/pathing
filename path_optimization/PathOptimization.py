@@ -11,6 +11,34 @@ import QR
 import restriction
 
 
+BUFFER = 0.0001  # Planet Earth degrees (~11 metres)
+
+NON_FLIGHT_AREAS = [
+    # Top left
+    [
+        (48.512416,-71.65284),
+        (48.509293,-71.645411),
+        (48.504713,-71.647935)
+    ],
+    # Bottom left
+    [
+        (48.503332,-71.646455),
+        (48.503452,-71.644717),
+        (48.503754,-71.643126),
+        (48.493829,-71.632581)
+    ],
+    # Top right
+    [
+        (48.508742,-71.624235),
+        (48.512953,-71.638466),
+        (48.513599,-71.639174),
+        (48.51422,-71.640021),
+        (48.514693,-71.640968),
+        (48.515103,-71.64189)
+    ]
+]
+
+
 class PathOptim:
     """
     Unit Tests for QR.py
@@ -76,7 +104,7 @@ class PathOptim:
                     output_list[1][i][1]
                 )
             # remember to pass in UTM coordinates, or set up a checker in the restriction function
-            a = restriction.restriction(start,end,bound)
+            a = restriction.restriction(start, end, bound, BUFFER, NON_FLIGHT_AREAS)
             print("Restriction:")
             print(a)
         

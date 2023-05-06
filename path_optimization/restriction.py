@@ -5,26 +5,33 @@ import matplotlib.pyplot as plt  # pip install matplotlib
 from math import sqrt, pow
 
 
-BUFFER = 0.0001  # Planet Earth degrees (~11 metres)
+def create_bounded_area(bound, buffer):
+    bounded = polygon(bound)
+    bounded_scaled = bounded.buffer(buffer, join_style=2)
+    points = list(bounded_scaled.exterior.coords)
+    return bounded, points
 
 
 # A sample bounded area
-def restriction(start, end, bound):
+def restriction(start, end, bound, buffer, non_flight_areas):
     '''
     :type start, end: tuples(x,y) coordintes in UTM
     '''
     print("restriction()")
+
     # Represents the bounded area
-    bounded = polygon(bound)
-
-    boundedScaled = bounded.buffer(BUFFER, join_style=2)
-
-    scaledPoints = list(boundedScaled.exterior.coords)
-
+    bounded_areas = []
     vertices = [start, end]
 
-    for points in scaledPoints:
-        vertices.append(points)
+    if bound is not None:
+        bounded, points = create_bounded_area(bound, buffer)
+        bounded_areas.append(bounded)
+        vertices += points
+
+    for area in non_flight_areas:
+        bounded, points = create_bounded_area(area, buffer / 10)
+        bounded_areas.append(bounded)
+        vertices += points
 
     # Modified Dijkstra's algorithm
 
@@ -62,8 +69,13 @@ def restriction(start, end, bound):
             if vertex == current_vertex:
                 continue
 
-            if intersect(vertex, current_vertex, bounded):
-                print("Intersect, skip")
+            is_intersect = False
+            for bounded in bounded_areas:
+                if intersect(vertex, current_vertex, bounded):
+                    is_intersect = True
+                    break
+
+            if is_intersect:
                 continue
 
             if not vertex in queue:
