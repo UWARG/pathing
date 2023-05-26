@@ -5,7 +5,3 @@
 # Python
 __pycache__/
 venv/
-
-# Credentials
-credentials.json
-token.json
