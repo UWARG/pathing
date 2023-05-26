@@ -15,3 +15,13 @@ Steps to run path optimization on your own computer
    - The for loop at the end of main() just gets enough flight paths so that we complete 50% of the routes.
 
    - There might be a case where one of the flight paths returned ends with like ['Alpha', 'Alpha'] just ignore the second Alpha :D
+
+# Competition 2023
+
+Code is modified to output both routes (for email) and waypoints (for Mission Planner). Weights were adjusted to penalize routes far from the launch point and long routes. However, the adjustments were not made correctly before the submission deadline.
+
+`emailing.py` contains automated email (Gmail) code from:
+* [https://developers.google.com/gmail/api/quickstart/python](https://developers.google.com/gmail/api/quickstart/python)
+* [https://developers.google.com/gmail/api/guides/sending](https://developers.google.com/gmail/api/guides/sending)
+
+`distances.py` contains code to create a CSV file of distances for manual route optimization.

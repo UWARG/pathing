@@ -7,3 +7,8 @@ protobuf==4.22.3
 pyzbar==0.1.9
 scipy==1.7.3
 utm==0.7.0
+
+# Email automation (Gmail)
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
