@@ -30,3 +30,23 @@ Notes
 =====
 
 1. When I upload the points to Mission Planner I run into an error saying "SystemError: Timeout on read - setWP". I suspect that this is because the hardware is not plugged in on my computer. This should be resolved when everything is set up on Icarus for competition.
+
+# Competition 2023
+
+Only the files below were used for the 2022-2023 competition.
+
+`waypoint_current_location.py` is a script loaded into Mission Planner to get the drone's current location. The current location is currently unused.
+
+## Task 1
+
+`waypoint_file_write.py` creates a path for Mission Planner, respecting flight boundaries.
+
+`waypoint_boundary.py` creates a fence for Mission Planner, to indicate the restricted area.
+
+There was no time to integrate diversion to create a new path before the flight window.
+
+## Task 2
+
+Task 2 route generation is currently in [this repository](https://github.com/Chrisytz/Task2).
+
+`waypoint_manual.py` creates a path for Mission Planner with included takeoff and hover commands from manually hardcoded waypoint names. At the flight window, only basic waypointing was implemented, not takeoff and hover commands.

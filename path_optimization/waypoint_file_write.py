@@ -45,6 +45,7 @@ NON_FLIGHT_AREAS = [
 
 
 if __name__ == "__main__":
+    print("Capturing QR...")
     camera = cv2.VideoCapture(CAMERA)
     scanner = QR.QRScanner()
     while True:
@@ -56,6 +57,7 @@ if __name__ == "__main__":
 
         _, output = scanner.main(image)
         if output is not None:
+            cv2.imwrite("D:/Repositories/WARG/task1-qr-path.png", image)
             cv2.destroyAllWindows()
             break
 
@@ -64,7 +66,9 @@ if __name__ == "__main__":
             break
 
     # Debugging
+    print("Read message from QR:")
     print(output)
+    print("")
 
     # TODO
     is_path = True
@@ -83,7 +87,6 @@ if __name__ == "__main__":
                                                  None,
                                                  BUFFER,
                                                  NON_FLIGHT_AREAS)[1:]
-    print(len(mission_path))
 
     for i in range(1, len(waypoints)):
         path = restriction.restriction(waypoint_names_to_coordinates[waypoints[i - 1]],
@@ -92,10 +95,7 @@ if __name__ == "__main__":
                                              BUFFER,
                                              NON_FLIGHT_AREAS)
 
-        print(len(path))
         mission_path += path[1:]
-
-    print(len(mission_path))
 
     # Generate mission string
     mission = "QGC WPL 110\n"
@@ -107,11 +107,17 @@ if __name__ == "__main__":
         # 16 is MAV_CMD_NAV_WAYPOINT
         mission += str(i + 2) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(mission_path[i][0]) + "\t" + str(mission_path[i][1]) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
 
-    mission += str(len(mission_path) + 2) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
+    # VTOL_LAND is failsafe, do not use
+    #mission += str(len(mission_path) + 2) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
 
     # Write mission
     base_path = os.path.realpath(os.path.dirname(__file__))
-    output_file = open(base_path + "/" + MISSION_FILE, "w")
+    file_path = base_path + "/" + MISSION_FILE
+    output_file = open(file_path, "w")
+
+    print("Writing mission to " + file_path)
+    print(mission)
+
     output_file.write(mission)
     output_file.close()
 

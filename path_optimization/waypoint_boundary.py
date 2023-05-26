@@ -28,6 +28,7 @@ if __name__ == "__main__":
 
         _, output = scanner.main(image)
         if output is not None:
+            cv2.imwrite("D:/Repositories/WARG/task1-qr-divert.png", image)
             cv2.destroyAllWindows()
             break
 
@@ -36,7 +37,9 @@ if __name__ == "__main__":
             break
 
     # Debugging
+    print("Read message from QR:")
     print(output)
+    print("")
 
     # TODO
     is_path = True
@@ -62,7 +65,12 @@ if __name__ == "__main__":
 
     # Write fence
     base_path = os.path.realpath(os.path.dirname(__file__))
-    output_file = open(base_path + "/" + FENCE_FILE, "w")
+    file_path = base_path + "/" + FENCE_FILE
+    output_file = open(file_path, "w")
+
+    print("Writing fence to " + file_path)
+    print(fence)
+
     output_file.write(fence)
     output_file.close()
 

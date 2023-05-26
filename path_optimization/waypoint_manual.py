@@ -65,6 +65,11 @@ if __name__ == "__main__":
                                                  NON_FLIGHT_AREAS)[1:]
 
     for i in range(1, len(waypoints)):
+        if waypoints[i - 1] == "Zulu":
+            mission_path.append("loiter")
+        else:
+            mission_path.append("takeoff")
+
         path = restriction.restriction(waypoint_names_to_coordinates[waypoints[i - 1]],
                                              waypoint_names_to_coordinates[waypoints[i]],
                                              None,
@@ -76,15 +81,22 @@ if __name__ == "__main__":
     # Generate mission string
     mission = "QGC WPL 110\n"
     mission += "0\t1\t0\t16\t0\t0\t0\t0\t" + str(waypoint_names_to_coordinates["Alpha"][0]) + "\t" + str(waypoint_names_to_coordinates["Alpha"][1]) + "\t136\t1\n"  # Home
-    mission += "1\t0\t3\t84\t0\t0\t0\t0\t0\t0\t" + str(RELATIVE_ALTITUDE) + "\t1\n"  # VTOL_TAKEOFF
+    mission += "1\t0\t3\t17\t0\t0\t0\t0\t0\t0\t0\t1\n"  # TODO: Some takeoff
 
+    # pylint
     for i in range(0, len(mission_path)):
-        # 3 is MAV_FRAME_GLOBAL_RELATIVE_ALT (home altitude = 0)
-        # 16 is MAV_CMD_NAV_WAYPOINT
-        mission += str(i + 2) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(mission_path[i][0]) + "\t" + str(mission_path[i][1]) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
+        if mission_path[i] == "takeoff":
+            mission += str(i + 2) + "\t0\t3\t17\t0\t0\t0\t0\t0\t0\t0\t1\n"  # TODO: Some takeoff
+        elif mission_path[i] == "loiter":
+            mission += str(i + 2) + "\t0\t3\t22\t0\t0\t0\t0\t0\t0\t" + str(RELATIVE_ALTITUDE) + "\t1\n"  # TODO: Loiter unlimited
+        else:
+            # 3 is MAV_FRAME_GLOBAL_RELATIVE_ALT (home altitude = 0)
+            # 16 is MAV_CMD_NAV_WAYPOINT
+            mission += str(i + 2) + "\t0\t3\t16\t0\t10\t10\tNaN\t" + str(mission_path[i][0]) + "\t" + str(mission_path[i][1]) + "\t" + str(RELATIVE_ALTITUDE) + "\t1\n"
 
-    # VTOL_LAND is failsafe
+    # VTOL_LAND is failsafe, do not use
     #mission += str(len(mission_path) + 2) + "\t0\t3\t85\t0\t0\t0\t0\t0\t0\t0\t1\n"  # VTOL_LAND
+    mission += str(len(mission_path) + 2) + "\t0\t3\t22\t0\t0\t0\t0\t0\t0\t" + str(RELATIVE_ALTITUDE) + "\t1\n"  # TODO: Loiter unlimited
 
     # Write mission
     base_path = os.path.realpath(os.path.dirname(__file__))

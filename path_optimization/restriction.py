@@ -28,12 +28,11 @@ def restriction(start, end, bound, buffer, non_flight_areas):
         vertices += points
 
     for area in non_flight_areas:
-        bounded, points = create_bounded_area(area, buffer / 10)
+        bounded, points = create_bounded_area(area, buffer)
         bounded_areas.append(bounded)
         vertices += points
 
-    # TODO: The modified Dijkstra's algorithm is incorrect,
-    # hack to not randomly divert even though there is a clear path between start and end
+    # Shortcut if there is no obstacle
     is_direct_allowed = True
     for bounded in bounded_areas:
         if intersect(start, end, bounded):
