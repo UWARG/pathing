@@ -4,10 +4,11 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 from distance_matrix import distance_matrix, paths, dict
 import csv
+import time
 
 import QR_CSV
 
-MAX_DISTANCE = 8000
+MAX_DISTANCE = 6000
 TOTAL_PATHS = 0
 
 
@@ -54,7 +55,7 @@ def print_solution(data, manager, routing, solution):
     print('Total Distance of all routes: {}m'.format(total_distance))
 
 
-def path_list(num_vehicles, manager, routing, solution) -> list[DronePaths]:
+def path_list(num_vehicles, manager, routing, solution) -> "list[DronePaths]":
     # okay for this, just ignore the first location/name/wtv since its always just gonna be the start node
     global TOTAL_PATHS
     flight_paths = []
@@ -124,7 +125,7 @@ lets call that x, so then we just take the first x routes.
 """
 
 
-def calculate_route(num_vehicles, data_model) -> list[DronePaths]:
+def calculate_route(num_vehicles, data_model) -> "list[DronePaths]":
     """Entry point of the program."""
     # Instantiate the data problem.
     data = data_model
@@ -193,8 +194,9 @@ def calculate_route(num_vehicles, data_model) -> list[DronePaths]:
         return calculate_route(num_vehicles + 1, data_model)
 
 
-def main() -> list[DronePaths]:
-    drone_paths = []
+def main() -> "list[DronePaths]":
+    drone_waypoint_paths = []
+    drone_route_paths = []
     routes_completed = 0
     flight_paths = calculate_route(1, create_data_model())
 
@@ -204,11 +206,12 @@ def main() -> list[DronePaths]:
     # that give us the most points
     for path in flight_paths:
         if routes_completed > TOTAL_PATHS // 2:
-            return drone_paths
+            return drone_route_paths, drone_waypoint_paths
         routes_completed += path.routes_completed
-        drone_paths.append(path.path_list_name)
+        drone_route_paths.append(path.path_order)
+        drone_waypoint_paths.append(path.path_list_name)
 
-    return drone_paths
+    return drone_route_paths, drone_waypoint_paths
 
 
 
@@ -216,5 +219,27 @@ if __name__ == '__main__':
 
     QR_CSV.QR_CSV()
 
-    drone_paths = str(main())
-    print(drone_paths)
+    time.sleep(1)
+
+    route_paths, waypoints_paths = main()
+
+    print("Routes:")
+    print(route_paths)
+    print("")
+
+    print("Waypoints:")
+    print(waypoints_paths)
+    print("")
+
+    body = "WARG"
+
+    for path in route_paths:
+        for route in path:
+            body += ";" + str(route)
+
+    print("Email body:")
+    print(body)
+    print("")
+
+    #import emailing
+    #emailing.gmail_send_message(body)

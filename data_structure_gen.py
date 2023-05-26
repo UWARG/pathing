@@ -35,3 +35,15 @@ def dictionary(latlon, name):
             temp_dict[name.strip()] = (
             utm.from_latlon(float(lat), float(lon))[0], utm.from_latlon(float(lat), float(lon))[1])
     return temp_dict
+
+
+def dictionary_imacs(filename: str, latlon: bool):
+    temp_dict = {}
+    file = open(filename)
+    for line in file:
+        a,x,y,z = line.split(',')
+        if latlon == True:
+            temp_dict[z.strip()] = (float(y),float(x))
+        else:
+            temp_dict[z.strip()] = tuple(utm.from_latlon(float(y),float(x))[:2])
+    return temp_dict
