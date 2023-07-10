@@ -3,26 +3,30 @@ Test process
 """
 import dronekit
 
-from modules.waypoints_to_commands import waypoints_to_commands, ACCEPT_RADIUS
+from modules import waypoints_to_commands
 
 
 def test_waypoints_to_commands():
-    mock_waypoints_data = [(42.123, -73.456), (42.789, -73.987), (42.555, -73.321)]
-    mock_altitude_data = 100
+    waypoints = [(42.123, -73.456), (42.789, -73.987), (42.555, -73.321)]
+    altitude = 100
 
-    commands = waypoints_to_commands(mock_waypoints_data, mock_altitude_data)
+    commands_actual = waypoints_to_commands.waypoints_to_commands(waypoints, altitude)
 
-    assert isinstance(commands, list)
-    assert len(commands) == len(mock_waypoints_data)
+    assert isinstance(commands_actual, list)
+    assert len(commands_actual) == len(waypoints)
 
-    for command in commands:
-        assert isinstance(command, dronekit.Command)
-        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
-        assert command.param1 == 0
-        assert command.param2 == ACCEPT_RADIUS
-        assert command.param3 == 0
-        assert command.param4 == 0
-        assert command.x == mock_waypoints_data[commands.index(command)][0]
-        assert command.y == mock_waypoints_data[commands.index(command)][1]
-        assert command.z == mock_altitude_data
+    for i in range(0, len(commands_actual)):
+        command_actual = commands_actual[i]
+        lat_expected = waypoints[i][0]
+        lng_expected = waypoints[i][1]
+
+        assert isinstance(command_actual, dronekit.Command)
+        assert command_actual.frame == waypoints_to_commands.MAVLINK_FRAME
+        assert command_actual.command == waypoints_to_commands.MAVLINK_COMMAND
+        assert command_actual.param1 == 0
+        assert command_actual.param2 == waypoints_to_commands.ACCEPT_RADIUS
+        assert command_actual.param3 == 0
+        assert command_actual.param4 == 0
+        assert command_actual.x == lat_expected
+        assert command_actual.y == lng_expected
+        assert command_actual.z == altitude
