@@ -5,9 +5,9 @@ Function to convert list of waypoints to dronekit commands
 import dronekit
 
 
-ACCEPT_RADIUS = 10
 MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
+ACCEPT_RADIUS = 10
 
 
 def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
