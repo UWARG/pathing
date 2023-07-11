@@ -18,7 +18,7 @@ def qr_to_waypoint_names(qr_text: str) -> "tuple[bool, list[str] | None]":
     Returns:
         tuple[bool, list[str] | None]: (False, None) if invalid string or no results, (True, data) otherwise
     """
-    match = re.search("^Follow route:.*.+;", qr_text)
+    match = re.search("^Follow route:.*", qr_text)
     if match is None:
         return False, None
 
@@ -33,5 +33,3 @@ def qr_to_waypoint_names(qr_text: str) -> "tuple[bool, list[str] | None]":
         return False, None
     
     return True, filtered
-
-print(qr_to_waypoint_names("Follow route: Waterloo; Aerial; Robotics; Group 15"))
