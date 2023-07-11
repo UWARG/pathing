@@ -8,6 +8,9 @@ from modules import waypoints_to_commands
 
 
 def test_waypoints_to_commands():
+    """
+    Tests functionality correctness of waypoints_to_commands
+    """
     waypoints = [(42.123, -73.456), (42.789, -73.987), (42.555, -73.321)]
     altitude = 100
 
