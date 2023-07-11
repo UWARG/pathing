@@ -1,8 +1,6 @@
 """
 Module to parse QR string to waypoints.
 """
-
-
 import re
 
 
@@ -29,7 +27,7 @@ def qr_to_waypoint_names(qr_text: str) -> "tuple[bool, list[str] | None]":
     filtered = list(filter(lambda text: len(text) > 0, parsed))
 
     # Case of no results
-    if len(filtered) <= 0:
+    if len(filtered) == 0:
         return False, None
     
     return True, filtered
