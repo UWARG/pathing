@@ -13,7 +13,7 @@ def qr_input(device: "int | string") -> str:
     Parameters
     ----------
     device: int | string
-        Camera device name or index (e.g. /dev/video0 ).
+        Camera device name or index (e.g. /dev/video0).
 
     Returns
     -------
