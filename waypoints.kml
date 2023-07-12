@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="waypoints_to_kml" id="waypoints_to_kml">
+	<SimpleField name="latitude" type="float"></SimpleField>
+	<SimpleField name="longitude" type="float"></SimpleField>
+</Schema>
+<Folder><name>waypoints_to_kml</name>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4337716</SimpleData>
+		<SimpleData name="longitude">-80.5765499</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5765499,43.4337716</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433627</SimpleData>
+		<SimpleData name="longitude">-80.5778721</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5778721,43.433627</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.43301</SimpleData>
+		<SimpleData name="longitude">-80.577117</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.577117,43.43301</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433862</SimpleData>
+		<SimpleData name="longitude">-80.576904</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.576904,43.433862</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4336978</SimpleData>
+		<SimpleData name="longitude">-80.5772872</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5772872,43.4336978</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4335606</SimpleData>
+		<SimpleData name="longitude">-80.5768054</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5768054,43.4335606</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4335989</SimpleData>
+		<SimpleData name="longitude">-80.5776694</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5776694,43.4335989</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4338052</SimpleData>
+		<SimpleData name="longitude">-80.5773695</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5773695,43.4338052</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4337864</SimpleData>
+		<SimpleData name="longitude">-80.5772885</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5772885,43.4337864</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4339177</SimpleData>
+		<SimpleData name="longitude">-80.5772493</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5772493,43.4339177</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433936</SimpleData>
+		<SimpleData name="longitude">-80.5775828</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5775828,43.433936</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4338148</SimpleData>
+		<SimpleData name="longitude">-80.5775384</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5775384,43.4338148</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4332813</SimpleData>
+		<SimpleData name="longitude">-80.5773141</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5773141,43.4332813</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433841</SimpleData>
+		<SimpleData name="longitude">-80.5770798</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5770798,43.433841</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433932</SimpleData>
+		<SimpleData name="longitude">-80.5770063</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5770063,43.433932</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4337646</SimpleData>
+		<SimpleData name="longitude">-80.5769186</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5769186,43.4337646</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433526</SimpleData>
+		<SimpleData name="longitude">-80.5778249</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5778249,43.433526</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433263</SimpleData>
+		<SimpleData name="longitude">-80.5773709</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5773709,43.433263</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4334864</SimpleData>
+		<SimpleData name="longitude">-80.5775372</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5775372,43.4334864</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4335185</SimpleData>
+		<SimpleData name="longitude">-80.5775401</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5775401,43.4335185</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4335582</SimpleData>
+		<SimpleData name="longitude">-80.5773948</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5773948,43.4335582</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4331226</SimpleData>
+		<SimpleData name="longitude">-80.5769993</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5769993,43.4331226</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433032</SimpleData>
+		<SimpleData name="longitude">-80.5772698</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5772698,43.433032</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4333375</SimpleData>
+		<SimpleData name="longitude">-80.5777462</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5777462,43.4333375</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4338635</SimpleData>
+		<SimpleData name="longitude">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>0.0,43.4338635</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.433947</SimpleData>
+		<SimpleData name="longitude">-80.577993</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.577993,43.433947</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#waypoints_to_kml">
+		<SimpleData name="latitude">43.4339886</SimpleData>
+		<SimpleData name="longitude">-80.5779298</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-80.5779298,43.4339886</coordinates></Point>
+  </Placemark>
+</Folder>
+</Document></kml>
