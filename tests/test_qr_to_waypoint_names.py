@@ -17,6 +17,7 @@ def test_valid_waypoint_single_simple():
     assert result
     assert actual == expected
 
+
 def test_valid_waypoing_single_whitepace():
     """
     Test single waypoint with surrounding whitespace.
@@ -27,6 +28,7 @@ def test_valid_waypoing_single_whitepace():
     result, actual = qr_to_waypoint_names.qr_to_waypoint_names(input)
     assert result
     assert actual == expected
+
 
 def test_valid_waypoints_multiple_simple():
     """
@@ -40,6 +42,7 @@ def test_valid_waypoints_multiple_simple():
     assert result
     assert actual == expected
 
+
 def test_valid_waypoints_multiple_varying_whitespace():
     """
     Test multiple waypoints with varying amounts of whitespace in between.
@@ -52,6 +55,7 @@ def test_valid_waypoints_multiple_varying_whitespace():
     assert result
     assert actual == expected
     
+
 def test_prefix_only():
     """
     Test input of only prefix
@@ -63,6 +67,7 @@ def test_prefix_only():
 
     assert not result
     assert actual == expected
+
 
 def test_multiple_empty_waypoints():
     """
@@ -76,6 +81,7 @@ def test_multiple_empty_waypoints():
     assert not result
     assert actual == expected
 
+
 def test_invalid_waypoints_simple():
     """
     Test case where prefix string does not appear whatsoever.
@@ -87,6 +93,7 @@ def test_invalid_waypoints_simple():
 
     assert not result
     assert actual == expected
+
 
 def test_invalid_waypoints_leading_whitespace():
     """
@@ -100,6 +107,7 @@ def test_invalid_waypoints_leading_whitespace():
     assert not result
     assert actual == expected
 
+
 def test_invalid_waypoints_typo():
     """
     Test incorrect capitalization/spelling of otherwise valid qr string.
@@ -111,6 +119,7 @@ def test_invalid_waypoints_typo():
 
     assert not result
     assert actual == expected
+
 
 def test_incorrect_delimiter_comma_separated():
     """
@@ -124,6 +133,7 @@ def test_incorrect_delimiter_comma_separated():
     assert result
     assert actual == expected
 
+
 def test_incorrect_delimiter_space_separated():
     """
     Test valid qr string with space separated waypoints.
@@ -134,6 +144,7 @@ def test_incorrect_delimiter_space_separated():
     result, actual = qr_to_waypoint_names.qr_to_waypoint_names(input)
     assert result
     assert actual == expected
+
 
 def test_incorrect_delimiter_colon_separated():
     """
