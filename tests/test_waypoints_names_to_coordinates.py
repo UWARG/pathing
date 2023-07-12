@@ -1,3 +1,8 @@
+"""
+Test process
+"""
+
+from modules import waypoint_names_to_coordinates
 
 names_valid = ["Waterloo", "Aerial", "Robotics", "Group 15"]
 waypoint_dictionary = {
