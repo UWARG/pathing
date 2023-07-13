@@ -1,10 +1,10 @@
 """
-Testcases for upload_commands
+Testcases for upload_commands.
 """
 
 import dronekit
 
-import waypoints_to_commands
+from modules import waypoints_to_commands
 
 
 def test_upload_commands():
