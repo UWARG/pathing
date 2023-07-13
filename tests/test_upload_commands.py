@@ -1,5 +1,5 @@
 """
-Test process
+Testcases for upload_commands
 """
 
 import dronekit
@@ -9,7 +9,7 @@ import waypoints_to_commands
 
 def test_upload_commands():
     """
-    Integration test for upload_commands
+    Integration test for upload_commands.
     """
     # Example waypoints list, converted to waypoint commands
     waypoints_input = [(39.140, -86.23), (21.731, -91.9), (11.255, 53.825)]
