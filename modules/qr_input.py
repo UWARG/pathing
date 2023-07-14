@@ -19,8 +19,8 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
 
     Returns
     -------
-    str
-        Decoded QR code string.
+    tuple[bool, str | None]
+        A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
     """
     camera = camera_device.CameraDevice(device)
     scanner = qr_scanner.QrScanner()
@@ -43,11 +43,10 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
 
         if is_qr_text_found:
             # Exit and return decoded text if found
-            return is_qr_text_found, qr_text
+            return True, qr_text
 
         # Exit early on manual quit
         if cv2.waitKey(1) == ord('q'):
             break
 
-    return is_qr_text_found, qr_text
-
+    return False, None
