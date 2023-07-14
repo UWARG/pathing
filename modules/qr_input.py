@@ -1,12 +1,14 @@
 """
-Function to read camera input until valid QR code
+Function to read camera input until valid QR code.
 """
+
+import cv2
 
 from common.qr.modules import qr_scanner
 from common.camera.modules import camera_device
 
 
-def qr_input(device: "int | string") -> str:
+def qr_input(device: "int | str") -> "tuple[bool, str | None]":
     """
     Checks camera input indefinitely until valid text is decoded from QR code.
 
@@ -23,16 +25,29 @@ def qr_input(device: "int | string") -> str:
     camera = camera_device.CameraDevice(device)
     scanner = qr_scanner.QrScanner()
 
-    qr_text_found = False
+    is_qr_text_found = False
     qr_text = None
-    while not qr_text_found:
+    while not is_qr_text_found:
         # Get new image from camera as long as QR text not found
-        image_found, frame = camera.get_image()
+        is_image_found, frame = camera.get_image()
+        if not is_image_found:
+            # Log error is camera fails to get image
+            print("ERROR: is_image_found returned false. Cannot get image from camera")
+            continue
 
-        if image_found:
+        cv2.imshow("Camera", frame)
+
+        if is_image_found:
             # Check frame for valid QR code if found
-            qr_text_found, qr_text = scanner.get_qr_text(frame)
+            is_qr_text_found, qr_text = scanner.get_qr_text(frame)
 
-        if qr_text_found:
+        if is_qr_text_found:
             # Exit and return decoded text if found
-            return qr_text
+            return is_qr_text_found, qr_text
+
+        # Exit early on manual quit
+        if cv2.waitKey(1) == ord('q'):
+            break
+
+    return is_qr_text_found, qr_text
+
