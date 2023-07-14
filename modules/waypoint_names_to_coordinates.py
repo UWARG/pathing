@@ -3,7 +3,7 @@ This file contains a function for converting waypoint names to coordinates.
 """
 
 def waypoint_names_to_coordinates(waypoint_names: "list[str]",
-                waypoint_mapping: "dict[str, tuple[float, float]]") \
+    waypoint_mapping: "dict[str, tuple[float, float]]") \
         -> "tuple[bool, list[tuple[float, float]]]":
     """
     Converts a list of waypoint names to their corresponding coordinates based on a waypoint mapping.
