@@ -7,8 +7,8 @@ import dronekit
 
 MAVLINK_TAKEOFF_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
-MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
-MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
+MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
+MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
 
 
 def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
@@ -19,14 +19,14 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
     Parameters
     ----------
     commands: list[dronekit.Command]
-        dronekit commands that can be sent to the drone.
+        Dronekit commands that can be sent to the drone.
     altitude: int
-        altitude in meters to command the drone to.
+        Altitude in meters to command the drone to.
 
     Returns
     -------
     list[dronekit.Command]
-        dronekit commands with takeoff and land commands that can be sent to the drone.
+        Dronekit commands with takeoff and land commands that can be sent to the drone.
     """
     takeoff_command = dronekit.Command(
         0,
