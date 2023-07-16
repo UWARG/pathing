@@ -13,6 +13,10 @@ ALTITUDE = 50
 MAVLINK_TEST_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 MAVLINK_TEST_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
 ACCEPT_RADIUS = 10
+FIRST_WAYPOINT_LATITUDE = 42.123
+FIRST_WAYPOINT_LONGITUDE = -73.456
+SECOND_WAYPOINT_LATITUDE = 42.789
+SECOND_WAYPOINT_LONGITUDE = -73.987
 
 
 @pytest.fixture
@@ -33,8 +37,8 @@ def non_empty_commands() -> "list[dronekit.Command]":
             ACCEPT_RADIUS,
             0,
             0,
-            42.123,
-            -73.456,
+            FIRST_WAYPOINT_LATITUDE,
+            FIRST_WAYPOINT_LONGITUDE,
             ALTITUDE,
         ),
         dronekit.Command(
@@ -49,8 +53,8 @@ def non_empty_commands() -> "list[dronekit.Command]":
             ACCEPT_RADIUS,
             0,
             0,
-            42.789,
-            -73.987,
+            SECOND_WAYPOINT_LATITUDE,
+            SECOND_WAYPOINT_LONGITUDE,
             ALTITUDE,
         )
     ]
@@ -89,8 +93,7 @@ def assert_expected_takeoff_and_landing_commands(commands_actual: "list[dronekit
 
     # Test original commands
     assert len(commands_actual) == len(commands_expected) + 2
-    for i in range(len(commands_expected)):
-        assert commands_actual[i+1] == commands_expected[i]
+    assert commands_actual[1:-1] == commands_expected
 
 
 def test_add_takeoff_and_landing_on_empty_commands(empty_commands: "list[dronekit.Command]"):
