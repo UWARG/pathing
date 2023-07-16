@@ -7,7 +7,7 @@ import pytest
 from modules import qr_input
 
 
-CAMERA = 1
+CAMERA = 0
 
 
 pytest.skip("Integration test", allow_module_level=True)
