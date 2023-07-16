@@ -2,10 +2,15 @@
 Test process.
 """
 
+import pytest
+
 from modules import qr_input
 
 
 CAMERA = 1
+
+
+pytest.skip("Integration test", allow_module_level=True)
 
 
 def test_qr_input():
