@@ -19,7 +19,7 @@ def waypoint_names_to_coordinates(waypoint_names: "list[str]",
     coordinates = []
 
     if not len(waypoint_names) == 0:  # Handle the case when waypoint_names is empty
-        return False, coordinates
+        return False, None
 
     for name in waypoint_names:
         if name in waypoint_mapping:

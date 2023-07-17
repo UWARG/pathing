@@ -4,7 +4,7 @@ Test process.
 from modules import waypoint_names_to_coordinates
 
 NAMES_VALID = ["Waterloo", "Aerial", "Robotics", "Group 15"]
-waypoint_dictionary = {
+WAYPOINT_DICTIONARY = {
     "Aerial": (9, 7),
     "Group 15": (3, 4),
     "Robotics": (-1, 0),
@@ -14,8 +14,8 @@ waypoint_dictionary = {
 }
 
 def test_valid_names():
-    names_valid = ["Waterloo", "Aerial", "Robotics", "Group 15"]
-    waypoint_dictionary = {
+    NAMES_VALID = ["Waterloo", "Aerial", "Robotics", "Group 15"]
+    WAYPOINT_DICTIONARY = {
         "Aerial": (9, 7),
         "Group 15": (3, 4),
         "Robotics": (-1, 0),
@@ -24,14 +24,14 @@ def test_valid_names():
         "Waterloo": (2, -5),
     }
 
-    result, value = waypoint_names_to_coordinates(names_valid, waypoint_dictionary)
+    result, value = waypoint_names_to_coordinates(NAMES_VALID, WAYPOINT_DICTIONARY)
     assert result is True
     assert value == [(2, -5), (9, 7), (-1, 0), (3, 4)]
 
 
 def test_empty_names():
-    names_empty = []
-    waypoint_dictionary = {
+    NAMES_VALID = []
+    WAYPOINT_DICTIONARY = {
         "Aerial": (9, 7),
         "Group 15": (3, 4),
         "Robotics": (-1, 0),
@@ -40,14 +40,14 @@ def test_empty_names():
         "Waterloo": (2, -5),
     }
 
-    result, value = waypoint_names_to_coordinates(names_empty, waypoint_dictionary)
+    result, value = waypoint_names_to_coordinates(NAMES_VALID, WAYPOINT_DICTIONARY)
     assert result is True
     assert value == []
 
 
 def test_invalid_names():
-    names_invalid = ["WARG", "Hello", "World"]
-    waypoint_dictionary = {
+    NAMES_VALID = ["WARG", "Hello", "World"]
+    WAYPOINT_DICTIONARY = {
         "Aerial": (9, 7),
         "Group 15": (3, 4),
         "Robotics": (-1, 0),
@@ -55,7 +55,7 @@ def test_invalid_names():
         "Waterloo": (2, -5),
     }
 
-    result, value = waypoint_names_to_coordinates(names_invalid, waypoint_dictionary)
+    result, value = waypoint_names_to_coordinates(NAMES_VALID, WAYPOINT_DICTIONARY)
     assert result is False
     assert value is None
 
