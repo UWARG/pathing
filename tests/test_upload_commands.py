@@ -11,7 +11,7 @@ MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 MAVLINK_TAKEOFF = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
 MAVLINK_LANDING = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
-ACCEPT_RADIUS = 0.1
+DELAY = 3
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 TOLERANCE = 0.00001
 
@@ -21,22 +21,22 @@ def test_upload_waypoint_command_list(drone: dronekit.Vehicle,
     """
     Test the case of a list of waypoint commands.
     """
-    # Run upload_commands
     upload_commands.upload_commands(drone,commands)
-    
+
+    # Retrieve current drone commands and see if they match with inputs
     command_sequence = drone.commands
     command_sequence.download()
     command_sequence.wait_ready()
     
-    # Retrieve current drone commands and see if they match with inputs
     for i, command in enumerate(command_sequence):
         lat_input = waypoints_input[i][0]
         lon_input = waypoints_input[i][1]
         
         assert command.frame == MAVLINK_FRAME
         assert command.command == MAVLINK_COMMAND
-        assert command.param1 == 0
-        assert command.param2 == ACCEPT_RADIUS
+        assert command.param1 == DELAY
+        # Parameters 2,3,4 not being tested since Mission Planner ignores them
+        assert command.param2 == 0 
         assert command.param3 == 0
         assert command.param4 == 0
         assert abs(command.x - lat_input) <= TOLERANCE 
@@ -49,22 +49,22 @@ def test_upload_empty_command_list(drone: dronekit.Vehicle,
     """
     Test the case of an empty command list.
     """
-    # Run upload_commands on empty command list
     upload_commands.upload_commands(drone,commands)
-    
+
+    # Retrieve current drone commands and see if they match with previous inputs
     command_sequence = drone.commands 
     command_sequence.download()
     drone.wait_ready()
 
-    # Retrieve current drone commands and see if they match with previous inputs
     for i, command in enumerate(command_sequence):
         lat_input = waypoints_input[i][0]
         lon_input = waypoints_input[i][1]
 
         assert command.frame == MAVLINK_FRAME
         assert command.command == MAVLINK_COMMAND
-        assert command.param1 == 0
-        assert command.param2 == ACCEPT_RADIUS
+        assert command.param1 == DELAY
+        # Parameters 2,3,4 not being tested since Mission Planner ignores them
+        assert command.param2 == 0
         assert command.param3 == 0
         assert command.param4 == 0
         assert abs(command.x - lat_input) <= TOLERANCE
@@ -79,6 +79,7 @@ def test_upload_takeoff_command(drone: dronekit.Vehicle,
     """
     upload_commands.upload_commands(drone,commands)
 
+    # Retrieve current drone commands and see if they match with previous inputs
     command_sequence = drone.commands 
     command_sequence.download()
     drone.wait_ready()
@@ -102,6 +103,7 @@ def test_upload_landing_command(drone: dronekit.Vehicle,
     """
     upload_commands.upload_commands(drone,commands)
 
+    # Retrieve current drone commands and see if they match with previous inputs
     command_sequence = drone.commands 
     command_sequence.download()
     drone.wait_ready()
@@ -138,8 +140,8 @@ if __name__ == "__main__":
             MAVLINK_COMMAND,
             0,
             0,
+            DELAY,
             0,
-            ACCEPT_RADIUS,
             0,
             0,
             lat_input,
