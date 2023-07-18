@@ -1,9 +1,9 @@
 """
 Integration test for upload_commands.
 """
+import math
 
 import dronekit
-import math
 
 from modules import upload_commands
 
@@ -36,8 +36,8 @@ def test_upload_command_list(drone: dronekit.Vehicle,
     """
     Test the case of a list of waypoint commands.
     """
-    actual = upload_commands.upload_commands(drone, commands)
-    assert actual
+    result = upload_commands.upload_commands(drone, commands)
+    assert result
 
     # Retrieve current drone commands and see if they match with inputs
     command_sequence = retrieve_commands(drone)
@@ -64,8 +64,8 @@ def test_upload_empty_command_list(drone: dronekit.Vehicle) -> None:
 
     # Upload empty command list
     empty_command_list = []
-    actual = upload_commands.upload_commands(drone, empty_command_list)
-    assert not actual
+    result = upload_commands.upload_commands(drone, empty_command_list)
+    assert not result
     
     # Retrieve new commands and compare them with previous list
     command_check = retrieve_commands(drone)
