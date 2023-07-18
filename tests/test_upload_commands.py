@@ -157,20 +157,20 @@ if __name__ == "__main__":
     # Test with loiter time command
     commands_input = []
     loiter_time_command = dronekit.Command(
-    0,                          
-    0,                          
-    0,                          
-    MAVLINK_FRAME_GLOBAL,  
-    MAVLINK_LOITER,         
-    0,                          
-    0,                          
-    0,                          
-    0,                          
-    0,                          
-    0,                          
-    0,                          
-    0,                          
-    altitude_input,                   
+        0,                          
+        0,                          
+        0,                          
+        MAVLINK_FRAME_GLOBAL,  
+        MAVLINK_LOITER,         
+        0,                          
+        0,                          
+        0,                          
+        0,                          
+        0,                          
+        0,                          
+        0,                          
+        0,                          
+        altitude_input,                   
     )
     commands_input.append(landing_command)
     test_upload_command_list(drone,commands_input)
