@@ -1,9 +1,10 @@
 """
-Test process.
+Test waypoint names to coordinates function.
 """
+
 from modules import waypoint_names_to_coordinates
 
-NAMES_VALID = ["Waterloo", "Aerial", "Robotics", "Group 15"]
+
 WAYPOINT_DICTIONARY = {
     "Aerial": (9, 7),
     "Group 15": (3, 4),
@@ -13,54 +14,75 @@ WAYPOINT_DICTIONARY = {
     "Waterloo": (2, -5),
 }
 
-def test_valid_names():
-    NAMES_VALID = ["Waterloo", "Aerial", "Robotics", "Group 15"]
-    WAYPOINT_DICTIONARY = {
-        "Aerial": (9, 7),
-        "Group 15": (3, 4),
-        "Robotics": (-1, 0),
-        "University of Waterloo Station for 301 ION": (6, 6),
-        "WARG": (8, 2),
-        "Waterloo": (2, -5),
-    }
 
-    result, value = waypoint_names_to_coordinates(NAMES_VALID, WAYPOINT_DICTIONARY)
+def test_valid_names():
+    """
+    Valid names as input.
+    """
+    # Setup
+    names_valid = ["Waterloo", "Aerial", "Robotics", "Group 15"]
+    expected = [(2, -5), (9, 7), (-1, 0), (3, 4)]
+
+    # Run
+    result, actual = waypoint_names_to_coordinates.waypoint_names_to_coordinates(
+        names_valid,
+        WAYPOINT_DICTIONARY,
+    )
+
+    # Test
     assert result is True
-    assert value == [(2, -5), (9, 7), (-1, 0), (3, 4)]
+    assert actual == expected
 
 
 def test_empty_names():
-    NAMES_VALID = []
-    WAYPOINT_DICTIONARY = {
-        "Aerial": (9, 7),
-        "Group 15": (3, 4),
-        "Robotics": (-1, 0),
-        "University of Waterloo Station for 301 ION": (6, 6),
-        "WARG": (8, 2),
-        "Waterloo": (2, -5),
-    }
+    """
+    Empty list as input.
+    """
+    # Setup
+    names_empty = []
 
-    result, value = waypoint_names_to_coordinates(NAMES_VALID, WAYPOINT_DICTIONARY)
-    assert result is True
-    assert value == []
+    # Run
+    result, actual = waypoint_names_to_coordinates.waypoint_names_to_coordinates(
+        names_empty,
+        WAYPOINT_DICTIONARY,
+    )
+
+    # Test
+    assert result is False
+    assert actual is None
 
 
 def test_invalid_names():
-    NAMES_VALID = ["WARG", "Hello", "World"]
-    WAYPOINT_DICTIONARY = {
-        "Aerial": (9, 7),
-        "Group 15": (3, 4),
-        "Robotics": (-1, 0),
-        "University of Waterloo Station for 301 ION": (6, 6),
-        "Waterloo": (2, -5),
-    }
+    """
+    Names that don't exist in the map.
+    """
+    # Setup
+    names_invalid = ["Hello", "World"]
 
-    result, value = waypoint_names_to_coordinates(NAMES_VALID, WAYPOINT_DICTIONARY)
+    # Run
+    result, actual = waypoint_names_to_coordinates.waypoint_names_to_coordinates(
+        names_invalid,
+        WAYPOINT_DICTIONARY,
+    )
+
+    # Test
     assert result is False
-    assert value is None
+    assert actual is None
 
 
-# Run the test functions
-test_valid_names()
-test_empty_names()
-test_invalid_names()
+def test_valid_and_invalid():
+    """
+    A mix of existent and non-existent names.
+    """
+    # Setup
+    names_mixed = ["WARG", "Foo", "Bar"]
+
+    # Run
+    result, actual = waypoint_names_to_coordinates.waypoint_names_to_coordinates(
+        names_mixed,
+        WAYPOINT_DICTIONARY,
+    )
+
+    # Test
+    assert result is False
+    assert actual is None
