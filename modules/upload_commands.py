@@ -5,7 +5,7 @@ Function to upload dronekit commands.
 import dronekit
 
 
-def upload_commands(drone: dronekit.Vehicle, commands: "list[dronekit.Command]") -> None:
+def upload_commands(drone: dronekit.Vehicle, commands: "list[dronekit.Command]") -> bool:
     """
     Add the list of commands to the drone’s command sequence, and upload them.
     If the list is empty, does not upload anything.
@@ -23,7 +23,7 @@ def upload_commands(drone: dronekit.Vehicle, commands: "list[dronekit.Command]")
     """
     # If the list is empty, do nothing
     if len(commands) == 0:
-        return
+        return False
        
     # Download the command sequence and clear it
     # This is to avoid duplicate or conflicting commands
@@ -38,3 +38,4 @@ def upload_commands(drone: dronekit.Vehicle, commands: "list[dronekit.Command]")
 
     # Upload the commands to drone
     command_sequence.upload()
+    return True
