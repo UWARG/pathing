@@ -8,7 +8,7 @@ import dronekit
 from modules import upload_commands
 
 
-MAVLINK_FRAME_GLOBAL = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_WAYPOINT = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 MAVLINK_TAKEOFF = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
 MAVLINK_LANDING = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND  
@@ -97,7 +97,7 @@ if __name__ == "__main__":
             0,
             0,
             0,
-            MAVLINK_FRAME_GLOBAL,
+            MAVLINK_FRAME,
             MAVLINK_WAYPOINT,
             0,
             0,
@@ -115,7 +115,7 @@ if __name__ == "__main__":
         0,
         0,
         0,
-        MAVLINK_FRAME_GLOBAL,
+        MAVLINK_FRAME,
         MAVLINK_TAKEOFF,
         0,
         0,
@@ -133,7 +133,7 @@ if __name__ == "__main__":
         0,
         0,
         0,
-        MAVLINK_FRAME_GLOBAL,
+        MAVLINK_FRAME,
         MAVLINK_LANDING,
         0,
         0,
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         0,                          
         0,                          
         0,                          
-        MAVLINK_FRAME_GLOBAL,  
+        MAVLINK_FRAME,  
         MAVLINK_LOITER,         
         0,                          
         0,                          
