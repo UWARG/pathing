@@ -1,8 +1,8 @@
 """
 Task 1 path.
 """
-
 import pathlib
+
 import dronekit
 
 from modules import add_takeoff_and_landing_command
