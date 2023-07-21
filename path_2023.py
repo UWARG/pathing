@@ -19,6 +19,7 @@ CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
+
 def run() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
 
