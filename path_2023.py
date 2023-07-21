@@ -1,25 +1,27 @@
 """
 Task 1 path.
 """
+
 import pathlib
 import dronekit
 
+from modules import add_takeoff_and_landing_command
 from modules import load_waypoint_name_to_coordinates_map
 from modules import qr_input
 from modules import qr_to_waypoint_names
 from modules import upload_commands
 from modules import waypoint_names_to_coordinates
 from modules import waypoints_to_commands
-from modules import add_takeoff_and_landing_command
 
 
 WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
 
 def run() -> int:
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
+
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
@@ -41,7 +43,6 @@ def run() -> int:
         return -1
     
     waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
-
     if len(waypoint_commands) == 0:
         print("Error: waypoints_to_commands")
         return -1
@@ -51,9 +52,11 @@ def run() -> int:
         print("Error: add_takeoff_and_landing_command")
         return -1
     
-    upload_commands.upload_commands(drone, takeoff_landing_commands)
+    result = upload_commands.upload_commands(drone, takeoff_landing_commands)
+    if not result:
+        print("Error: upload_commands")
+        return -1
     
-
     return 0
 
 
