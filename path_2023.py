@@ -3,7 +3,6 @@ Task 1 path.
 """
 import pathlib
 import dronekit
-import time
 
 from modules import load_waypoint_name_to_coordinates_map
 from modules import qr_input
@@ -17,7 +16,7 @@ from modules import add_takeoff_and_landing_command
 WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
-CONNECTION_ADDRESS = "tcp:localhost:5763"
+CONNECTION_ADDRESS = "tcp:localhost:14550"
 drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
 
 def run() -> int:
@@ -62,5 +61,4 @@ if __name__ == "__main__":
     result_run = run()
     if result_run < 0:
         print("ERROR")
-    time.sleep(10)
     print("Done")
