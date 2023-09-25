@@ -11,7 +11,7 @@ ACCEPT_RADIUS = 10
 
 
 def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
-                          altitude: int) -> "list[dronekit.Command]":
+                          altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to dronekit commands.
 
@@ -24,9 +24,14 @@ def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
 
     Returns
     -------
-    list[dronekit.Command]
+    tuple[bool, list[dronekit.Command] | None]: 
+        (False, None) if empty waypoints list,
+        (True, dronekit commands that can be sent to the drone) otherwise
         dronekit commands that can be sent to the drone.
     """
+    if not waypoints:
+        return False, None
+
     dronekit_command_list = []
 
     for waypoint in waypoints:
@@ -49,4 +54,4 @@ def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
         )
         dronekit_command_list.append(command)
 
-    return dronekit_command_list
+    return True, dronekit_command_list
