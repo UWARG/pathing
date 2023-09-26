@@ -3,6 +3,7 @@ Function to convert list of waypoints to dronekit commands.
 """
 
 import dronekit
+from .waypoint_class import Waypoint
 
 
 MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
@@ -10,15 +11,15 @@ MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 ACCEPT_RADIUS = 10
 
 
-def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
+def waypoints_to_commands(waypoints: "list[Waypoint]",
                           altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to dronekit commands.
 
     Parameters
     ----------
-    waypoints: list[tuple[float, float]]
-        waypoint coordinates in decimal degrees (latitude, longitude).
+    waypoints: list[Waypoint]
+        List of Waypoint objects.
     altitude: int
         altitude in meters to command the drone to.
 
@@ -34,7 +35,8 @@ def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
     dronekit_command_list = []
 
     for waypoint in waypoints:
-        lat, lng = waypoint
+        lat = waypoint.latitude
+        lng = waypoint.longitude
         command = dronekit.Command(
             0,
             0,
