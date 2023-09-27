@@ -3,7 +3,7 @@ Name-coordinate mapping from CSV file.
 """
 import pathlib
 
-from modules.waypoint_class import Waypoint
+from modules.waypoint import Waypoint
 
 # Function to create a list of all Waypoint objects from a CSV file
 

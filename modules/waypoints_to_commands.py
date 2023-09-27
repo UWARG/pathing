@@ -4,7 +4,7 @@ Function to convert list of waypoints to dronekit commands.
 
 import dronekit
 
-from .waypoint_class import Waypoint
+from modules.waypoint import Waypoint
 
 
 MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT

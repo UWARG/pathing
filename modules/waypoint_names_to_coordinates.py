@@ -2,7 +2,7 @@
 This file contains a function for converting waypoint names to objects.
 """
 
-from modules.waypoint_class import Waypoint
+from modules.waypoint import Waypoint
 
 def waypoint_names_to_coordinates(waypoint_names: "list[str]",
                                   waypoint_mapping: "list[Waypoint]") \
