@@ -4,7 +4,7 @@ Test process
 
 import dronekit
 
-from modules.waypoint_class import Waypoint
+from modules.waypoint import Waypoint
 from modules import waypoints_to_commands
 
 
