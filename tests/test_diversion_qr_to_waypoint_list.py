@@ -87,3 +87,4 @@ def test_mismatch_input():
     actual = diversion_qr_to_waypoint_list.diversion_qr_to_waypoint_list(input)
 
     assert actual == expected
+
