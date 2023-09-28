@@ -20,7 +20,7 @@ def waypoints_to_commands(waypoints: "list[Waypoint]",
     Parameters
     ----------
     waypoints: list[Waypoint]
-        List of Waypoint objects.
+        List of Waypoint objects containing names and coordinates.
     altitude: int
         altitude in meters to command the drone to.
 
