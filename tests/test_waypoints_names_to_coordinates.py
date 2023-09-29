@@ -30,8 +30,6 @@ def test_valid_names():
         WAYPOINT_DICTIONARY,
     )
 
-    print(actual)
-
     # Test
     assert result is True
     assert actual == expected
