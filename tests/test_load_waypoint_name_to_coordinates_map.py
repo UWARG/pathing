@@ -4,6 +4,7 @@ Testing with real files.
 import pathlib
 
 from modules import load_waypoint_name_to_coordinates_map
+from modules.waypoint import Waypoint
 
 
 def test_normal_file():
@@ -13,13 +14,12 @@ def test_normal_file():
     # Setup
     normal_csv_file_path = pathlib.Path("tests", "test_csv", "test_normal_csv.csv")
     expected = {
-        "WARG": (43.47323264522664, -80.54011639872981),
-        "University of Waterloo Station for 301 ION": (43.4735247614021, -80.54144667502672),
+        "WARG": (Waypoint("WARG", 43.47323264522664, -80.54011639872981)), 
+        "University of Waterloo Station for 301 ION": (Waypoint("University of Waterloo Station for 301 ION", 43.4735247614021, -80.54144667502672)),
     }
 
     # Run
-    result, actual = \
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+    result, actual = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             normal_csv_file_path,
         )
 

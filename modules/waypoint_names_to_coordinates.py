@@ -1,5 +1,5 @@
 """
-This file contains a function for converting waypoint names to objects.
+This file contains a function for converting waypoint names to coordinates.
 """
 
 from modules.waypoint import Waypoint
@@ -12,7 +12,8 @@ def waypoint_names_to_coordinates(waypoint_names: "list[str]",
 
     Args:
         waypoint_names (list[str]): A list of waypoint names.
-        waypoint_mapping (dict[str, Waypoint]): A dictionary mapping waypoint names to their corresponding Waypoint objects with coordinates.
+        waypoint_mapping (dict[str, Waypoint]): A dictionary mapping waypoint names to their 
+            corresponding Waypoint objects with coordinates.
 
     Returns:
         tuple[bool, list[Waypoint]]: A tuple containing a boolean indicating the success of the conversion
