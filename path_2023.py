@@ -19,6 +19,32 @@ CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
+def get_current_destination(drone):
+    # Get the command sequence
+    cmds = drone.commands
+    cmds.download()
+    cmds.wait_ready()
+
+    # Get the current command index
+    current_command_index = cmds.next
+
+    if current_command_index < cmds.count:
+        # Get the current command
+        current_command = cmds[current_command_index]
+
+        if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
+            # Extract latitude and longitude from the waypoint command
+            latitude = current_command.x
+            longitude = current_command.y
+            print ("longitude, latitude: ", longitude, latitude)
+            return latitude, longitude
+        else:
+            print("ERROR: Current command is not a waypoint command.")
+    else:
+        print("ERROR: No waypoints or current command index out of range.")
+
+    return None, None
+    
 
 def run() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
