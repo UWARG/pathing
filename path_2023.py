@@ -49,6 +49,14 @@ def get_current_destination(drone):
 def run() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
 
+    current_latitude, current_longitude = get_current_destination(drone)
+    
+    if current_latitude is not None and current_longitude is not None:
+        print("Current Destination Latitude:", current_latitude)
+        print("Current Destination Longitude:", current_longitude)
+    else:
+        print("Unable to retrieve the current destination.")
+
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
