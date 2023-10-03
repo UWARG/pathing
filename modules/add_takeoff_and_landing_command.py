@@ -29,7 +29,7 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
         (False, None) if empty commands list,
         (True, dronekit commands with takeoff and land commands that can be sent to the drone) otherwise
     """
-    if not commands:
+    if len(commands) == 0:
         return False, None
     
     takeoff_command = dronekit.Command(

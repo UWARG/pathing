@@ -29,7 +29,7 @@ def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
         (True, dronekit commands that can be sent to the drone) otherwise
         dronekit commands that can be sent to the drone.
     """
-    if not waypoints:
+    if len(waypoints) == 0:
         return False, None
 
     dronekit_command_list = []
