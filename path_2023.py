@@ -19,43 +19,8 @@ CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
-def get_current_destination(drone):
-    # Get the command sequence
-    cmds = drone.commands
-    cmds.download()
-    cmds.wait_ready()
-
-    # Get the current command index
-    current_command_index = cmds.next
-
-    if current_command_index < cmds.count:
-        # Get the current command
-        current_command = cmds[current_command_index]
-
-        if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
-            # Extract latitude and longitude from the waypoint command
-            latitude = current_command.x
-            longitude = current_command.y
-            print ("longitude, latitude: ", longitude, latitude)
-            return latitude, longitude
-        else:
-            print("ERROR: Current command is not a waypoint command.")
-    else:
-        print("ERROR: No waypoints or current command index out of range.")
-
-    return None, None
-    
-
 def run() -> int:
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
-
-    current_latitude, current_longitude = get_current_destination(drone)
-    
-    if current_latitude is not None and current_longitude is not None:
-        print("Current Destination Latitude:", current_latitude)
-        print("Current Destination Longitude:", current_longitude)
-    else:
-        print("Unable to retrieve the current destination.")
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True, timeout=60)
 
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
@@ -66,7 +31,7 @@ def run() -> int:
     if not result:
         print("ERROR: qr_input")
         return -1
-
+    
     result, waypoint_names = qr_to_waypoint_names.qr_to_waypoint_names(qr_text)
     if not result:
         print("ERROR: qr_to_waypoint_names")
@@ -92,6 +57,22 @@ def run() -> int:
         print("Error: upload_commands")
         return -1
     
+    # Get the current waypoint sequence
+    current_waypoint = drone.commands.next
+    print(f"Current waypoint sequence: {current_waypoint}")
+
+    # Get the current location (latitude, longitude)
+    current_location = drone.location.global_frame
+    print(f"Current location: Lat {current_location.lat}, Lon {current_location.lon}")
+
+    # Get the current destination
+    if current_waypoint < len(drone.commands):
+        current_command = drone.commands[current_waypoint]
+        if current_command.command == 16:
+            destination_latitude = current_command.x
+            destination_longitude = current_command.y
+            print(f"Current destination: Lat {destination_latitude}, Lon {destination_longitude}")
+
     return 0
 
 
