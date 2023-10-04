@@ -19,6 +19,7 @@ def load_waypoint_name_to_coordinates_map(waypoint_file_path: pathlib.Path) \
             parts = line.split(',')
             if line in ("name,latitude,longitude\n", "") or len(parts) < 3:
                 continue
+            
             name, latitude, longitude = line.split(',')
             name_to_coordinates_map[name] = (float(latitude), float(longitude))
 
