@@ -19,9 +19,8 @@ CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
-
 def run() -> int:
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True, timeout=60)
 
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
@@ -32,7 +31,7 @@ def run() -> int:
     if not result:
         print("ERROR: qr_input")
         return -1
-
+    
     result, waypoint_names = qr_to_waypoint_names.qr_to_waypoint_names(qr_text)
     if not result:
         print("ERROR: qr_to_waypoint_names")
