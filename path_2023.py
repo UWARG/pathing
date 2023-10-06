@@ -12,6 +12,7 @@ from modules import qr_to_waypoint_names
 from modules import upload_commands
 from modules import waypoint_names_to_coordinates
 from modules import waypoints_to_commands
+from modules import waypoint_tracking
 
 
 WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
@@ -20,7 +21,7 @@ ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 def run() -> int:
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True, timeout=60)
 
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
@@ -31,7 +32,7 @@ def run() -> int:
     if not result:
         print("ERROR: qr_input")
         return -1
-    
+
     result, waypoint_names = qr_to_waypoint_names.qr_to_waypoint_names(qr_text)
     if not result:
         print("ERROR: qr_to_waypoint_names")
@@ -56,22 +57,11 @@ def run() -> int:
     if not result:
         print("Error: upload_commands")
         return -1
-    
-    # Get the current waypoint sequence
-    current_waypoint = drone.commands.next
-    print(f"Current waypoint sequence: {current_waypoint}")
 
-    # Get the current location (latitude, longitude)
-    current_location = drone.location.global_frame
-    print(f"Current location: Lat {current_location.lat}, Lon {current_location.lon}")
-
-    # Get the current destination
-    if current_waypoint < len(drone.commands):
-        current_command = drone.commands[current_waypoint]
-        if current_command.command == 16:
-            destination_latitude = current_command.x
-            destination_longitude = current_command.y
-            print(f"Current destination: Lat {destination_latitude}, Lon {destination_longitude}")
+    current_latitude, current_longitude = waypoint_tracking.get_current_location(drone)
+    if not current_latitude:
+        print("Error: waypoint_tracking")
+        return -1
 
     return 0
 

@@ -17,10 +17,10 @@ def load_waypoint_name_to_coordinates_map(waypoint_file_path: pathlib.Path) \
         for line in file:
             # Skip header and empty lines
             parts = line.split(',')
-            if line in ("name,latitude,longitude\n", "") or len(parts) < 3:
+            if line in "name,latitude,longitude\n" or len(parts) < 3:
                 continue
-            
-            name, latitude, longitude = line.split(',')
+
+            name, latitude, longitude = parts
             name_to_coordinates_map[name] = (float(latitude), float(longitude))
 
     if len(name_to_coordinates_map) > 0:
