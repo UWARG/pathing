@@ -7,7 +7,7 @@ import dronekit
 
 def get_current_location(drone) -> "tuple[float,float]":
     """
-    Function to retrieve the current destination (latitude and longitude) of the drone
+    Function to retrieve the current location (latitude and longitude) of the drone
     """
     # Download the mission commands from the drone
     drone.commands.download()
