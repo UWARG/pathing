@@ -11,7 +11,7 @@ def test_normal_file():
     Normal CSV file.
     """
     # Setup
-    normal_csv_file_path = pathlib.Path("test_csv", "test_normal_csv.csv")
+    normal_csv_file_path = pathlib.Path("tests", "test_csv", "test_normal_csv.csv")
     expected = {
         "WARG": (43.47323264522664, -80.54011639872981),
         "University of Waterloo Station for 301 ION": (43.4735247614021, -80.54144667502672),
