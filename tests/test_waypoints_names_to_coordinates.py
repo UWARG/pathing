@@ -3,16 +3,16 @@ Test waypoint names to coordinates function.
 """
 
 from modules import waypoint_names_to_coordinates
-from modules.waypoint import Waypoint
+from modules import waypoint
 
 
 WAYPOINT_DICTIONARY = {
-    "Aerial": Waypoint("Aerial", 9, 7),
-    "Group 15": Waypoint("Group 15", 3, 4),
-    "Robotics": Waypoint("Robotics", -1, 0),
-    "University of Waterloo Station for 301 ION": Waypoint("University of Waterloo Station for 301 ION", 6, 6),
-    "WARG": Waypoint("WARG", 8, 2),
-    "Waterloo": Waypoint("Waterloo", 2, -5),
+    "Aerial": waypoint.Waypoint("Aerial", 9, 7),
+    "Group 15": waypoint.Waypoint("Group 15", 3, 4),
+    "Robotics": waypoint.Waypoint("Robotics", -1, 0),
+    "University of Waterloo Station for 301 ION": waypoint.Waypoint("University of Waterloo Station for 301 ION", 6, 6),
+    "WARG": waypoint.Waypoint("WARG", 8, 2),
+    "Waterloo": waypoint.Waypoint("Waterloo", 2, -5),
 }
 
 
@@ -22,7 +22,7 @@ def test_valid_names():
     """
     # Setup
     names_valid = ["Waterloo", "Aerial", "Robotics", "Group 15"]
-    expected = [Waypoint("Waterloo", 2, -5), Waypoint("Aerial", 9, 7), Waypoint("Robotics", -1, 0), Waypoint("Group 15", 3, 4)]
+    expected = [waypoint.Waypoint("Waterloo", 2, -5), waypoint.Waypoint("Aerial", 9, 7), waypoint.Waypoint("Robotics", -1, 0), waypoint.Waypoint("Group 15", 3, 4)]
 
     # Run
     result, actual = waypoint_names_to_coordinates.waypoint_names_to_coordinates(
