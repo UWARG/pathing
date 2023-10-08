@@ -6,7 +6,8 @@ including the current waypoint sequence, location, and destination.
 import dronekit
 
 
-def get_current_waypoint_info(drone: dronekit.Vehicle) -> "tuple[bool, tuple[int, tuple[float, float]]]":
+def get_current_waypoint_info(drone: dronekit.Vehicle) \
+    -> "tuple[bool, tuple[int, tuple[float, float]]]":
     """
     Function to retrieve information about the current waypoint sequence and destination
     """
