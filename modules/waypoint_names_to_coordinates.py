@@ -2,11 +2,12 @@
 This file contains a function for converting waypoint names to coordinates.
 """
 
-from modules.waypoint import Waypoint
+from modules import waypoint
+
 
 def waypoint_names_to_coordinates(waypoint_names: "list[str]",
-                                  waypoint_mapping: "dict[str, Waypoint]") \
-    -> "tuple[bool, list[Waypoint]]":
+                                  waypoint_mapping: "dict[str, waypoint.Waypoint]") \
+    -> "tuple[bool, list[waypoint.Waypoint]]":
     """
     Converts a list of waypoint names to their corresponding coordinates based on a waypoint mapping.
 
