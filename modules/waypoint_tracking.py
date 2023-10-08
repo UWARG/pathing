@@ -36,7 +36,7 @@ def get_current_waypoint_info(drone: dronekit.Vehicle) \
         if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
-    return waypoint_info
+    return True, waypoint_info
 
 
 def get_current_location(drone: dronekit.Vehicle) -> "tuple[bool, tuple[float, float] | None]":

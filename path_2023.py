@@ -20,6 +20,7 @@ WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
+DELAY = 0.1 # seconds
 
 
 def run() -> int:
@@ -60,18 +61,16 @@ def run() -> int:
         print("Error: upload_commands")
         return -1
 
-    waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
-    if not waypoint_info:
-        print("Error: waypoint_tracking")
-        return -1
-
     while True:
-        current_latitude, current_longitude = waypoint_tracking.get_current_location(drone)
-        if not current_latitude:
-            print("Error: waypoint_tracking")
-            return -1
+        result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
+        if not result:
+            print("Error: waypoint_tracking (waypoint_info)")
 
-        time.sleep(0.1)
+        result, location = waypoint_tracking.get_current_location(drone)
+        if not result:
+            print("Error: waypoint_tracking (get_current_location)")
+
+        time.sleep(DELAY)
 
     return 0
 
