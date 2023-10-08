@@ -3,6 +3,7 @@ Task 1 path.
 """
 import pathlib
 import time
+
 import dronekit
 
 from modules import add_takeoff_and_landing_command
@@ -59,11 +60,17 @@ def run() -> int:
         print("Error: upload_commands")
         return -1
 
+    waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
+    if not waypoint_info:
+        print("Error: waypoint_tracking")
+        return -1
+
     while True:
         current_latitude, current_longitude = waypoint_tracking.get_current_location(drone)
         if not current_latitude:
             print("Error: waypoint_tracking")
             return -1
+
         time.sleep(0.1)
 
     return 0
