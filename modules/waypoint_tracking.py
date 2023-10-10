@@ -36,9 +36,6 @@ def get_current_waypoint_info(drone: dronekit.Vehicle) \
         if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
-    if waypoint_info is None:
-        return False, None
-
     return True, waypoint_info
 
 
