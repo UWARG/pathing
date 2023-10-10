@@ -13,7 +13,7 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
     -----------
     qr_text: str
     Diversion QR string which needs to be parsed.
-     
+
     Returns
     -------
     tuple[bool, tuple[list[Waypoint], Waypoint] | None] 
@@ -29,7 +29,7 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
 
     # Extract semicolon-separated list of diversion waypoint names without leading/trailing whitespace
     diversion_waypoints = [
-    text.strip(" ") for text in diversion_waypoints_string.replace("Avoid the area bounded by:", "", 1).split(";")
+        text.strip(" ") for text in diversion_waypoints_string.replace("Avoid the area bounded by:", "", 1).split(";")
     ]
 
     # Remove remaining cases of empty names
@@ -38,13 +38,13 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
     # Case of no results
     if len(filtered) == 0:
         return False, None
-    
+
     # Extract rejoin waypoint name, without leading/trailing whitespace
     rejoin_waypoint = (rejoin_waypoint_string.replace("Rejoin the route at", "", 1)).strip()
-    
+
     # Case of rejoin waypoint being empty
     if rejoin_waypoint == "":
         return False, None
-    
+
     return True, (diversion_waypoints, rejoin_waypoint)
 
