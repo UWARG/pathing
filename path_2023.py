@@ -20,11 +20,11 @@ WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-DELAY = 0.1 # seconds
+DELAY = 0.1   # seconds
 
 
 def run() -> int:
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True)
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = True, timeout = 60)
 
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
@@ -65,10 +65,14 @@ def run() -> int:
         result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
         if not result:
             print("Error: waypoint_tracking (waypoint_info)")
+        else:
+            print(f"Current waypoint sequence: {waypoint_info}")
 
         result, location = waypoint_tracking.get_current_location(drone)
         if not result:
             print("Error: waypoint_tracking (get_current_location)")
+        else:
+            print(f"Current location (Lat, Lon): {location}")
 
         time.sleep(DELAY)
 
