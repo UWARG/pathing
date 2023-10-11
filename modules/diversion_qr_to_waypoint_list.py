@@ -12,12 +12,12 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
     Parameters
     -----------
     qr_text: str
-    Diversion QR string which needs to be parsed.
+        Diversion QR string which needs to be parsed.
 
     Returns
     -------
     tuple[bool, tuple[list[Waypoint], Waypoint] | None] 
-    Returns False, None if the string is invalid or if the list is empty.
+        Returns False, None if the string is invalid or if the list is empty.
     """
     # Check if string is of valid form
     match = re.search(r"^Avoid the area bounded by:.*\..*Rejoin the route at.*", qr_text)
@@ -47,4 +47,3 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
         return False, None
 
     return True, (diversion_waypoints, rejoin_waypoint)
-
