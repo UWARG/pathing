@@ -100,7 +100,7 @@ def test_empty_rejoin_waypoint():
 
 def test_mismatch_input():
     """
-    Test case with no matching text
+    Test case with no matching text.
     """
     # Setup
     input = "Lorem ipsum dolor sit amet. Zulu; Tango; Alpha."
@@ -111,4 +111,3 @@ def test_mismatch_input():
     # Test
     assert not result
     assert actual is None
-
