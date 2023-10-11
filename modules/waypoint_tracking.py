@@ -31,7 +31,7 @@ def get_current_waypoint_info(drone: dronekit.Vehicle) \
     waypoint_info = (current_waypoint, None)
 
     # Get the current destination
-    if current_waypoint < len(drone.commands):
+    if current_waypoint < drone.commands.count:
         current_command = drone.commands[current_waypoint]
         if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
