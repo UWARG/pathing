@@ -12,14 +12,17 @@ from modules import qr_input
 from modules import qr_to_waypoint_names
 from modules import upload_commands
 from modules import waypoint_names_to_coordinates
-from modules import waypoints_to_commands
 from modules import waypoint_tracking
+from modules import waypoints_dict_to_kml
+from modules import waypoints_to_commands
 
 
 WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
+KML_FILE_PATH = pathlib.Path(".", "waypoints")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
+KML_FILE_NAME = "wrestrc_waypoints"
 DELAY = 0.1  # seconds
 
 
@@ -30,6 +33,11 @@ def run() -> int:
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
+        return -1
+    
+    result = waypoints_dict_to_kml.waypoints_dict_to_kml(waypoint_name_to_coordinates, KML_FILE_NAME, KML_FILE_PATH)
+    if not result:
+        print("ERROR: unable to generate kml file")
         return -1
 
     result, qr_text = qr_input.qr_input(CAMERA)
