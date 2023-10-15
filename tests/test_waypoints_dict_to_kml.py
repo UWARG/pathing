@@ -17,9 +17,11 @@ def test_waypoints_dict_to_kml(waypoints: "dict[str, tuple[float, float]]"):
     Basic test case to see if KML file is generated from a dictionary of waypoints.
     """
 
+    # name and directory for testing purposes
     test_document_name = "test_kml_document"
     test_path = pathlib.Path(".", "tests", "test_kml")
 
+    # determine if action was successful
     result = waypoints_dict_to_kml.waypoints_dict_to_kml(waypoints, test_document_name, test_path)
 
     assert result
