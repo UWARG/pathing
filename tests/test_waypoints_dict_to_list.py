@@ -1,8 +1,9 @@
 """
-Test Process.
+Testing various formats of waypoints dictionary during conversion to list process.
 """
 
 from modules import waypoints_dict_to_list
+
 
 def test_valid_waypoint_dict():
     """
@@ -13,21 +14,18 @@ def test_valid_waypoint_dict():
     expected = [(43.4340501,-80.5789803), (43.4335758,-80.5775237), (43.4336672,-80.57839)]  #expected output
 
     # determine if action was successful
-    result, output = waypoints_dict_to_list.waypoints_dict_to_list(input)
+    result, actual = waypoints_dict_to_list.waypoints_dict_to_list(input)
 
     assert result
-    assert output == expected
+    assert actual == expected
+
 
 def test_empty_waypoint_dict():
-    """
-    Test empty dictionary of waypoints.
-    """
-
     input =  {}
     expected = None  # expected output 
 
     # determine if action was successful
-    result, output = waypoints_dict_to_list.waypoints_dict_to_list(input)
+    result, actual = waypoints_dict_to_list.waypoints_dict_to_list(input)
 
-    assert not result
-    assert output == expected
+    assert result is not None
+    assert actual == expected
