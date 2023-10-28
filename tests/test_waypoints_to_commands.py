@@ -4,7 +4,7 @@ Test process
 
 import dronekit
 
-from modules import waypoints_to_commands
+import modules.waypoints_to_commands as waypoints_to_commands
 
 
 def test_waypoints_to_commands():
@@ -14,7 +14,9 @@ def test_waypoints_to_commands():
     waypoints = [(42.123, -73.456), (42.789, -73.987), (42.555, -73.321)]
     altitude = 100
 
-    commands_actual = waypoints_to_commands.waypoints_to_commands(waypoints, altitude)
+    result, commands_actual = waypoints_to_commands.waypoints_to_commands(waypoints, altitude)
+    
+    assert result
 
     assert isinstance(commands_actual, list)
     assert len(commands_actual) == len(waypoints)
