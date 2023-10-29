@@ -6,7 +6,7 @@ import copy
 import dronekit
 import pytest
 
-import modules as add_takeoff_and_landing_command
+from modules import add_takeoff_and_landing_command
 
 
 ALTITUDE = 50
@@ -76,7 +76,7 @@ def assert_expected_takeoff_and_landing_commands(commands_actual: "list[dronekit
     """
     Helper function to assert the correctness of takeoff and landing commands.
     """
-
+    
     # Test takeoff command
     takeoff_command = commands_actual[0]
     assert isinstance(takeoff_command, dronekit.Command)
@@ -90,17 +90,9 @@ def assert_expected_takeoff_and_landing_commands(commands_actual: "list[dronekit
     assert landing_command.frame == add_takeoff_and_landing_command.MAVLINK_LANDING_FRAME
     assert landing_command.command == add_takeoff_and_landing_command.MAVLINK_LANDING_COMMAND
 
-     # Test original commands
+    # Test original commands
     assert len(commands_actual) == len(commands_expected) + 2
     assert commands_actual[1:-1] == commands_expected
-
-def assert_expected_takeoff_and_landing_commands_empty(commands_actual: "list[dronekit.Command]",
-                                                       commands_expected: "list[dronekit.Command]"):
-    """
-    Helper function to assert the correctness of takeoff and landing commands when there are no commands
-    """
-    assert(commands_actual is None)
-    assert(len(commands_expected) == 0)
 
 def test_add_takeoff_and_landing_on_empty_commands(empty_commands: "list[dronekit.Command]"):
     """
@@ -109,8 +101,8 @@ def test_add_takeoff_and_landing_on_empty_commands(empty_commands: "list[droneki
     commands_expected = copy.deepcopy(empty_commands)
     result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(empty_commands, ALTITUDE)
 
-    assert(not result)
-    assert_expected_takeoff_and_landing_commands_empty(commands_actual, commands_expected)
+    assert(commands_actual is None)
+    assert(len(commands_expected) == 0)
 
 def test_add_takeoff_and_landing_on_nonempty_commands(non_empty_commands: "list[dronekit.Command]"):
     """
