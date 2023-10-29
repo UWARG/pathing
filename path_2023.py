@@ -44,12 +44,12 @@ def run() -> int:
         return -1
     
     result, waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
-    if len(waypoint_commands) == 0:
+    if not result:
         print("Error: waypoints_to_commands")
         return -1
     
     result, takeoff_landing_commands = add_takeoff_and_landing_command.add_takeoff_and_landing_command(waypoint_commands, ALTITUDE)
-    if len(takeoff_landing_commands) == 0:
+    if not result:
         print("Error: add_takeoff_and_landing_command")
         return -1
     

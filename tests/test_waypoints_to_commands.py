@@ -4,7 +4,7 @@ Test process
 
 import dronekit
 
-import modules.waypoints_to_commands as waypoints_to_commands
+import modules as waypoints_to_commands
 
 
 def test_waypoints_to_commands():
