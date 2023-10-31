@@ -99,12 +99,10 @@ def test_add_takeoff_and_landing_on_empty_commands(empty_commands: "list[droneki
     """
     Tests functionality correctness of add_takeoff_and_landing_command on empty list of commands.
     """
-    commands_expected = copy.deepcopy(empty_commands)
     result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(empty_commands, ALTITUDE)
 
     assert not result
     assert commands_actual is None
-    assert len(commands_expected) == 0
 
 def test_add_takeoff_and_landing_on_nonempty_commands(non_empty_commands: "list[dronekit.Command]"):
     """
