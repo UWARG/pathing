@@ -22,10 +22,9 @@ def test_valid_waypoint_dict():
 
 def test_empty_waypoint_dict():
     input =  {}
-    expected = None  # expected output 
 
     # determine if action was successful
     result, actual = waypoints_dict_to_list.waypoints_dict_to_list(input)
 
-    assert result is not None
-    assert actual == expected
+    assert not result
+    assert actual is None

@@ -2,7 +2,8 @@
 Module to convert waypoints dict to waypoints list.
 """
 
-def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, tuple[float, float]]") -> "tuple[bool, list[tuple[float,float]]]":
+def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, tuple[float, float]]") \
+    -> "tuple[bool, list[tuple[float,float]]]":
     """
     Converts dictionary of waypoints into a list.
 
