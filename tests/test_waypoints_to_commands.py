@@ -1,7 +1,9 @@
 """
 Test process.
 """
+
 import dronekit
+
 from modules import waypoints_to_commands
 
 def test_waypoints_to_commands_empty_input():
@@ -10,9 +12,12 @@ def test_waypoints_to_commands_empty_input():
     """
     waypoints = []
     altitude = 100
+    
     result, commands_actual = waypoints_to_commands.waypoints_to_commands(waypoints, altitude)
+    
     assert not result
     assert commands_actual is None
+
 
 def test_waypoints_to_commands():
     """
