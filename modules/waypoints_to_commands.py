@@ -1,5 +1,5 @@
 """
-Function to convert list of waypoints to dronekit commands
+Function to convert list of waypoints to dronekit commands.
 """
 
 import dronekit
@@ -26,8 +26,7 @@ def waypoints_to_commands(waypoints: "list[tuple[float, float]]",
     -------
     tuple[bool, list[dronekit.Command] | None]: 
         (False, None) if empty waypoints list,
-        (True, dronekit commands that can be sent to the drone) otherwise
-        dronekit commands that can be sent to the drone.
+        (True, dronekit commands that can be sent to the drone) otherwise dronekit commands that can be sent to the drone.
     """
     if len(waypoints) == 0:
         return False, None

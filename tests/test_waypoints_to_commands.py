@@ -6,6 +6,7 @@ import dronekit
 
 from modules import waypoints_to_commands
 
+
 def test_waypoints_to_commands_empty_input():
     """
     Tests functionality correctness of waypoints_to_commands on empty input.

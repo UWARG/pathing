@@ -1,5 +1,5 @@
 """
-Test process
+Test process.
 """
 import copy
 
