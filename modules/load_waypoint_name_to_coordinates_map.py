@@ -4,7 +4,7 @@ Name-coordinate mapping from CSV file.
 
 import pathlib
 
-from modules import waypoint
+from . import waypoint
 
 
 def load_waypoint_name_to_coordinates_map(waypoint_file_path: pathlib.Path) \
