@@ -2,7 +2,7 @@
 This file contains a function for converting waypoint names to coordinates.
 """
 
-from modules import waypoint
+from . import waypoint
 
 
 def waypoint_names_to_coordinates(waypoint_names: "list[str]",
