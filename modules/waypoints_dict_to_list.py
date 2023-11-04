@@ -17,11 +17,11 @@ def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, tuple[float,
     bool: Whether waypoint data conversion was a success.
     list[tuple[float, float]]: List of the waypoint coordinates.
     """
-    # check for empty input dictionary
-    if not waypoint_name_to_coordinates:
+    # Check for empty input dictionary
+    if len(waypoint_name_to_coordinates) == 0:
         return False, None
     
-    # create list of all the values in the input dictionary, ie. the tuple[float, float]
+    # Create list of all the values in the input dictionary, ie. the tuple[float, float]
     waypoints_list = list(waypoint_name_to_coordinates.values())
 
     return True, waypoints_list
