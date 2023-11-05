@@ -10,33 +10,31 @@ from modules import add_takeoff_and_landing_command
 from modules import upload_commands
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
+from modules import waypoint_names_to_coordinates
+from modules import load_waypoint_name_to_coordinates_map
 
-
-WAYPOINT_FILE_PATH = pathlib.Path(".", "2023", "path_creation", "waypoints2024.csv")
+WAYPOINT_FILE_PATH = pathlib.Path(".", "2024", "waypoints_task_2.csv")
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 DELAY = 0.1  # seconds
 
-
 def run() -> int:
+    """
+    Reads in hardcoded waypoints from csv file and sends drone commands.
+    """
+    
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
 
     # Read in hardcoded waypoints from csv files
-    waypoints = []
-    with open(WAYPOINT_FILE_PATH, encoding="utf-8") as file:
-        for line in file:
-            # Skip header and empty lines
-            parts = line.split(',')
-            if line in "name,latitude,longitude\n" or len(parts) < 3:
-                continue
-            name, latitude, longitude = parts
-            waypoint = [float(latitude), float(longitude)]
-            waypoints.append(waypoint)
-    
-    if len(waypoints) == 0:
-        print("Error: Failed to read from file or no data in file")
+    # Waypoints must be in alphabetical order
+    result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
+    if not result:
+        print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
+
+    # Convert dictionary to list of coordinates
+    waypoints= list(waypoint_name_to_coordinates.values())
 
     waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
     if len(waypoint_commands) == 0:
