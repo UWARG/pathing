@@ -8,11 +8,7 @@ import dronekit
 import csv
 
 from modules import add_takeoff_and_landing_command
-from modules import load_waypoint_name_to_coordinates_map
-from modules import qr_input
-from modules import qr_to_waypoint_names
 from modules import upload_commands
-from modules import waypoint_names_to_coordinates
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
 
@@ -29,19 +25,14 @@ def run() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
 
     waypoints = []
-    with open('waypointTest.txt') as csv_file:
+    with open('waypoints2024.txt') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
-            if line_count == 0:
-                print(f'Column names are {", ".join(row)}')
-                line_count += 1
-            else:
-                print(f'Name: {row[0]}, latitude: {row[1]}, longitude: {row[2]}')
+            if line_count > 0:
                 waypoint = [float(row[1]), float(row[2])]
                 waypoints.append(waypoint)
-                line_count += 1
-        print(waypoints)
+            line_count += 1
 
     waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
     if len(waypoint_commands) == 0:
