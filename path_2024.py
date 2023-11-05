@@ -5,7 +5,6 @@ import pathlib
 import time
 
 import dronekit
-import csv
 
 from modules import add_takeoff_and_landing_command
 from modules import upload_commands
@@ -13,8 +12,7 @@ from modules import waypoints_to_commands
 from modules import waypoint_tracking
 
 
-WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
-CAMERA = 0
+WAYPOINT_FILE_PATH = pathlib.Path(".", "2023", "path_creation", "waypoints2024.csv")
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 DELAY = 0.1  # seconds
@@ -24,15 +22,21 @@ def run() -> int:
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
 
+    # Read in hardcoded waypoints from csv files
     waypoints = []
-    with open('waypoints2024.txt') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
-        for row in csv_reader:
-            if line_count > 0:
-                waypoint = [float(row[1]), float(row[2])]
-                waypoints.append(waypoint)
-            line_count += 1
+    with open(WAYPOINT_FILE_PATH, encoding="utf-8") as file:
+        for line in file:
+            # Skip header and empty lines
+            parts = line.split(',')
+            if line in "name,latitude,longitude\n" or len(parts) < 3:
+                continue
+            name, latitude, longitude = parts
+            waypoint = [float(latitude), float(longitude)]
+            waypoints.append(waypoint)
+    
+    if len(waypoints) == 0:
+        print("Error: Failed to read from file or no data in file")
+        return -1
 
     waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
     if len(waypoint_commands) == 0:
