@@ -20,21 +20,20 @@ DELAY = 0.1  # seconds
 
 def run() -> int:
     """
-    Reads in hardcoded waypoints from csv file and sends drone commands.
+    Reads in hardcoded waypoints from CSV file and sends drone commands.
     """
-    
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
 
-    # Read in hardcoded waypoints from csv files
-    # Waypoints must be in alphabetical order
+    # Read in hardcoded waypoints from CSV file
+    # Waypoints must be in insertion order
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
 
     # Convert dictionary to list of coordinates
-    waypoints= list(waypoint_name_to_coordinates.values())
+    waypoints = list(waypoint_name_to_coordinates.values())
 
     waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
     if len(waypoint_commands) == 0:
