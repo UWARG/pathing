@@ -26,7 +26,7 @@ def run() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
 
     # Read in hardcoded waypoints from CSV file
-    # Waypoints must be in insertion order
+    # Waypoints are stored in order of insertion, starting with the top row
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
