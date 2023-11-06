@@ -28,9 +28,10 @@ def run() -> int:
 
     # Read in hardcoded waypoints from CSV file
     # Waypoints are stored in order of insertion, starting with the top row
-    result, waypoint_name_to_coordinates \
-        = load_waypoint_name_to_coordinates_map \
-        .load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
+    result, waypoint_name_to_coordinates = \
+        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+            WAYPOINT_FILE_PATH,
+        )
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
@@ -43,9 +44,11 @@ def run() -> int:
         print("Error: waypoints_to_commands")
         return -1
 
-    takeoff_landing_commands \
-        = add_takeoff_and_landing_command \
-        .add_takeoff_and_landing_command(waypoint_commands, ALTITUDE)
+    takeoff_landing_commands = \
+        add_takeoff_and_landing_command.add_takeoff_and_landing_command(
+            waypoint_commands,
+            ALTITUDE,
+        )
     if len(takeoff_landing_commands) == 0:
         print("Error: add_takeoff_and_landing_command")
         return -1
