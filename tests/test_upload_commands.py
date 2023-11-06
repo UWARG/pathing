@@ -9,6 +9,7 @@ import pytest
 from modules import upload_commands
 
 
+# This file does not contain unit tests
 pytest.skip("Integration test", allow_module_level=True)
 
 
