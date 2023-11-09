@@ -1,7 +1,6 @@
 """
 Prefixes a takeoff command and suffixes a landing command to the end of the list of commands.
 """
-
 import dronekit
 
 
