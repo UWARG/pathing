@@ -1,7 +1,6 @@
 """
 Function to convert list of waypoints to dronekit commands
 """
-
 import dronekit
 
 from . import waypoint
@@ -32,8 +31,6 @@ def waypoints_to_commands(waypoints: "list[waypoint.Waypoint]",
     dronekit_command_list = []
 
     for point in waypoints:
-        lat = point.latitude
-        lng = point.longitude
         command = dronekit.Command(
             0,
             0,
@@ -46,8 +43,8 @@ def waypoints_to_commands(waypoints: "list[waypoint.Waypoint]",
             ACCEPT_RADIUS,
             0,
             0,
-            lat,
-            lng,
+            point.latitude,
+            point.longitude,
             altitude,
         )
         dronekit_command_list.append(command)

@@ -1,7 +1,6 @@
 """
 Name-coordinate mapping from CSV file.
 """
-
 import pathlib
 
 from . import waypoint

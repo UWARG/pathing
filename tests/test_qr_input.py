@@ -1,7 +1,6 @@
 """
 Test process.
 """
-
 import pytest
 
 from modules import qr_input
