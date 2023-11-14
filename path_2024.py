@@ -7,15 +7,19 @@ import time
 import dronekit
 
 from modules import add_takeoff_and_landing_command
+from modules import load_waypoint_name_to_coordinates_map
 from modules import upload_commands
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
-from modules import load_waypoint_name_to_coordinates_map
+from modules import waypoints_dict_to_list
+from modules.common.kml.modules import waypoints_to_kml
 
 
 WAYPOINT_FILE_PATH = pathlib.Path(".", "2024", "waypoints_task_2.csv")
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
+KML_FILE_PATH = pathlib.Path(".", "waypoints")
+KML_FILE_NAME = "wrestrc_waypoints"
 DELAY = 0.1  # seconds
 
 
@@ -35,11 +39,18 @@ def run() -> int:
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
+    
+    result, waypoints_list = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_name_to_coordinates)
+    if not result:
+        print("ERROR: Unable to convert waypoints from dict to list")
+        return -1
 
-    # Convert dictionary to list of coordinates
-    waypoints = list(waypoint_name_to_coordinates.values())
+    result = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_NAME, KML_FILE_PATH)
+    if not result:
+        print("ERROR: Unable to generate KML file")
+        return -1
 
-    waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints, ALTITUDE)
+    waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints_list, ALTITUDE)
     if len(waypoint_commands) == 0:
         print("Error: waypoints_to_commands")
         return -1

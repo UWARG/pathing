@@ -41,7 +41,7 @@ def run() -> int:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
     
-    result  = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_NAME, KML_FILE_PATH)
+    result = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_NAME, KML_FILE_PATH)
     if not result:
         print("ERROR: Unable to generate KML file")
         return -1
