@@ -15,8 +15,11 @@ def test_normal_file():
     normal_csv_file_path = pathlib.Path("tests", "test_csv", "test_normal_csv.csv")
     expected = {
         "WARG": waypoint.Waypoint("WARG", 43.47323264522664, -80.54011639872981), 
-        "University of Waterloo Station for 301 ION": waypoint.Waypoint\
-            ("University of Waterloo Station for 301 ION", 43.4735247614021, -80.54144667502672),
+        "University of Waterloo Station for 301 ION": waypoint.Waypoint(
+            "University of Waterloo Station for 301 ION", 
+            43.4735247614021,
+            -80.54144667502672
+            ),
     }
 
     # Run

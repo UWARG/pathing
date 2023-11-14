@@ -1,6 +1,7 @@
 """
 Function to convert list of waypoints to dronekit commands.
 """
+
 import dronekit
 
 from . import waypoint

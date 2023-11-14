@@ -25,9 +25,10 @@ def test_valid_names():
     names_valid = ["Waterloo", "Aerial", "Robotics", "Group 15"]
     expected = [
         waypoint.Waypoint("Waterloo", 2, -5),
-        waypoint.Waypoint("Aerial", 9, 7), waypoint.Waypoint("Robotics", -1, 0),
+        waypoint.Waypoint("Aerial", 9, 7),
+        waypoint.Waypoint("Robotics", -1, 0),
         waypoint.Waypoint("Group 15", 3, 4)
-        ]
+    ]
 
     # Run
     result, actual = waypoint_names_to_coordinates.waypoint_names_to_coordinates(

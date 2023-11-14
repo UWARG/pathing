@@ -10,7 +10,7 @@ class Waypoint:
         name (str): The name or label for the waypoint.
         latitude (float): The latitude coordinate of the waypoint in decimal degrees.
         longitude (float): The longitude coordinate of the waypoint in decimal degrees.
-    
+
     Methods:
         __init__(name, latitude, longitude): Initializes a Waypoint object.
         __eq__(other): Checks if two Waypoint objects are equal.
