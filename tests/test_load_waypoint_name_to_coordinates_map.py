@@ -3,8 +3,8 @@ Testing with real files.
 """
 import pathlib
 
-from modules import waypoint
 from modules import load_waypoint_name_to_coordinates_map
+from modules import waypoint
 
 
 def test_normal_file():
@@ -18,7 +18,7 @@ def test_normal_file():
         "University of Waterloo Station for 301 ION": waypoint.Waypoint(
             "University of Waterloo Station for 301 ION", 
             43.4735247614021,
-            -80.54144667502672
+            -80.54144667502672,
         ),
     }
 

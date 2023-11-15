@@ -28,7 +28,7 @@ def test_waypoints_to_commands():
     waypoints = [
         waypoint.Waypoint("Waypoint 1", 42.123, -73.456),
         waypoint.Waypoint("Waypoint 2", 42.789, -73.987),
-        waypoint.Waypoint("Waypoint 3", 42.555, -73.321)
+        waypoint.Waypoint("Waypoint 3", 42.555, -73.321),
     ]
     altitude = 100
 

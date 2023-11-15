@@ -16,7 +16,6 @@ class Waypoint:
         __eq__(other): Checks if two Waypoint objects are equal.
         __repr__(): Returns a string representation of the Waypoint object.
     """
-
     def __init__(self, name: str, latitude: float, longitude: float):
         """
         Constructor for the Waypoint object.
