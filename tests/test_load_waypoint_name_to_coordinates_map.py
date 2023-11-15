@@ -19,7 +19,7 @@ def test_normal_file():
             "University of Waterloo Station for 301 ION", 
             43.4735247614021,
             -80.54144667502672
-            ),
+        ),
     }
 
     # Run
