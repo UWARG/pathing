@@ -18,8 +18,8 @@ from modules.common.kml.modules import waypoints_to_kml
 WAYPOINT_FILE_PATH = pathlib.Path(".", "2024", "waypoints_task_2.csv")
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-KML_FOLDER_PATH = pathlib.Path(".", "waypoints")
-KML_FILE_NAME = "wrestrc_waypoints"
+KML_FILE_PARENT_DIRECTORY = pathlib.Path(".", "waypoints")
+KML_FILE_PREFIX = "wrestrc_waypoints"
 DELAY = 0.1  # seconds
 
 
@@ -45,7 +45,7 @@ def run() -> int:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
 
-    result, kml_file_path = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_NAME, KML_FOLDER_PATH)
+    result, _ = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY)
     if not result:
         print("ERROR: Unable to generate KML file")
         return -1
