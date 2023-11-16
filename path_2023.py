@@ -22,7 +22,7 @@ WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-KML_FILE_PATH = pathlib.Path(".", "waypoints")
+KML_FOLDER_PATH = pathlib.Path(".", "waypoints")
 KML_FILE_NAME = "wrestrc_waypoints"
 DELAY = 0.1  # seconds
 
@@ -41,7 +41,7 @@ def run() -> int:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
     
-    result = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_NAME, KML_FILE_PATH)
+    result, kml_file_path = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_NAME, KML_FOLDER_PATH)
     if not result:
         print("ERROR: Unable to generate KML file")
         return -1
