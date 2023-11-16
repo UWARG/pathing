@@ -31,7 +31,7 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
     """
     if len(commands) == 0:
         return False, None
-    
+
     takeoff_command = dronekit.Command(
         0,
         0,

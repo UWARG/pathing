@@ -24,7 +24,7 @@ def upload_commands(drone: dronekit.Vehicle, commands: "list[dronekit.Command]")
     # If the list is empty, do nothing
     if len(commands) == 0:
         return False
-       
+
     # Download the command sequence and clear it
     # This is to avoid duplicate or conflicting commands
     command_sequence = drone.commands
