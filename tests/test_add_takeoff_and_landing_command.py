@@ -1,5 +1,5 @@
 """
-Test process
+Test process.
 """
 import copy
 
@@ -95,20 +95,21 @@ def assert_expected_takeoff_and_landing_commands(commands_actual: "list[dronekit
     assert len(commands_actual) == len(commands_expected) + 2
     assert commands_actual[1:-1] == commands_expected
 
-
 def test_add_takeoff_and_landing_on_empty_commands(empty_commands: "list[dronekit.Command]"):
     """
     Tests functionality correctness of add_takeoff_and_landing_command on empty list of commands.
     """
-    commands_expected = copy.deepcopy(empty_commands)
-    commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(empty_commands, ALTITUDE)
-    assert_expected_takeoff_and_landing_commands(commands_actual, commands_expected, ALTITUDE)
+    result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(empty_commands, ALTITUDE)
 
+    assert not result
+    assert commands_actual is None
 
 def test_add_takeoff_and_landing_on_nonempty_commands(non_empty_commands: "list[dronekit.Command]"):
     """
     Tests functionality correctness of add_takeoff_and_landing_command on non-empty list of commands.
     """
     commands_expected = copy.deepcopy(non_empty_commands)
-    commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(non_empty_commands, ALTITUDE)
+    result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(non_empty_commands, ALTITUDE)
+    
+    assert result
     assert_expected_takeoff_and_landing_commands(commands_actual, commands_expected, ALTITUDE)

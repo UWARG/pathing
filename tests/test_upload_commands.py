@@ -4,14 +4,21 @@ Integration test for upload_commands.
 import math
 
 import dronekit
+import pytest
 
 from modules import upload_commands
 
 
+# This file does not contain unit tests
+pytest.skip("Integration test", allow_module_level=True)
+
+
+ALTITUDE = 40
+
 MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_WAYPOINT = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 MAVLINK_TAKEOFF = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
-MAVLINK_LANDING = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND  
+MAVLINK_LANDING = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
 MAVLINK_LOITER = dronekit.mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME
 DELAY = 3
 
@@ -24,10 +31,10 @@ def retrieve_commands(drone: dronekit.Vehicle) -> dronekit.CommandSequence:
     """
     Retrieves latest version of commands.
     """
-    command_sequence = drone.commands 
+    command_sequence = drone.commands
     command_sequence.download()
     drone.wait_ready()
-    
+
     return command_sequence
 
 
@@ -41,7 +48,7 @@ def test_upload_command_list(drone: dronekit.Vehicle,
 
     # Retrieve current drone commands and see if they match with inputs
     command_sequence = retrieve_commands(drone)
-    
+
     for i, command in enumerate(command_sequence):
         assert command.frame == commands[i].frame
         assert command.command == commands[i].command
@@ -66,10 +73,10 @@ def test_upload_empty_command_list(drone: dronekit.Vehicle) -> None:
     empty_command_list = []
     result = upload_commands.upload_commands(drone, empty_command_list)
     assert not result
-    
+
     # Retrieve new commands and compare them with previous list
     command_check = retrieve_commands(drone)
-    
+
     for i, command in enumerate(command_check):
         assert command.frame == commands[i].frame
         assert command.command == commands[i].command
@@ -79,21 +86,20 @@ def test_upload_empty_command_list(drone: dronekit.Vehicle) -> None:
         assert math.isclose(command.y, commands[i].y, abs_tol = TOLERANCE)
         assert math.isclose(command.z, commands[i].z, abs_tol = TOLERANCE)
 
-    
+
 if __name__ == "__main__":
     # Drone setup
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=True)
-    
+    dronekit_vehicle = dronekit.connect(CONNECTION_ADDRESS, wait_ready=True)
+
     # Example waypoints list, converted to waypoint commands
     waypoints_input = [(39.140, 22.23), (25.123, -76.324)]
-    altitude_input = 40
 
     # Test a command sequence with a variety of commands
     commands_input = []
-    
+
     for waypoint in waypoints_input:
         lat_input, lon_input = waypoint
-        command = dronekit.Command(
+        dronekit_command = dronekit.Command(
             0,
             0,
             0,
@@ -107,9 +113,9 @@ if __name__ == "__main__":
             0,
             lat_input,
             lon_input,
-            altitude_input,
+            ALTITUDE,
         )
-        commands_input.append(command)
+        commands_input.append(dronekit_command)
 
     takeoff_command = dronekit.Command(
         0,
@@ -125,7 +131,7 @@ if __name__ == "__main__":
         0,
         0,
         0,
-        altitude_input,
+        ALTITUDE,
     )
     commands_input.append(takeoff_command)
 
@@ -148,27 +154,27 @@ if __name__ == "__main__":
     commands_input.append(landing_command)
 
     loiter_command = dronekit.Command(
-        0,                          
-        0,                          
-        0,                          
-        MAVLINK_FRAME,  
-        MAVLINK_LOITER,         
-        0,                          
-        0,                          
-        0,                          
-        0,                          
-        0,                          
-        0,                          
-        0,                          
-        0,                          
-        altitude_input,                   
+        0,
+        0,
+        0,
+        MAVLINK_FRAME,
+        MAVLINK_LOITER,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        ALTITUDE,
     )
     commands_input.append(loiter_command)
 
     # Test with the command sequence
-    test_upload_command_list(drone, commands_input)
+    test_upload_command_list(dronekit_vehicle, commands_input)
 
     # Test with empty command sequence
-    test_upload_empty_command_list(drone)
+    test_upload_empty_command_list(dronekit_vehicle)
 
     print("Done!")

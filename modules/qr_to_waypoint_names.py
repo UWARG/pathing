@@ -29,5 +29,5 @@ def qr_to_waypoint_names(qr_text: str) -> "tuple[bool, list[str] | None]":
     # Case of no results
     if len(filtered) == 0:
         return False, None
-    
+
     return True, filtered
