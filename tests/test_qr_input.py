@@ -10,9 +10,6 @@ from modules import qr_input
 CAMERA = 0
 
 
-pytest.skip("Integration test", allow_module_level=True)
-
-
 def test_qr_input():
     """
     Tests functionality for qr_input

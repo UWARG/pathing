@@ -9,10 +9,6 @@ import pytest
 from modules import upload_commands
 
 
-# This file does not contain unit tests
-pytest.skip("Integration test", allow_module_level=True)
-
-
 ALTITUDE = 40
 
 MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
