@@ -3,24 +3,22 @@ Function to convert list of waypoints to a list of spline waypoint dronekit comm
 """
 
 import dronekit
+from modules.common.comms.modules.TelemMessages.Waypoint import Waypoint
 
 
 MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT
-ACCEPT_RADIUS = 10
+ACCEPTANCE_RADIUS = 10
 
 
-def waypoints_to_spline_commands(waypoints: "list[tuple[float, float]]",
-                          altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
+def waypoints_to_spline_commands(waypoints: "Waypoint") -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to a list of spline waypoint dronekit commands.
 
     Parameters
     ----------
-    waypoints: list[tuple[float, float]]
+    waypoints: Waypoint
         waypoint coordinates in decimal degrees (latitude, longitude).
-    altitude: int
-        altitude in meters to command the drone to.
 
     Returns
     -------
@@ -34,7 +32,8 @@ def waypoints_to_spline_commands(waypoints: "list[tuple[float, float]]",
     dronekit_command_list = []
 
     for waypoint in waypoints:
-        lat, lng = waypoint
+        lat = waypoint.latitude
+        lng = waypoint.longtitude
         command = dronekit.Command(
             0,
             0,
@@ -44,12 +43,12 @@ def waypoints_to_spline_commands(waypoints: "list[tuple[float, float]]",
             0,
             0,
             0,  # param1
-            ACCEPT_RADIUS,
+            ACCEPTANCE_RADIUS,
             0,
             0,
             lat,
             lng,
-            altitude,
+            waypoint.altitude,
         )
         dronekit_command_list.append(command)
 
