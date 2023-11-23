@@ -4,7 +4,6 @@ Integration test for upload_commands.
 import math
 
 import dronekit
-import pytest
 
 from modules import upload_commands
 
@@ -34,8 +33,8 @@ def retrieve_commands(drone: dronekit.Vehicle) -> dronekit.CommandSequence:
     return command_sequence
 
 
-def test_upload_command_list(drone: dronekit.Vehicle,
-                             commands: "list[dronekit.Command]") -> None:
+def upload_and_check_command_list(drone: dronekit.Vehicle,
+                                  commands: "list[dronekit.Command]"):
     """
     Test the case of a list of waypoint commands.
     """
@@ -55,7 +54,7 @@ def test_upload_command_list(drone: dronekit.Vehicle,
         assert math.isclose(command.z, commands[i].z, abs_tol = TOLERANCE)
 
 
-def test_upload_empty_command_list(drone: dronekit.Vehicle) -> None:
+def upload_and_check_empty_command_list(drone: dronekit.Vehicle):
     """
     Test the case of an empty command list.
     """
@@ -85,7 +84,8 @@ def test_upload_empty_command_list(drone: dronekit.Vehicle) -> None:
 
 if __name__ == "__main__":
     # Drone setup
-    dronekit_vehicle = dronekit.connect(CONNECTION_ADDRESS, wait_ready=True)
+    # Wait ready is false as the drone may be on the ground
+    dronekit_vehicle = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Example waypoints list, converted to waypoint commands
     waypoints_input = [(39.140, 22.23), (25.123, -76.324)]
@@ -168,9 +168,9 @@ if __name__ == "__main__":
     commands_input.append(loiter_command)
 
     # Test with the command sequence
-    test_upload_command_list(dronekit_vehicle, commands_input)
+    upload_and_check_command_list(dronekit_vehicle, commands_input)
 
     # Test with empty command sequence
-    test_upload_empty_command_list(dronekit_vehicle)
+    upload_and_check_empty_command_list(dronekit_vehicle)
 
     print("Done!")

@@ -43,4 +43,3 @@ jobs:
       # Run tests with PyTest
       - name: Run tests
         run: pytest -vv
-        
