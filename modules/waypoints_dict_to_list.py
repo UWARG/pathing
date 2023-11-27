@@ -4,6 +4,7 @@ Module to convert waypoints dict to waypoints list.
 
 from . import waypoint
 
+
 def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, waypoint.Waypoint]") \
     -> "tuple[bool, list[waypoint.Waypoint]]":
     """
@@ -22,7 +23,7 @@ def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, waypoint.Way
     # Check for empty input dictionary
     if len(waypoint_name_to_coordinates) == 0:
         return False, None
-    
+
     # Create list of all the values in the input dictionary, ie. the Waypoint
     waypoints_list = list(waypoint_name_to_coordinates.values())
 

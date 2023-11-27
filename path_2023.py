@@ -23,7 +23,7 @@ CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 KML_FILE_PARENT_DIRECTORY = pathlib.Path(".", "waypoints")
-KML_FILE_PREFIX = "wrestrc_waypoints"
+KML_FILE_PREFIX = "waypoints_log"
 DELAY = 0.1  # seconds
 
 
@@ -41,7 +41,9 @@ def run() -> int:
         print("ERROR: convert waypoints from dict to list")
         return -1
     
-    result, _ = waypoints_to_kml.waypoints_to_kml(waypoints_list, KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY)
+    # TODO: Remove tuple conversion when common repository's waypoint_to_kml() supports Waypoint class
+    waypoints_list_tuple = [(waypoint.latitude, waypoint.longitude) for waypoint in waypoints_list]
+    result, _ = waypoints_to_kml.waypoints_to_kml(waypoints_list_tuple, KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY)
     if not result:
         print("ERROR: Unable to generate KML file")
         return -1

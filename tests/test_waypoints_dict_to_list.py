@@ -15,7 +15,6 @@ def test_valid_waypoint_dict():
     charlie = waypoint.Waypoint("Charlie", 43.4336672,-80.57839)
 
     waypoint_mapping = {"Alpha": alpha, "Bravo": bravo, "Charlie": charlie}
-
     expected = [alpha, bravo, charlie]
 
     # Determine if action was successful
