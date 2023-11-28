@@ -42,11 +42,13 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
             is_qr_text_found, qr_text = scanner.get_qr_text(frame)
 
         if is_qr_text_found:
-            # Exit and return decoded text if found
-            return True, qr_text
+            break
 
         # Exit early on manual quit
         if cv2.waitKey(1) == ord('q'):
             break
 
-    return False, None
+    # Cleanup
+    cv2.destroyAllWindows()
+
+    return is_qr_text_found, qr_text
