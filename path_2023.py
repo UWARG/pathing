@@ -12,14 +12,18 @@ from modules import qr_input
 from modules import qr_to_waypoint_names
 from modules import upload_commands
 from modules import waypoint_names_to_coordinates
-from modules import waypoints_to_commands
 from modules import waypoint_tracking
+from modules import waypoints_dict_to_list
+from modules import waypoints_to_commands
+from modules.common.kml.modules import waypoints_to_kml
 
 
 WAYPOINT_FILE_PATH = pathlib.Path(".", "waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
+KML_FILE_PARENT_DIRECTORY = pathlib.Path(".", "waypoints")
+KML_FILE_PREFIX = "waypoints_log"
 DELAY = 0.1  # seconds
 
 
@@ -30,6 +34,18 @@ def run() -> int:
     result, waypoint_name_to_coordinates = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(WAYPOINT_FILE_PATH)
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
+        return -1
+    
+    result, waypoints_list = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_name_to_coordinates)
+    if not result:
+        print("ERROR: convert waypoints from dict to list")
+        return -1
+    
+    # TODO: Remove tuple conversion when common repository's waypoint_to_kml() supports Waypoint class
+    waypoints_list_tuple = [(waypoint.latitude, waypoint.longitude) for waypoint in waypoints_list]
+    result, _ = waypoints_to_kml.waypoints_to_kml(waypoints_list_tuple, KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY)
+    if not result:
+        print("ERROR: Unable to generate KML file")
         return -1
 
     result, qr_text = qr_input.qr_input(CAMERA)
