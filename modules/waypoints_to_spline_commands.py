@@ -13,7 +13,7 @@ ACCEPT_RADIUS = 10
 
 
 def waypoints_to_spline_commands(waypoints: "list[waypoint.Waypoint]",
-                          altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
+                                 altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to dronekit commands.
 
@@ -27,7 +27,7 @@ def waypoints_to_spline_commands(waypoints: "list[waypoint.Waypoint]",
     -------
     tuple[bool, list[dronekit.Command] | None]: 
         (False, None) if empty waypoints list,
-        (True, dronekit commands that can be sent to the drone) otherwise dronekit commands that can be sent to the drone.
+        (True, dronekit commands that can be sent to the drone)
     """
     if len(waypoints) == 0:
         return False, None
