@@ -15,7 +15,8 @@ def test_waypoints_to_spline_commands_empty_input():
     waypoints = []
     altitude = 100
 
-    result, commands_actual = waypoints_to_spline_commands.waypoints_to_spline_commands(waypoints, altitude)
+    result, commands_actual = waypoints_to_spline_commands.waypoints_to_spline_commands(waypoints, 
+                                                                                        altitude)
 
     assert not result
     assert commands_actual is None
@@ -32,7 +33,8 @@ def test_waypoints_to_spline_commands():
     ]
     altitude = 100
 
-    result, commands_actual = waypoints_to_spline_commands.waypoints_to_spline_commands(waypoints, altitude)
+    result, commands_actual = waypoints_to_spline_commands.waypoints_to_spline_commands(waypoints, 
+                                                                                        altitude)
 
     assert result
 
