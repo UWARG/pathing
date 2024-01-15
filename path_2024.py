@@ -21,6 +21,7 @@ CONNECTION_ADDRESS = "tcp:localhost:14550"
 KML_FILE_PARENT_DIRECTORY = pathlib.Path("waypoints")
 KML_FILE_PREFIX = "waypoints_log"
 DELAY = 0.1  # seconds
+STOP_CONDITION_TIMEOUT = 1800  # seconds (30 minutes)
 
 
 # Required for checks
@@ -81,7 +82,8 @@ def run() -> int:
         print("Error: upload_commands")
         return -1
 
-    while True:
+    start_time = time.time()
+    while time.time() - start_time < STOP_CONDITION_TIMEOUT:
         result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
         if not result:
             print("Error: waypoint_tracking (waypoint_info)")
