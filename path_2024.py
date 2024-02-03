@@ -7,6 +7,7 @@ import time
 import dronekit
 
 from modules import add_takeoff_and_landing_command
+from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
 from modules import upload_commands
 from modules import waypoints_to_commands
@@ -99,9 +100,9 @@ def run() -> int:
         
         # Send drone back to launch if exceeds 30 minute time limit
         current_time = time.time()
-        if current_time - start_time >= MAXIMUM_FLIGHT_TIME:
-            landing_command = takeoff_landing_commands[-1]
-            upload_commands.upload_commands(drone, landing_command)
+        has_exceeded_max_time = check_stop_condition.check_stop_condition(start_time, current_time, drone, MAXIMUM_FLIGHT_TIME)
+        if has_exceeded_max_time:   
+            break
 
         time.sleep(DELAY)
 
