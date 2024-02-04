@@ -79,7 +79,6 @@ def upload_intial_mission(
     controller.drone.commands.upload()
 
 
-
 if __name__ == "__main__":
     result, controller = flight_controller.FlightController.create(MISSION_PLANNER_ADDRESS)
     if not result:
@@ -96,7 +95,7 @@ if __name__ == "__main__":
     # Upload Mission
     upload_intial_mission(waypoint, controller)
 
-    # loop mimicks path_2024 structure
+    # loop mimicks path_2024.py structure
     start_time = time.time()
     while True:
         time.sleep(1)
