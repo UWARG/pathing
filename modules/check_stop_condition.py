@@ -3,7 +3,6 @@ Checks whether the drone has reached it's max flight time and sends it back to l
 """
 
 import dronekit
-import time
 
 from . import upload_commands
 
@@ -20,7 +19,9 @@ def check_stop_condition(start_time: float, current_time: float, drone: dronekit
     Parameters
     -----------
     start_time: float
-        The time at which the drone while loop in path_2024.py began.
+        The time at which the drone loop in path_2024.py began.
+    current_time: float
+        Total elapsed time for program.
     drone: dronekit.Vehicle
         The connected drone.
     MAXIMUM_FLIGHT_TIME: int
