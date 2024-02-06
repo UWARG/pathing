@@ -19,7 +19,7 @@ MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 
 MAXIMUM_FLIGHT_TIME = 5  # seconds (for testing purposes)
 
-ALTITUDE = 10
+ALTITUDE = 50
 ACCEPT_RADIUS = 10
 
 
