@@ -76,7 +76,11 @@ def upload_intial_mission(
     controller.drone.commands.add(waypoint_command)
 
     # Upload the mission to the drone
-    controller.drone.commands.upload()
+    try:
+        controller.drone.commands.upload()
+        return True
+    except dronekit.TimeoutError:
+        return False
 
 
 if __name__ == "__main__":
@@ -87,14 +91,15 @@ if __name__ == "__main__":
 
     # Get Pylance to stop complaining
     assert controller is not None
-    print("created drone controller")
+    print("created drone controller.")
 
-    # Set the home location of the drone to E5
-    # Set extra command line to `--home=43.472978,-80.540103,336,0`
+
+    # Upload Mission with a single waypoint
     waypoint = (43.4731, -80.5419, ALTITUDE)
-
-    # Upload Mission
-    upload_intial_mission(waypoint, controller)
+    result = upload_intial_mission(waypoint, controller)
+    if not result:
+        print("Unable to upload mission.")
+        sys.exit()
 
     # loop mimicks path_2024.py structure
     start_time = time.time()
