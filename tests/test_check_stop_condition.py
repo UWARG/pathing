@@ -87,6 +87,7 @@ if __name__ == "__main__":
 
     # Get Pylance to stop complaining
     assert controller is not None
+    print("created drone controller")
 
     # Set the home location of the drone to E5
     # Set extra command line to `--home=43.472978,-80.540103,336,0`
@@ -105,5 +106,7 @@ if __name__ == "__main__":
         has_exceeded_max_time = check_stop_condition.check_stop_condition(start_time, current_time, controller.drone, MAXIMUM_FLIGHT_TIME)
         if has_exceeded_max_time:   
             break
+        else:
+            print(f"Elapsed time (s): {current_time - start_time}")
 
     print("Done")
