@@ -52,6 +52,6 @@ def check_stop_condition(start_time: float, current_time: float, drone: dronekit
     )
 
     # Invoke upload_commands to clear previous commands and direct drone back to launch
-    upload_commands.upload_commands(drone, list(landing_command))
+    upload_commands.upload_commands(drone, [landing_command])
 
     return True
