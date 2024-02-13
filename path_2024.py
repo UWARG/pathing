@@ -85,7 +85,6 @@ def run() -> int:
 
     start_time = time.time()
     while True:
-
         result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
         if not result:
             print("Error: waypoint_tracking (waypoint_info)")
@@ -98,11 +97,12 @@ def run() -> int:
         else:
             print(f"Current location (Lat, Lon): {location}")
         
-        # Send drone back to launch if exceeds 30 minute time limit
+        # Send drone back to launch if exceeds time limit
         current_time = time.time()
-        has_exceeded_max_time = check_stop_condition.check_stop_condition(start_time, current_time, drone, MAXIMUM_FLIGHT_TIME)
-        if has_exceeded_max_time:   
+        is_returning_to_launch = check_stop_condition.check_stop_condition(start_time, current_time, drone, MAXIMUM_FLIGHT_TIME)
+        if is_returning_to_launch:   
             break
+        print(f"Elapsed time (s): {current_time - start_time}")
 
         time.sleep(DELAY)
 

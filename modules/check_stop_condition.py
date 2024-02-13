@@ -1,5 +1,5 @@
 """
-Checks whether the drone has reached it's max flight time and sends it back to launch.
+Checks whether the drone has reached its max flight time and sends it back to launch.
 """
 
 import dronekit
@@ -11,27 +11,29 @@ MAVLINK_LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
 MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
 
 
-def check_stop_condition(start_time: float, current_time: float, drone: dronekit.Vehicle, MAXIMUM_FLIGHT_TIME: int)\
-    -> bool:
+def check_stop_condition(start_time: float, 
+                         current_time: float, 
+                         drone: dronekit.Vehicle, 
+                         maximum_flight_time: float) -> bool:
     """
     Check if drone exceeds the maximum flight time limit and replace with new mission of returning to launch.
 
     Parameters
     -----------
     start_time: float
-        The time at which the drone loop in path_2024.py began.
+        The time the drone started the mission in seconds.
     current_time: float
-        Total elapsed time for program.
+        Time elapsed in seconds since starting the mission.
     drone: dronekit.Vehicle
         The connected drone.
-    MAXIMUM_FLIGHT_TIME: int
-        max flight time for drone in seconds 
+    maximum_flight_time: float
+        Max flight time for drone in seconds. 
     
     Returns
     -------
-    bool: True if max flight time was exceeded, False otherwise
+    bool: True if max flight time was exceeded, False otherwise.
     """
-    if current_time - start_time < MAXIMUM_FLIGHT_TIME:
+    if current_time - start_time < maximum_flight_time:
         return False
 
     landing_command = dronekit.Command(
@@ -51,7 +53,7 @@ def check_stop_condition(start_time: float, current_time: float, drone: dronekit
         0,
     )
 
-    # Invoke upload_commands to clear previous commands and direct drone back to launch
+    # Invoke upload_commands to clear previous commands and direct drone back to launch location
     upload_commands.upload_commands(drone, [landing_command])
 
     return True
