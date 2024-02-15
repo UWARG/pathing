@@ -2,17 +2,17 @@
 Module to convert waypoints dict to waypoints list.
 """
 
-from . import waypoint
+from .common.kml.modules import location_ground
 
 
-def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, waypoint.Waypoint]") \
-    -> "tuple[bool, list[waypoint.Waypoint]]":
+def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, location_ground.LocationGround]") \
+    -> "tuple[bool, list[location_ground.LocationGround]]":
     """
     Converts dictionary of waypoints into a list.
 
     Parameters
     ----------
-    waypoint_name_to_coordinates: dict[str, Waypoint]
+    waypoint_name_to_coordinates: dict[str, LocationGround]
         Waypoint mapping of name to (latitude, longitude).
 
     Returns

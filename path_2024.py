@@ -12,7 +12,7 @@ from modules import upload_commands
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
-from modules.common.kml.modules import waypoints_to_kml
+from modules.common.kml.modules import ground_locations_to_kml
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")
@@ -51,7 +51,7 @@ def run() -> int:
 
     # TODO: Remove tuple conversion when common repository's waypoint_to_kml() supports Waypoint class
     waypoints_list_tuple = [(waypoint.latitude, waypoint.longitude) for waypoint in waypoints_list]
-    result, _ = waypoints_to_kml.waypoints_to_kml(
+    result, _ = ground_locations_to_kml.ground_locations_to_kml(
         waypoints_list_tuple,
         KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY,
     )
