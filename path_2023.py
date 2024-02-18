@@ -51,10 +51,8 @@ def run() -> int:
         print("ERROR: convert waypoints from dict to list")
         return -1
 
-    # TODO: Remove tuple conversion when common repository's waypoint_to_kml() supports Waypoint class
-    waypoints_list_tuple = [(waypoint.latitude, waypoint.longitude) for waypoint in waypoints_list]
     result, _ = ground_locations_to_kml.ground_locations_to_kml(
-        waypoints_list_tuple,
+        waypoints_list,
         KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY,
     )
     if not result:

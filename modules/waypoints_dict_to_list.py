@@ -24,7 +24,7 @@ def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, location_gro
     if len(waypoint_name_to_coordinates) == 0:
         return False, None
 
-    # Create list of all the values in the input dictionary, ie. the Waypoint
+    # Create list of all the values in the input dictionary, ie. the LocationGround
     waypoints_list = list(waypoint_name_to_coordinates.values())
 
     return True, waypoints_list
