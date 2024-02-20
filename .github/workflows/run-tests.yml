@@ -40,6 +40,13 @@ jobs:
       - name: Install zbar library
         run: sudo apt-get install libzbar0
 
+      # Run linters and formatters
+      - name: Linters and formatters
+        run: |
+          black --check .
+          flake8 .
+          pylint .
+
       # Run tests with PyTest
       - name: Run tests
         run: pytest -vv

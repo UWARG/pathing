@@ -12,8 +12,9 @@ MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 ACCEPT_RADIUS = 10
 
 
-def waypoints_to_commands(waypoints: "list[location_ground.LocationGround]",
-                          altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
+def waypoints_to_commands(
+    waypoints: "list[location_ground.LocationGround]", altitude: int
+) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to dronekit commands.
 
@@ -26,7 +27,7 @@ def waypoints_to_commands(waypoints: "list[location_ground.LocationGround]",
 
     Returns
     -------
-    tuple[bool, list[dronekit.Command] | None]: 
+    tuple[bool, list[dronekit.Command] | None]:
         (False, None) if empty waypoints list,
         (True, dronekit commands that can be sent to the drone) otherwise dronekit commands that can be sent to the drone.
     """

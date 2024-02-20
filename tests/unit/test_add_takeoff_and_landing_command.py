@@ -1,6 +1,7 @@
 """
 Test process.
 """
+
 import copy
 
 import dronekit
@@ -19,8 +20,13 @@ SECOND_WAYPOINT_LATITUDE = 42.789
 SECOND_WAYPOINT_LONGITUDE = -73.987
 
 
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=protected-access,redefined-outer-name
+
+
 @pytest.fixture
-def non_empty_commands() -> "list[dronekit.Command]":
+def non_empty_commands() -> "list[dronekit.Command]":  # type: ignore
     """
     Fixture for a list of commands.
     """
@@ -56,23 +62,25 @@ def non_empty_commands() -> "list[dronekit.Command]":
             SECOND_WAYPOINT_LATITUDE,
             SECOND_WAYPOINT_LONGITUDE,
             ALTITUDE,
-        )
+        ),
     ]
-    yield commands
+    yield commands  # type: ignore
 
 
 @pytest.fixture
-def empty_commands() -> "list[dronekit.Command]":
+def empty_commands() -> "list[dronekit.Command]":  # type: ignore
     """
     Fixture for an empty list of commands.
     """
     commands = []
-    yield commands
+    yield commands  # type: ignore
 
 
-def assert_expected_takeoff_and_landing_commands(commands_actual: "list[dronekit.Command]",
-                                                 commands_expected: "list[dronekit.Command]",
-                                                 altitude: float):
+def assert_expected_takeoff_and_landing_commands(
+    commands_actual: "list[dronekit.Command]",
+    commands_expected: "list[dronekit.Command]",
+    altitude: float,
+) -> None:
     """
     Helper function to assert the correctness of takeoff and landing commands.
     """
@@ -95,21 +103,31 @@ def assert_expected_takeoff_and_landing_commands(commands_actual: "list[dronekit
     assert len(commands_actual) == len(commands_expected) + 2
     assert commands_actual[1:-1] == commands_expected
 
-def test_add_takeoff_and_landing_on_empty_commands(empty_commands: "list[dronekit.Command]"):
+
+def test_add_takeoff_and_landing_on_empty_commands(
+    empty_commands: "list[dronekit.Command]",
+) -> None:
     """
     Tests functionality correctness of add_takeoff_and_landing_command on empty list of commands.
     """
-    result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(empty_commands, ALTITUDE)
+    result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(
+        empty_commands, ALTITUDE
+    )
 
     assert not result
     assert commands_actual is None
 
-def test_add_takeoff_and_landing_on_nonempty_commands(non_empty_commands: "list[dronekit.Command]"):
+
+def test_add_takeoff_and_landing_on_nonempty_commands(
+    non_empty_commands: "list[dronekit.Command]",
+) -> None:
     """
     Tests functionality correctness of add_takeoff_and_landing_command on non-empty list of commands.
     """
     commands_expected = copy.deepcopy(non_empty_commands)
-    result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(non_empty_commands, ALTITUDE)
-    
+    result, commands_actual = add_takeoff_and_landing_command.add_takeoff_and_landing_command(
+        non_empty_commands, ALTITUDE
+    )
+
     assert result
     assert_expected_takeoff_and_landing_commands(commands_actual, commands_expected, ALTITUDE)

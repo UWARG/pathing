@@ -1,6 +1,7 @@
 """
-Path template.
+Reads in hardcoded waypoints from CSV file and sends drone commands.
 """
+
 import pathlib
 import time
 
@@ -26,21 +27,20 @@ MAXIMUM_FLIGHT_TIME = 1800  # seconds
 TIMEOUT = 30  # seconds
 
 
-# Required for checks
-# pylint: disable-next=too-many-return-statements
-def run() -> int:
+def main() -> int:
     """
-    Reads in hardcoded waypoints from CSV file and sends drone commands.
+    Main function.
     """
     # Wait ready is false as the drone may be on the ground
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Read in hardcoded waypoints from CSV file
     # Waypoints are stored in order of insertion, starting with the top row
-    result, waypoint_name_to_coordinates = \
+    result, waypoint_name_to_coordinates = (
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             WAYPOINT_FILE_PATH,
         )
+    )
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
@@ -54,7 +54,8 @@ def run() -> int:
 
     result, _ = ground_locations_to_kml.ground_locations_to_kml(
         waypoints_list,
-        KML_FILE_PREFIX, KML_FILE_PARENT_DIRECTORY,
+        KML_FILE_PREFIX,
+        KML_FILE_PARENT_DIRECTORY,
     )
     if not result:
         print("ERROR: Unable to generate KML file")
@@ -68,11 +69,12 @@ def run() -> int:
         print("Error: waypoints_to_commands")
         return -1
 
-    result, takeoff_landing_commands = \
+    result, takeoff_landing_commands = (
         add_takeoff_and_landing_command.add_takeoff_and_landing_command(
             waypoint_commands,
             ALTITUDE,
         )
+    )
     if not result:
         print("Error: add_takeoff_and_landing_command")
         return -1
@@ -110,10 +112,8 @@ def run() -> int:
 
 
 if __name__ == "__main__":
-    # Not a constant
-    # pylint: disable-next=invalid-name
-    result_run = run()
-    if result_run < 0:
-        print("ERROR")
+    result_main = main()
+    if result_main < 0:
+        print(f"ERROR: Status code: {result_main}")
 
-    print("Done")
+    print("Done!")

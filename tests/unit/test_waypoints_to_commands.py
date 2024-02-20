@@ -8,7 +8,12 @@ from modules import waypoints_to_commands
 from modules.common.kml.modules import location_ground
 
 
-def test_waypoints_to_commands_empty_input():
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=protected-access,redefined-outer-name
+
+
+def test_waypoints_to_commands_empty_input() -> None:
     """
     Tests functionality correctness of waypoints_to_commands on empty input.
     """
@@ -21,7 +26,7 @@ def test_waypoints_to_commands_empty_input():
     assert commands_actual is None
 
 
-def test_waypoints_to_commands():
+def test_waypoints_to_commands() -> None:
     """
     Tests functionality correctness of waypoints_to_commands.
     """

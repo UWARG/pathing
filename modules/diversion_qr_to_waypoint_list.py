@@ -1,6 +1,7 @@
 """
 Function to parse diversion QR string into a list of vertices and a rejoin waypoint.
 """
+
 import re
 
 
@@ -16,7 +17,7 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
 
     Returns
     -------
-    tuple[bool, tuple[list[Waypoint], Waypoint] | None] 
+    tuple[bool, tuple[list[Waypoint], Waypoint] | None]
         Returns False, None if the string is invalid or if the list is empty.
     """
     # Check if string is of valid form
@@ -25,11 +26,14 @@ def diversion_qr_to_waypoint_list(qr_text: str) -> "tuple[bool, tuple[list[str],
         return False, None
 
     # Separate qr_text into diversion_waypoints and rejoin_waypoint strings
-    diversion_waypoints_string, sep, rejoin_waypoint_string = qr_text.partition('.')
+    diversion_waypoints_string, _, rejoin_waypoint_string = qr_text.partition(".")
 
     # Extract semicolon-separated list of diversion waypoint names without leading/trailing whitespace
     diversion_waypoints = [
-        text.strip(" ") for text in diversion_waypoints_string.replace("Avoid the area bounded by:", "", 1).split(";")
+        text.strip(" ")
+        for text in diversion_waypoints_string.replace("Avoid the area bounded by:", "", 1).split(
+            ";"
+        )
     ]
 
     # Remove remaining cases of empty names

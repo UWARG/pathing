@@ -11,8 +11,9 @@ MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
 MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
 
 
-def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
-                                    altitude: float) -> "tuple[bool, list[dronekit.Command] | None]":
+def add_takeoff_and_landing_command(
+    commands: "list[dronekit.Command]", altitude: float
+) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Prepends a takeoff command and appends a landing command to a list of dronekit commands.
 
@@ -25,7 +26,7 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
 
     Returns
     -------
-    tuple[bool, list[dronekit.Command] | None]: 
+    tuple[bool, list[dronekit.Command] | None]:
         (False, None) if empty commands list,
         (True, dronekit commands with takeoff and land commands that can be sent to the drone) otherwise.
     """
