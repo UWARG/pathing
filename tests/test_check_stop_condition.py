@@ -15,8 +15,8 @@ from modules.common.mavlink.modules import flight_controller
 MISSION_PLANNER_ADDRESS = "tcp:127.0.0.1:14550"
 MAXIMUM_FLIGHT_TIME = 5  # seconds (for testing purposes)
 
-ALTITUDE = 50
-DELAY = 1
+ALTITUDE = 50  # metres
+DELAY = 1  # seconds
 
 
 if __name__ == "__main__":
