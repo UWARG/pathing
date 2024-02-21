@@ -1,7 +1,6 @@
 """
 Test the drone stop condition.
 """
-
 import sys
 import time
 

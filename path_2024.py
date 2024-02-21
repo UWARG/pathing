@@ -102,6 +102,7 @@ def run() -> int:
         is_returning_to_launch = check_stop_condition.check_stop_condition(start_time, current_time, drone, MAXIMUM_FLIGHT_TIME)
         if is_returning_to_launch:   
             break
+        
         print(f"Elapsed time (s): {current_time - start_time}")
 
         time.sleep(DELAY)
