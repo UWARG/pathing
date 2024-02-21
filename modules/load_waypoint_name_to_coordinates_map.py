@@ -3,11 +3,11 @@ Name-coordinate mapping from CSV file.
 """
 import pathlib
 
-from . import waypoint
+from .common.kml.modules import location_ground
 
 
 def load_waypoint_name_to_coordinates_map(waypoint_file_path: pathlib.Path) \
-    -> "tuple[bool, dict[str, waypoint.Waypoint]]":
+    -> "tuple[bool, dict[str, location_ground.LocationGround]]":
     """
     Creates a name to coordinate dictionary from the CSV file.
     """
@@ -23,7 +23,7 @@ def load_waypoint_name_to_coordinates_map(waypoint_file_path: pathlib.Path) \
                 continue
 
             name, latitude, longitude = parts
-            name_to_coordinates_map[name] = waypoint.Waypoint(name, float(latitude), float(longitude))
+            name_to_coordinates_map[name] = location_ground.LocationGround(name, float(latitude), float(longitude))
 
     if len(name_to_coordinates_map) > 0:
         return True, name_to_coordinates_map
