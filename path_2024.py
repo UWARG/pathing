@@ -7,6 +7,7 @@ import time
 import dronekit
 
 from modules import add_takeoff_and_landing_command
+from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
 from modules import upload_commands
 from modules import waypoints_to_commands
@@ -21,6 +22,7 @@ CONNECTION_ADDRESS = "tcp:localhost:14550"
 KML_FILE_PARENT_DIRECTORY = pathlib.Path("waypoints")
 KML_FILE_PREFIX = "waypoints_log"
 DELAY = 0.1  # seconds
+MAXIMUM_FLIGHT_TIME = 1800  # seconds
 
 
 # Required for checks
@@ -79,6 +81,7 @@ def run() -> int:
         print("Error: upload_commands")
         return -1
 
+    start_time = time.time()
     while True:
         result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
         if not result:
@@ -91,6 +94,14 @@ def run() -> int:
             print("Error: waypoint_tracking (get_current_location)")
         else:
             print(f"Current location (Lat, Lon): {location}")
+        
+        # Send drone back to launch if exceeds time limit
+        current_time = time.time()
+        is_returning_to_launch = check_stop_condition.check_stop_condition(start_time, current_time, drone, MAXIMUM_FLIGHT_TIME)
+        if is_returning_to_launch:   
+            break
+        
+        print(f"Elapsed time (s): {current_time - start_time}")
 
         time.sleep(DELAY)
 
