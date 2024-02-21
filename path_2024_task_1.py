@@ -1,5 +1,5 @@
 """
-Task 1 path.
+Task 1 path. Uploads mission to run a maximum number of laps and monitors the mission for early landing.
 """
 import pathlib
 
@@ -14,13 +14,13 @@ LAP_WAYPOINTS_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
-# Required for checks
-# pylint: disable-next=too-many-return-statements
-def run() -> int:
+def main() -> int:
     """
-    Uploads mission to run a maximum number of laps and monitors the mission for early landing.
+    Main function.
     """
     # Wait ready is false as the drone may be on the ground
+    # TODO: In progress
+    # pylint: disable-next=unused-variable
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Create waypoint name to coordinate dictionary for takeoff waypoint
@@ -33,6 +33,8 @@ def run() -> int:
         return -1
 
     # Convert named waypoint dictionary to list
+    # TODO: In progress
+    # pylint: disable-next=unused-variable
     result, waypoint_takeoff_list = \
         waypoints_dict_to_list.waypoints_dict_to_list(
             takeoff_waypoint_dictionary,
@@ -51,6 +53,8 @@ def run() -> int:
         return -1
 
     # Convert lap waypoint dictionary to list
+    # TODO: In progress
+    # pylint: disable-next=unused-variable
     result, lap_waypoint_list = \
         waypoints_dict_to_list.waypoints_dict_to_list(
             lap_waypoint_dictionary,
@@ -63,10 +67,8 @@ def run() -> int:
 
 
 if __name__ == "__main__":
-    # Not a constant
-    # pylint: disable-next=invalid-name
-    result_run = run()
-    if result_run < 0:
-        print("ERROR")
+    result_main = main()
+    if result_main < 0:
+        print(f"ERROR: Status code: {result_main}")
 
-    print("Done")
+    print("Done!")
