@@ -7,8 +7,8 @@ import time
 from modules import add_takeoff_and_landing_command
 from modules import check_stop_condition
 from modules import upload_commands
-from modules import waypoint
 from modules import waypoints_to_commands
+from modules.common.kml.modules import location_ground
 from modules.common.mavlink.modules import flight_controller
 
 
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     assert controller is not None
 
     # Upload mission with a single waypoint
-    test_waypoint = waypoint.Waypoint("Test", 43.4731, -80.5419)
+    test_waypoint = location_ground.Location_ground("Test", 43.4731, -80.5419)
     result, test_waypoint_commands = waypoints_to_commands.waypoints_to_commands([test_waypoint], ALTITUDE)
     if not result:
         print("Unable to create waypoint commands.")
