@@ -1,6 +1,6 @@
-'''
-Task 1 path
-'''
+"""
+Task 1 path.
+"""
 
 import dronekit
 
@@ -14,3 +14,5 @@ def run() -> int:
     """
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
+    
+    return 0
