@@ -8,6 +8,8 @@ import dronekit
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
+# Required for checks
+# pylint: disable-next=too-many-return-statements
 def run() -> int:
     """
     Uploads mission to run a maximum number of laps and monitors the mission for early landing.
