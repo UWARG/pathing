@@ -8,8 +8,8 @@ from modules import add_takeoff_and_landing_command
 from modules import check_stop_condition
 from modules import upload_commands
 from modules import waypoints_to_commands
-from modules.common.mavlink.modules import flight_controller
 from modules.common.kml.modules import location_ground
+from modules.common.mavlink.modules import flight_controller
 
 
 MISSION_PLANNER_ADDRESS = "tcp:127.0.0.1:14550"
