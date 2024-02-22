@@ -7,7 +7,8 @@ import dronekit
 
 from modules import load_waypoint_name_to_coordinates_map, waypoints_dict_to_list
 
-WAYPOINT_ALPHA_FILE_PATH = pathlib.Path("2024", "waypoints", "waypoint_alpha_task_1.csv")
+WAYPOINT_ALPHA_FILE_PATH = pathlib.Path(
+    "2024", "waypoints", "waypoint_alpha_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
@@ -18,7 +19,7 @@ def run() -> int:
     Uploads mission to run a maximum number of laps and monitors the mission for early landing.
     """
     # Wait ready is false as the drone may be on the ground
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Create waypoint Alpha name to coordinate dictionary
     result, waypoint_alpha_dictionary = \
@@ -28,7 +29,7 @@ def run() -> int:
     if not result:
         print("ERROR: load waypoint alpha to coordinates map")
         return -1
-    
+
     # Convert waypoint Alpha dictionary to list
     result, waypoint_alpha_list = \
         waypoints_dict_to_list.waypoints_dict_to_list(
