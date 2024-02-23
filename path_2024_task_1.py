@@ -8,7 +8,7 @@ import dronekit
 from modules import load_waypoint_name_to_coordinates_map, waypoints_dict_to_list
 
 WAYPOINT_ALPHA_FILE_PATH = pathlib.Path(
-    "2024", "waypoints", "waypoint_alpha_task_1.csv")
+    "2024", "waypoints", "waypoint_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
