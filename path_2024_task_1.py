@@ -9,8 +9,7 @@ from modules import load_waypoint_name_to_coordinates_map
 from modules import waypoints_dict_to_list
 
 
-WAYPOINT_FILE_PATH = pathlib.Path(
-    "2024", "waypoints", "waypoint_task_1.csv")
+WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "waypoint_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
@@ -29,7 +28,7 @@ def run() -> int:
             WAYPOINT_FILE_PATH,
         )
     if not result:
-        print("ERROR: load waypoint to coordinates map")
+        print("ERROR: Load waypoint to coordinates map")
         return -1
 
     # Convert waypoint dictionary to list
@@ -38,7 +37,7 @@ def run() -> int:
             waypoint_dictionary,
         )
     if not result:
-        print("ERROR: convert waypoint dictionary to list")
+        print("ERROR: Convert waypoint dictionary to list")
         return -1
 
     return 0
