@@ -1,13 +1,15 @@
 """
 Task 1 path.
 """
-
 import pathlib
+
 import dronekit
 
-from modules import load_waypoint_name_to_coordinates_map, waypoints_dict_to_list
+from modules import load_waypoint_name_to_coordinates_map
+from modules import waypoints_dict_to_list
 
-WAYPOINT_ALPHA_FILE_PATH = pathlib.Path(
+
+WAYPOINT_FILE_PATH = pathlib.Path(
     "2024", "waypoints", "waypoint_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
@@ -21,22 +23,22 @@ def run() -> int:
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
-    # Create waypoint Alpha name to coordinate dictionary
-    result, waypoint_alpha_dictionary = \
+    # Create waypoint name to coordinate dictionary
+    result, waypoint_dictionary = \
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            WAYPOINT_ALPHA_FILE_PATH
+            WAYPOINT_FILE_PATH,
         )
     if not result:
-        print("ERROR: load waypoint alpha to coordinates map")
+        print("ERROR: load waypoint to coordinates map")
         return -1
 
-    # Convert waypoint Alpha dictionary to list
-    result, waypoint_alpha_list = \
+    # Convert waypoint dictionary to list
+    result, waypoint_list = \
         waypoints_dict_to_list.waypoints_dict_to_list(
-            waypoint_alpha_dictionary
+            waypoint_dictionary,
         )
     if not result:
-        print("ERROR: convert waypoint alpha dictionary to list")
+        print("ERROR: convert waypoint dictionary to list")
         return -1
 
     return 0
