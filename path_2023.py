@@ -23,8 +23,8 @@ WAYPOINT_FILE_PATH = pathlib.Path("waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-KML_FILE_PARENT_DIRECTORY = pathlib.Path("waypoints")
-KML_FILE_PREFIX = "waypoints_log"
+LOG_DIRECTORY_PATH = pathlib.Path("logs")
+KML_FILE_PREFIX = "waypoints"
 DELAY = 0.1  # seconds
 
 
@@ -34,6 +34,8 @@ def main() -> int:
     """
     Main function.
     """
+    pathlib.Path(LOG_DIRECTORY_PATH).mkdir(exist_ok=True)
+
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
@@ -56,7 +58,7 @@ def main() -> int:
     result, _ = ground_locations_to_kml.ground_locations_to_kml(
         waypoints_list,
         KML_FILE_PREFIX,
-        KML_FILE_PARENT_DIRECTORY,
+        LOG_DIRECTORY_PATH,
     )
     if not result:
         print("ERROR: Unable to generate KML file")
