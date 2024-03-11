@@ -9,8 +9,8 @@ from modules import load_waypoint_name_to_coordinates_map
 from modules import waypoints_dict_to_list
 
 
-WAYPOINT_NAMES_FILE_PATH = pathlib.Path("2024", "waypoints", "waypoint_task_1.csv")
-LAP_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoint_task_1.csv")
+WAYPOINT_NAMES_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1")
+LAP_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
@@ -23,8 +23,8 @@ def run() -> int:
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
-    # Create waypoint name to coordinate dictionary for named waypoints
-    result, waypoint_names_dictionary = \
+    # Create waypoint name to coordinate dictionary for takeoff waypoint
+    result, takeoff_waypoint_dictionary = \
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             WAYPOINT_NAMES_FILE_PATH,
         )
@@ -33,9 +33,9 @@ def run() -> int:
         return -1
 
     # Convert named waypoint dictionary to list
-    result, waypoint_names_list = \
+    result, waypoint_takeoff_list = \
         waypoints_dict_to_list.waypoints_dict_to_list(
-            waypoint_names_dictionary,
+            takeoff_waypoint_dictionary,
         )
     if not result:
         print("ERROR: Convert waypoint dictionary to list")
