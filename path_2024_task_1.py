@@ -9,8 +9,8 @@ from modules import load_waypoint_name_to_coordinates_map
 from modules import waypoints_dict_to_list
 
 
-WAYPOINT_NAMES_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1")
-LAP_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_1.csv")
+TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1")
+LAP_WAYPOINTS_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
@@ -26,7 +26,7 @@ def run() -> int:
     # Create waypoint name to coordinate dictionary for takeoff waypoint
     result, takeoff_waypoint_dictionary = \
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            WAYPOINT_NAMES_FILE_PATH,
+            TAKEOFF_WAYPOINT_FILE_PATH,
         )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
@@ -44,7 +44,7 @@ def run() -> int:
     # Create waypoint name to coordinate dictionary for lap waypoints
     result, lap_waypoint_dictionary = \
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            LAP_WAYPOINT_FILE_PATH,
+            LAP_WAYPOINTS_FILE_PATH,
         )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
