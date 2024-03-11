@@ -9,7 +9,8 @@ from modules import load_waypoint_name_to_coordinates_map
 from modules import waypoints_dict_to_list
 
 
-WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "waypoint_task_1.csv")
+WAYPOINT_NAMES_FILE_PATH = pathlib.Path("2024", "waypoints", "waypoint_task_1.csv")
+LAP_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoint_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
@@ -22,19 +23,37 @@ def run() -> int:
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
-    # Create waypoint name to coordinate dictionary
-    result, waypoint_dictionary = \
+    # Create waypoint name to coordinate dictionary for named waypoints
+    result, waypoint_names_dictionary = \
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            WAYPOINT_FILE_PATH,
+            WAYPOINT_NAMES_FILE_PATH,
         )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
         return -1
 
-    # Convert waypoint dictionary to list
-    result, waypoint_list = \
+    # Convert named waypoint dictionary to list
+    result, waypoint_names_list = \
         waypoints_dict_to_list.waypoints_dict_to_list(
-            waypoint_dictionary,
+            waypoint_names_dictionary,
+        )
+    if not result:
+        print("ERROR: Convert waypoint dictionary to list")
+        return -1
+
+    # Create waypoint name to coordinate dictionary for lap waypoints
+    result, lap_waypoint_dictionary = \
+        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+            LAP_WAYPOINT_FILE_PATH,
+        )
+    if not result:
+        print("ERROR: Load waypoint to coordinates map")
+        return -1
+
+    # Convert lap waypoint dictionary to list
+    result, lap_waypoint_list = \
+        waypoints_dict_to_list.waypoints_dict_to_list(
+            lap_waypoint_dictionary,
         )
     if not result:
         print("ERROR: Convert waypoint dictionary to list")
