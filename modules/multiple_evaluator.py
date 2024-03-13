@@ -12,7 +12,7 @@ class MultipleEvaluator():
         to evaluate when determining RTL
     """
     def __init__(self,
-                 evaluate_object_list : list["evaluate_condition_abstract.EvaluateCondition"]):
+                 evaluate_object_list : "list[evaluate_condition_abstract.EvaluateCondition]"):
         """
         Constructor
 
