@@ -12,8 +12,8 @@ MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT
 ACCEPT_RADIUS = 10
 
 
-def waypoints_to_commands(waypoints: "list[location_ground.LocationGround]",
-                          altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
+def waypoints_to_spline_commands(waypoints: "list[location_ground.LocationGround]",
+                                 altitude: int) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to a list of spline waypoint dronekit commands.
 
