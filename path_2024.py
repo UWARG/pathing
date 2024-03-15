@@ -23,6 +23,7 @@ KML_FILE_PARENT_DIRECTORY = pathlib.Path("waypoints")
 KML_FILE_PREFIX = "waypoints_log"
 DELAY = 0.1  # seconds
 MAXIMUM_FLIGHT_TIME = 1800  # seconds
+TIMEOUT = 30
 
 
 # Required for checks
@@ -32,7 +33,7 @@ def run() -> int:
     Reads in hardcoded waypoints from CSV file and sends drone commands.
     """
     # Wait ready is false as the drone may be on the ground
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False)
+    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready = False, timeout = TIMEOUT)
 
     # Read in hardcoded waypoints from CSV file
     # Waypoints are stored in order of insertion, starting with the top row
@@ -76,7 +77,7 @@ def run() -> int:
         print("Error: add_takeoff_and_landing_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands)
+    result = upload_commands.upload_commands(drone, takeoff_landing_commands, timeout = TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
