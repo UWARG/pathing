@@ -35,7 +35,7 @@ def waypoints_to_commands(waypoints: "list[location_ground.LocationGround]",
 
     dronekit_command_list = []
 
-    for waypoint in waypoints:
+    for point in waypoints:
         command = dronekit.Command(
             0,
             0,
@@ -48,8 +48,8 @@ def waypoints_to_commands(waypoints: "list[location_ground.LocationGround]",
             ACCEPT_RADIUS,
             0,
             0,
-            waypoint.latitude,
-            waypoint.longitude,
+            point.latitude,
+            point.longitude,
             altitude,
         )
         dronekit_command_list.append(command)
