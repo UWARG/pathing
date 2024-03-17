@@ -10,7 +10,7 @@ from modules.common.kml.modules import location_ground
 
 def test_waypoints_to_spline_commands_empty_input():
     """
-    Tests functionality correctness of waypoints_to_spline_commands on empty input.
+    Tests functionality of waypoints_to_spline_commands on empty input.
     """
     waypoints = []
     altitude = 100
@@ -26,7 +26,7 @@ def test_waypoints_to_spline_commands_empty_input():
 
 def test_waypoints_to_spline_commands():
     """
-    Tests functionality correctness of waypoints_to_spline_commands.
+    Tests functionality of waypoints_to_spline_commands.
     """
     waypoints = [
         location_ground.LocationGround("Waypoint 1", 42.123, -73.456),

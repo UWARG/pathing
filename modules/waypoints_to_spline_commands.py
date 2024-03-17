@@ -16,6 +16,8 @@ def waypoints_to_spline_commands(waypoints: "list[location_ground.LocationGround
     """
     Convert list of waypoints to a list of spline waypoint dronekit commands.
 
+    Spline waypoint dronekit commands fly to the target waypoint following a spline path then hover in place.
+
     Parameters
     ----------
     waypoints: list[LocationGround]
@@ -27,7 +29,7 @@ def waypoints_to_spline_commands(waypoints: "list[location_ground.LocationGround
     -------
     tuple[bool, list[dronekit.Command] | None]: 
         (False, None) if empty waypoints list,
-        (True, spline waypoint dronekit commands that can be sent to the drone) otherwise spline waypoint dronekit commands that can be sent to the drone.
+        (True, list of spline waypoint commands) otherwise spline waypoint dronekit commands that can be sent to the drone.
     """
     if len(waypoints) == 0:
         return False, None
