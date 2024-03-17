@@ -23,6 +23,7 @@ KML_FILE_PARENT_DIRECTORY = pathlib.Path("waypoints")
 KML_FILE_PREFIX = "waypoints_log"
 DELAY = 0.1  # seconds
 MAXIMUM_FLIGHT_TIME = 1800  # seconds
+TIMEOUT = 30  # seconds
 
 
 # Required for checks
@@ -76,7 +77,7 @@ def run() -> int:
         print("Error: add_takeoff_and_landing_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands)
+    result = upload_commands.upload_commands(drone, takeoff_landing_commands, timeout = TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
