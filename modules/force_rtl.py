@@ -1,5 +1,5 @@
 """
-Forces RTL (return to landing)
+Forces drone to return to launch (RTL)
 """
 
 import dronekit
@@ -10,9 +10,9 @@ MAVLINK_RTL_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
 MAVLINK_RTL_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
 
 
-def force_rtl(drone: dronekit.Vehicle) -> None:
+def force_rtl(drone: dronekit.Vehicle) -> bool:
     """
-    Clear current drone mission, sends RTL command using upload_command module
+    Sends RTL command using the upload_command module
     
     Parameters
     -----------
@@ -21,10 +21,10 @@ def force_rtl(drone: dronekit.Vehicle) -> None:
 
     Returns
     -------
-    None
+    bool: True if uploading RTL command is successful, False otherwise
     """
 
-    # clears current mission in a command
+    # clears current mission
     rtl_command = dronekit.Command(
         0,
         0,
@@ -42,9 +42,11 @@ def force_rtl(drone: dronekit.Vehicle) -> None:
         0,
     )
     
-    # utilize upload_command function to give mission command to drone
-    success = upload_commands.upload_commands(drone, [rtl_command])
+    # utilize upload_command function to give RTL command to drone
+    result = upload_commands.upload_commands(drone, [rtl_command])
     
     # error if unsuccessful
-    if not success:
+    if not result:
         print("Unable to upload RTL command to drone command sequence.")
+        
+    return result
