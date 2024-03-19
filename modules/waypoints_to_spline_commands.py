@@ -28,7 +28,7 @@ def waypoints_to_spline_commands(waypoints: "list[location_ground.LocationGround
     -------
     tuple[bool, list[dronekit.Command] | None]: 
         (False, None) if empty waypoints list,
-        (True, list of spline waypoint commands) otherwise spline waypoint dronekit commands that can be sent to the drone.
+        (True, list of spline waypoint commands) if waypoints is not empty.
     """
     if len(waypoints) == 0:
         return False, None
