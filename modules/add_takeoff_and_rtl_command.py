@@ -12,7 +12,7 @@ MAVLINK_RTL_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
 
 
 def add_takeoff_and_rtl_command(commands: "list[dronekit.Command]",
-                                    altitude: float) -> "tuple[bool, list[dronekit.Command] | None]":
+                                altitude: float) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Prepends a takeoff command and appends a RTL command to a list of dronekit commands.
 
