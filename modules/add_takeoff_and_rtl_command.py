@@ -1,20 +1,20 @@
 """
-Prefixes a takeoff command and suffixes a landing command to the end of the list of commands.
+Prefixes a takeoff command and suffixes a RTL command to the end of the list of commands.
 """
 
 import dronekit
 
 
 MAVLINK_TAKEOFF_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-MAVLINK_LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
+MAVLINK_RTL_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
 MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
-MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
+MAVLINK_RTL_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
 
 
-def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
-                                    altitude: float) -> "tuple[bool, list[dronekit.Command] | None]":
+def add_takeoff_and_rtl_command(commands: "list[dronekit.Command]",
+                                altitude: float) -> "tuple[bool, list[dronekit.Command] | None]":
     """
-    Prepends a takeoff command and appends a landing command to a list of dronekit commands.
+    Prepends a takeoff command and appends a RTL command to a list of dronekit commands.
 
     Parameters
     ----------
@@ -50,12 +50,12 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
     )
     commands.insert(0, takeoff_command)
 
-    landing_command = dronekit.Command(
+    rtl_command = dronekit.Command(
         0,
         0,
         0,
-        MAVLINK_LANDING_FRAME,
-        MAVLINK_LANDING_COMMAND,
+        MAVLINK_RTL_FRAME,
+        MAVLINK_RTL_COMMAND,
         0,
         0,
         0,  # param1
@@ -66,6 +66,6 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
         0,
         0,
     )
-    commands.append(landing_command)
+    commands.append(rtl_command)
 
     return True, commands
