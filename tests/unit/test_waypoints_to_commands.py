@@ -49,8 +49,8 @@ def test_waypoints_to_commands() -> None:
         lng_expected = waypoints[i].longitude
 
         assert isinstance(command, dronekit.Command)
-        assert command.frame == waypoints_to_commands.MAVLINK_FRAME
-        assert command.command == waypoints_to_commands.MAVLINK_COMMAND
+        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
         assert command.param1 == 0
         assert command.param2 == waypoints_to_commands.ACCEPT_RADIUS
         assert command.param3 == 0

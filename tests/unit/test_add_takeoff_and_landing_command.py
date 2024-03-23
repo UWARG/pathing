@@ -62,15 +62,15 @@ def assert_expected_takeoff_and_landing_commands(
     # Test takeoff command
     takeoff_command = commands_actual[0]
     assert isinstance(takeoff_command, dronekit.Command)
-    assert takeoff_command.frame == add_takeoff_and_landing_command.MAVLINK_TAKEOFF_FRAME
-    assert takeoff_command.command == add_takeoff_and_landing_command.MAVLINK_TAKEOFF_COMMAND
+    assert takeoff_command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+    assert takeoff_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
     assert takeoff_command.z == altitude
 
     # Test landing command
     landing_command = commands_actual[-1]
     assert isinstance(landing_command, dronekit.Command)
-    assert landing_command.frame == add_takeoff_and_landing_command.MAVLINK_LANDING_FRAME
-    assert landing_command.command == add_takeoff_and_landing_command.MAVLINK_LANDING_COMMAND
+    assert landing_command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
+    assert landing_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
 
     # Test original commands
     assert len(commands_actual) == len(commands_expected) + 2
