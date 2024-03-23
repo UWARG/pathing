@@ -4,11 +4,7 @@ Prefixes a takeoff command and suffixes a landing command to the end of the list
 
 import dronekit
 
-
-MAVLINK_TAKEOFF_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-MAVLINK_LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
-MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
-MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
+from . import generate_command
 
 
 def add_takeoff_and_landing_command(
@@ -33,40 +29,10 @@ def add_takeoff_and_landing_command(
     if len(commands) == 0:
         return False, None
 
-    takeoff_command = dronekit.Command(
-        0,
-        0,
-        0,
-        MAVLINK_TAKEOFF_FRAME,
-        MAVLINK_TAKEOFF_COMMAND,
-        0,
-        0,
-        0,  # param1
-        0,
-        0,
-        0,
-        0,
-        0,
-        altitude,
-    )
+    takeoff_command = generate_command.takeoff(altitude)
     commands.insert(0, takeoff_command)
 
-    landing_command = dronekit.Command(
-        0,
-        0,
-        0,
-        MAVLINK_LANDING_FRAME,
-        MAVLINK_LANDING_COMMAND,
-        0,
-        0,
-        0,  # param1
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-    )
+    landing_command = generate_command.landing()
     commands.append(landing_command)
 
     return True, commands

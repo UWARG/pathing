@@ -22,6 +22,7 @@ from modules.common.kml.modules import ground_locations_to_kml
 WAYPOINT_FILE_PATH = pathlib.Path("waypoints", "wrestrc_waypoints.csv")
 CAMERA = 0
 ALTITUDE = 40
+DRONE_TIMEOUT = 30.0  # seconds
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 LOG_DIRECTORY_PATH = pathlib.Path("logs")
 KML_FILE_PREFIX = "waypoints"
@@ -94,7 +95,7 @@ def main() -> int:
         print("Error: add_takeoff_and_landing_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands)
+    result = upload_commands.upload_commands(drone, takeoff_landing_commands, DRONE_TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1

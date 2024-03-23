@@ -19,12 +19,12 @@ from modules.common.kml.modules import ground_locations_to_kml
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")
 ALTITUDE = 40
+DRONE_TIMEOUT = 30.0  # seconds
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 LOG_DIRECTORY_PATH = pathlib.Path("logs")
 KML_FILE_PREFIX = "waypoints"
 DELAY = 0.1  # seconds
 MAXIMUM_FLIGHT_TIME = 1800  # seconds
-TIMEOUT = 30  # seconds
 
 
 def main() -> int:
@@ -81,7 +81,7 @@ def main() -> int:
         print("Error: add_takeoff_and_landing_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands, timeout = TIMEOUT)
+    result = upload_commands.upload_commands(drone, takeoff_landing_commands, DRONE_TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
@@ -99,13 +99,15 @@ def main() -> int:
             print("Error: waypoint_tracking (get_current_location)")
         else:
             print(f"Current location (Lat, Lon): {location}")
-        
+
         # Send drone back to launch if exceeds time limit
         current_time = time.time()
-        is_returning_to_launch = check_stop_condition.check_stop_condition(start_time, current_time, drone, MAXIMUM_FLIGHT_TIME)
-        if is_returning_to_launch:   
+        is_returning_to_launch = check_stop_condition.check_stop_condition(
+            start_time, current_time, drone, MAXIMUM_FLIGHT_TIME
+        )
+        if is_returning_to_launch:
             break
-        
+
         print(f"Elapsed time (s): {current_time - start_time}")
 
         time.sleep(DELAY)

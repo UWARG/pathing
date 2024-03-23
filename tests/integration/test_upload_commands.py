@@ -6,17 +6,15 @@ import math
 
 import dronekit
 
+from modules import generate_command
 from modules import upload_commands
 
 
 ALTITUDE = 40
+DRONE_TIMEOUT = 30.0  # seconds
 
-MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-MAVLINK_WAYPOINT = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
-MAVLINK_TAKEOFF = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
-MAVLINK_LANDING = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
-MAVLINK_LOITER = dronekit.mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME
-DELAY = 3
+WAYPOINT_HOLD_TIME = 3.0  # seconds
+ACCEPT_RADIUS = 10.0  # metres
 
 TOLERANCE = 0.0001
 
@@ -40,7 +38,7 @@ def upload_command_list_and_assert(
     """
     Test the case of a list of waypoint commands.
     """
-    result = upload_commands.upload_commands(drone, commands)
+    result = upload_commands.upload_commands(drone, commands, DRONE_TIMEOUT)
     assert result
 
     # Retrieve current drone commands and see if they match with inputs
@@ -68,7 +66,7 @@ def upload_empty_command_list_and_assert(drone: dronekit.Vehicle) -> None:
 
     # Upload empty command list
     empty_command_list = []
-    result = upload_commands.upload_commands(drone, empty_command_list)
+    result = upload_commands.upload_commands(drone, empty_command_list, DRONE_TIMEOUT)
     assert not result
 
     # Retrieve new commands and compare them with previous list
@@ -100,77 +98,16 @@ def main() -> int:
 
     for waypoint in waypoints_input:
         lat_input, lon_input = waypoint
-        dronekit_command = dronekit.Command(
-            0,
-            0,
-            0,
-            MAVLINK_FRAME,
-            MAVLINK_WAYPOINT,
-            0,
-            0,
-            DELAY,
-            0,
-            0,
-            0,
-            lat_input,
-            lon_input,
-            ALTITUDE,
+        dronekit_command = generate_command.waypoint(
+            WAYPOINT_HOLD_TIME, ACCEPT_RADIUS, lat_input, lon_input, ALTITUDE
         )
         commands_input.append(dronekit_command)
 
-    takeoff_command = dronekit.Command(
-        0,
-        0,
-        0,
-        MAVLINK_FRAME,
-        MAVLINK_TAKEOFF,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        ALTITUDE,
-    )
+    takeoff_command = generate_command.takeoff(ALTITUDE)
     commands_input.append(takeoff_command)
 
-    landing_command = dronekit.Command(
-        0,
-        0,
-        0,
-        MAVLINK_FRAME,
-        MAVLINK_LANDING,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-    )
+    landing_command = generate_command.landing()
     commands_input.append(landing_command)
-
-    loiter_command = dronekit.Command(
-        0,
-        0,
-        0,
-        MAVLINK_FRAME,
-        MAVLINK_LOITER,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        ALTITUDE,
-    )
-    commands_input.append(loiter_command)
 
     # Test with the command sequence
     upload_command_list_and_assert(dronekit_vehicle, commands_input)

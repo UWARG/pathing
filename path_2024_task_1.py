@@ -1,6 +1,7 @@
 """
 Task 1 path. Uploads mission to run a maximum number of laps and monitors the mission for early landing.
 """
+
 import pathlib
 
 import dronekit
@@ -24,10 +25,11 @@ def main() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Create waypoint name to coordinate dictionary for takeoff waypoint
-    result, takeoff_waypoint_dictionary = \
+    result, takeoff_waypoint_dictionary = (
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             TAKEOFF_WAYPOINT_FILE_PATH,
         )
+    )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
         return -1
@@ -35,19 +37,19 @@ def main() -> int:
     # Convert named waypoint dictionary to list
     # TODO: In progress
     # pylint: disable-next=unused-variable
-    result, waypoint_takeoff_list = \
-        waypoints_dict_to_list.waypoints_dict_to_list(
-            takeoff_waypoint_dictionary,
-        )
+    result, waypoint_takeoff_list = waypoints_dict_to_list.waypoints_dict_to_list(
+        takeoff_waypoint_dictionary,
+    )
     if not result:
         print("ERROR: Convert waypoint dictionary to list")
         return -1
 
     # Create waypoint name to coordinate dictionary for lap waypoints
-    result, lap_waypoint_dictionary = \
+    result, lap_waypoint_dictionary = (
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             LAP_WAYPOINTS_FILE_PATH,
         )
+    )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
         return -1
@@ -55,10 +57,9 @@ def main() -> int:
     # Convert lap waypoint dictionary to list
     # TODO: In progress
     # pylint: disable-next=unused-variable
-    result, lap_waypoint_list = \
-        waypoints_dict_to_list.waypoints_dict_to_list(
-            lap_waypoint_dictionary,
-        )
+    result, lap_waypoint_list = waypoints_dict_to_list.waypoints_dict_to_list(
+        lap_waypoint_dictionary,
+    )
     if not result:
         print("ERROR: Convert waypoint dictionary to list")
         return -1
