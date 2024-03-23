@@ -18,7 +18,7 @@ def waypoints_dict_to_list(waypoint_name_to_coordinates: "dict[str, location_gro
     Returns
     -------
     bool: Whether waypoint data conversion was a success.
-    list[Waypoint]: List of the waypoint coordinates.
+    list[LocationGround]: List of the waypoint coordinates.
     """
     # Check for empty input dictionary
     if len(waypoint_name_to_coordinates) == 0:
