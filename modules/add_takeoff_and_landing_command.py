@@ -9,7 +9,6 @@ MAVLINK_TAKEOFF_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 MAVLINK_LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
 MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
 MAVLINK_LANDING_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND
-PERCISION_LAND_MODE = dronekit.mavutil.mavlink.PRECISION_LAND_MODE_REQUIRED
 
 
 def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
