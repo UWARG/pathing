@@ -5,7 +5,8 @@ import sys
 import time
 
 from modules import add_takeoff_and_landing_command
-from modules import check_stop_condition
+from modules import check_time_condition
+from modules import multiple_evaluator
 from modules import upload_commands
 from modules import waypoints_to_commands
 from modules.common.kml.modules import location_ground
@@ -47,14 +48,16 @@ if __name__ == "__main__":
 
     # Loop mimics path_2024.py structure
     start_time = time.time()
+    time_limit_evaluator = check_time_condition.CheckTimeCondition(start_time,MAXIMUM_FLIGHT_TIME)
+    returning_to_launch_evaluator = multiple_evaluator.MultipleEvaluator([time_limit_evaluator])
     while True:
         # Check whether drone exceeds max flight time
         current_time = time.time()
-        is_returning_to_launch = check_stop_condition.check_stop_condition(start_time, current_time, controller.drone, MAXIMUM_FLIGHT_TIME)
+        is_returning_to_launch = returning_to_launch_evaluator.evaluate_all()
         if is_returning_to_launch:   
             break
 
-        print(f"Elapsed time (s): {current_time - start_time}")
+        time_limit_evaluator.output_time_elapsed()
 
         time.sleep(DELAY)
 
