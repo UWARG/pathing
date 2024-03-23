@@ -62,7 +62,7 @@ def add_takeoff_and_landing_command(commands: "list[dronekit.Command]",
         0,  # param1
         PERCISION_LAND_MODE,
         0,
-        None,
+        0,
         0,
         0,
         0,
