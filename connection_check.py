@@ -1,6 +1,7 @@
 """
 For testing MAVLink connection with DroneKit-Python.
 """
+
 import time
 
 import dronekit
@@ -99,19 +100,30 @@ def read_data(drone: dronekit.Vehicle) -> bool:
     print("Next waypoint index: " + str(command_sequence.next))
 
 
-if __name__ == "__main__":
+def main() -> int:
+    """
+    Main function.
+    """
     # TODO: Fails when wait_ready=True, debugging why this is
     # wait_ready=False is dangerous
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
+    dronekit_vehicle = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     if WRITE_TEST:
-        write_test_mission(drone)
+        write_test_mission(dronekit_vehicle)
 
     if READ_TEST:
         for _ in range(0, 40):
-            read_data(drone)
+            read_data(dronekit_vehicle)
             time.sleep(0.5)
 
-    drone.close()
+    dronekit_vehicle.close()
+
+    return 0
+
+
+if __name__ == "__main__":
+    result_main = main()
+    if result_main < 0:
+        print(f"ERROR: Status code: {result_main}")
 
     print("Done!")

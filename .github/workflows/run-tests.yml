@@ -30,7 +30,7 @@ jobs:
           git submodule update --init --recursive --remote
           pip install -r ./modules/common/requirements.txt
 
-      # Install pathing dependencies
+      # Install project dependencies
       - name: Install project dependencies
         run: |
           python -m pip install --upgrade pip
@@ -39,6 +39,13 @@ jobs:
       # Install zbar library to resolve pyzbar import error
       - name: Install zbar library
         run: sudo apt-get install libzbar0
+
+      # Run linters and formatters
+      - name: Linters and formatters
+        run: |
+          black --check .
+          flake8 .
+          pylint .
 
       # Run tests with PyTest
       - name: Run tests

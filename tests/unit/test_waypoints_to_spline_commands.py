@@ -8,7 +8,12 @@ from modules import waypoints_to_spline_commands
 from modules.common.kml.modules import location_ground
 
 
-def test_waypoints_to_spline_commands_empty_input():
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=protected-access,redefined-outer-name
+
+
+def test_waypoints_to_spline_commands_empty_input() -> None:
     """
     Tests functionality of waypoints_to_spline_commands on empty input.
     """
@@ -24,7 +29,7 @@ def test_waypoints_to_spline_commands_empty_input():
     assert commands_actual is None
 
 
-def test_waypoints_to_spline_commands():
+def test_waypoints_to_spline_commands() -> None:
     """
     Tests functionality of waypoints_to_spline_commands.
     """
@@ -47,8 +52,8 @@ def test_waypoints_to_spline_commands():
 
     for i, command in enumerate(commands_actual):
         assert isinstance(command, dronekit.Command)
-        assert command.frame == waypoints_to_spline_commands.MAVLINK_FRAME
-        assert command.command == waypoints_to_spline_commands.MAVLINK_COMMAND
+        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT
         assert command.param1 == 0
         assert command.param2 == 0
         assert command.param3 == 0

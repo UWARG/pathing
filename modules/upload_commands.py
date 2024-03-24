@@ -5,9 +5,9 @@ Function to upload dronekit commands.
 import dronekit
 
 
-def upload_commands(drone: dronekit.Vehicle,
-                    commands: "list[dronekit.Command]",
-                    timeout: int) -> bool:
+def upload_commands(
+    drone: dronekit.Vehicle, commands: "list[dronekit.Command]", timeout: int
+) -> bool:
     """
     Add the list of commands to the drone’s command sequence, and upload them.
     If the list is empty, does not upload anything.
@@ -31,7 +31,7 @@ def upload_commands(drone: dronekit.Vehicle,
     # This is to avoid duplicate or conflicting commands
     command_sequence = drone.commands
     command_sequence.download()
-    command_sequence.wait_ready(timeout = timeout)
+    command_sequence.wait_ready(timeout=timeout)
     command_sequence.clear()
 
     # Adds new commands to command sequence

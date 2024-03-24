@@ -1,11 +1,12 @@
 """
 Module to parse QR string to waypoints.
 """
+
 import re
 
 
 def qr_to_waypoint_names(qr_text: str) -> "tuple[bool, list[str] | None]":
-    """ 
+    """
     Function for parsing QR text into list of waypoints.
     Example of valid string: "Follow route: Waterloo; Aerial; Robotics; Group 15"
     Example of invalid string: "Avoid the area bounded by: Zulu; Bravo; Tango; Uniform.  Rejoin the route at Lima"

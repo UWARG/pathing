@@ -8,7 +8,12 @@ from modules import waypoints_to_commands
 from modules.common.kml.modules import location_ground
 
 
-def test_waypoints_to_commands_empty_input():
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=protected-access,redefined-outer-name
+
+
+def test_waypoints_to_commands_empty_input() -> None:
     """
     Tests functionality correctness of waypoints_to_commands on empty input.
     """
@@ -21,7 +26,7 @@ def test_waypoints_to_commands_empty_input():
     assert commands_actual is None
 
 
-def test_waypoints_to_commands():
+def test_waypoints_to_commands() -> None:
     """
     Tests functionality correctness of waypoints_to_commands.
     """
@@ -44,8 +49,8 @@ def test_waypoints_to_commands():
         lng_expected = waypoints[i].longitude
 
         assert isinstance(command, dronekit.Command)
-        assert command.frame == waypoints_to_commands.MAVLINK_FRAME
-        assert command.command == waypoints_to_commands.MAVLINK_COMMAND
+        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
         assert command.param1 == 0
         assert command.param2 == waypoints_to_commands.ACCEPT_RADIUS
         assert command.param3 == 0

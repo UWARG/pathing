@@ -1,6 +1,7 @@
 """
-Task 1 path.
+Task 1 path. Uploads mission to run a maximum number of laps and monitors the mission for early landing.
 """
+
 import pathlib
 
 import dronekit
@@ -14,47 +15,51 @@ LAP_WAYPOINTS_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 
 
-# Required for checks
-# pylint: disable-next=too-many-return-statements
-def run() -> int:
+def main() -> int:
     """
-    Uploads mission to run a maximum number of laps and monitors the mission for early landing.
+    Main function.
     """
     # Wait ready is false as the drone may be on the ground
+    # TODO: In progress
+    # pylint: disable-next=unused-variable
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Create waypoint name to coordinate dictionary for takeoff waypoint
-    result, takeoff_waypoint_dictionary = \
+    result, takeoff_waypoint_dictionary = (
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             TAKEOFF_WAYPOINT_FILE_PATH,
         )
+    )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
         return -1
 
     # Convert named waypoint dictionary to list
-    result, waypoint_takeoff_list = \
-        waypoints_dict_to_list.waypoints_dict_to_list(
-            takeoff_waypoint_dictionary,
-        )
+    # TODO: In progress
+    # pylint: disable-next=unused-variable
+    result, waypoint_takeoff_list = waypoints_dict_to_list.waypoints_dict_to_list(
+        takeoff_waypoint_dictionary,
+    )
     if not result:
         print("ERROR: Convert waypoint dictionary to list")
         return -1
 
     # Create waypoint name to coordinate dictionary for lap waypoints
-    result, lap_waypoint_dictionary = \
+    result, lap_waypoint_dictionary = (
         load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
             LAP_WAYPOINTS_FILE_PATH,
         )
+    )
     if not result:
         print("ERROR: Load waypoint to coordinates map")
         return -1
 
     # Convert lap waypoint dictionary to list
-    result, lap_waypoint_list = \
-        waypoints_dict_to_list.waypoints_dict_to_list(
-            lap_waypoint_dictionary,
-        )
+    # TODO: In progress
+    # pylint: disable-next=unused-variable
+    result, lap_waypoint_list = waypoints_dict_to_list.waypoints_dict_to_list(
+        lap_waypoint_dictionary,
+    )
     if not result:
         print("ERROR: Convert waypoint dictionary to list")
         return -1
@@ -63,10 +68,8 @@ def run() -> int:
 
 
 if __name__ == "__main__":
-    # Not a constant
-    # pylint: disable-next=invalid-name
-    result_run = run()
-    if result_run < 0:
-        print("ERROR")
+    result_main = main()
+    if result_main < 0:
+        print(f"ERROR: Status code: {result_main}")
 
-    print("Done")
+    print("Done!")
