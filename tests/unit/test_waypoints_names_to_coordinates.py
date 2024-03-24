@@ -10,14 +10,20 @@ WAYPOINT_DICTIONARY = {
     "Aerial": location_ground.LocationGround("Aerial", 9, 7),
     "Group 15": location_ground.LocationGround("Group 15", 3, 4),
     "Robotics": location_ground.LocationGround("Robotics", -1, 0),
-    "University of Waterloo Station for 301 ION": \
-        location_ground.LocationGround("University of Waterloo Station for 301 ION", 6, 6),
+    "University of Waterloo Station for 301 ION": location_ground.LocationGround(
+        "University of Waterloo Station for 301 ION", 6, 6
+    ),
     "WARG": location_ground.LocationGround("WARG", 8, 2),
     "Waterloo": location_ground.LocationGround("Waterloo", 2, -5),
 }
 
 
-def test_valid_names():
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=protected-access,redefined-outer-name
+
+
+def test_valid_names() -> None:
     """
     Valid names as input.
     """
@@ -41,7 +47,7 @@ def test_valid_names():
     assert actual == expected
 
 
-def test_empty_names():
+def test_empty_names() -> None:
     """
     Empty list as input.
     """
@@ -59,7 +65,7 @@ def test_empty_names():
     assert actual is None
 
 
-def test_invalid_names():
+def test_invalid_names() -> None:
     """
     Names that don't exist in the map.
     """
@@ -77,7 +83,7 @@ def test_invalid_names():
     assert actual is None
 
 
-def test_valid_and_invalid():
+def test_valid_and_invalid() -> None:
     """
     A mix of existent and non-existent names.
     """

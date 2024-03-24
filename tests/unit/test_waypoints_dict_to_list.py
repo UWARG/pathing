@@ -6,13 +6,18 @@ from modules import waypoints_dict_to_list
 from modules.common.kml.modules import location_ground
 
 
-def test_valid_waypoint_dict():
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=protected-access,redefined-outer-name
+
+
+def test_valid_waypoint_dict() -> None:
     """
     Test conversion to list for a valid dict.
     """
-    alpha = location_ground.LocationGround("Alpha", 43.4340501,-80.5789803)
-    bravo = location_ground.LocationGround("Bravo", 43.4335758,-80.5775237)
-    charlie = location_ground.LocationGround("Charlie", 43.4336672,-80.57839)
+    alpha = location_ground.LocationGround("Alpha", 43.4340501, -80.5789803)
+    bravo = location_ground.LocationGround("Bravo", 43.4335758, -80.5775237)
+    charlie = location_ground.LocationGround("Charlie", 43.4336672, -80.57839)
 
     waypoint_mapping = {"Alpha": alpha, "Bravo": bravo, "Charlie": charlie}
     expected = [alpha, bravo, charlie]
@@ -23,7 +28,8 @@ def test_valid_waypoint_dict():
     assert result
     assert actual == expected
 
-def test_empty_waypoint_dict():
+
+def test_empty_waypoint_dict() -> None:
     """
     Test conversion to list for an empty dict.
     """

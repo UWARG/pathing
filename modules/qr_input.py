@@ -45,7 +45,7 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
             break
 
         # Exit early on manual quit
-        if cv2.waitKey(1) == ord('q'):
+        if cv2.waitKey(1) == ord("q"):
             break
 
     # Cleanup
