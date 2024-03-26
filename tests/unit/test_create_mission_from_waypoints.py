@@ -13,8 +13,16 @@ LAPS_ALTITUDE = 50
 NUM_LAPS = 2
 
 
+# Test functions use test fixture signature names and access class privates
+# No enable
+# pylint: disable=duplicate-code,protected-access,redefined-outer-name
+
+
 @pytest.fixture
-def non_empty_start_sequence() -> "list[location_ground.LocationGround]":
+def non_empty_start_sequence() -> "list[location_ground.LocationGround]":  # type: ignore
+    """
+    Fixture for a nonempty start sequence list
+    """
     takeoff_sequence = [
         location_ground.LocationGround("Alpha", 48.5112750, -71.6505486),
     ]
@@ -22,7 +30,10 @@ def non_empty_start_sequence() -> "list[location_ground.LocationGround]":
 
 
 @pytest.fixture
-def non_empty_lap_sequence() -> "list[location_ground.LocationGround]":
+def non_empty_lap_sequence() -> "list[location_ground.LocationGround]":  # type: ignore
+    """
+    Fixture for a nonempty lap sequence list
+    """
     lap_sequence = [
         location_ground.LocationGround("waypoint 1", 43.4363951, -80.5861617),
         location_ground.LocationGround("waypoint 2", 43.4335848, -80.5767288),
