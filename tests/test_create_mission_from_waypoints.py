@@ -94,14 +94,12 @@ def test_valid_waypoints(
     Ensures that mission is correctly made based on valid parameters
     """
     print("Todo")
-    success, mission_actual = (
-        create_mission_from_waypoints.create_mission_from_waypoints(
-            NUM_LAPS,
-            TAKEOFF_ALTITUDE,
-            LAPS_ALTITUDE,
-            non_empty_start_sequence,
-            non_empty_lap_sequence,
-        )
+    success, mission_actual = create_mission_from_waypoints.create_mission_from_waypoints(
+        NUM_LAPS,
+        TAKEOFF_ALTITUDE,
+        LAPS_ALTITUDE,
+        non_empty_start_sequence,
+        non_empty_lap_sequence,
     )
     assert success
     assert isinstance(mission_actual, list)

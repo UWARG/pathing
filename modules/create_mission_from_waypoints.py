@@ -43,9 +43,7 @@ def create_mission_from_waypoints(
         laps_list += lap_sequence_list
 
     # Convert the laps list into a list of commands
-    success, laps_commands = waypoints_to_commands.waypoints_to_commands(
-        laps_list, laps_altitude
-    )
+    success, laps_commands = waypoints_to_commands.waypoints_to_commands(laps_list, laps_altitude)
     if not success:
         return False, None
 
