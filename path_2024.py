@@ -4,6 +4,7 @@ Reads in hardcoded waypoints from CSV file and sends drone commands.
 
 import pathlib
 import time
+import yaml
 
 import dronekit
 
@@ -18,19 +19,43 @@ from modules.common.kml.modules import ground_locations_to_kml
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")
-ALTITUDE = 40
-DRONE_TIMEOUT = 30.0  # seconds
-CONNECTION_ADDRESS = "tcp:localhost:14550"
-LOG_DIRECTORY_PATH = pathlib.Path("logs")
-KML_FILE_PREFIX = "waypoints"
-DELAY = 0.1  # seconds
-MAXIMUM_FLIGHT_TIME = 1800  # seconds
+CONFIG_FILE_PATH = pathlib.Path("config.yaml")
 
 
 def main() -> int:
     """
     Main function.
     """
+
+     # Open config file
+    try:
+        with CONFIG_FILE_PATH.open("r", encoding="utf8") as file:
+            try:
+                config = yaml.safe_load(file)
+            except yaml.YAMLError as exc:
+                print(f"Error parsing YAML file: {exc}")
+    except FileNotFoundError:
+        print(f"File not found: {CONFIG_FILE_PATH}")
+        return -1
+    except IOError as exc:
+        print(f"Error when opening file: {exc}")
+        return -1
+    
+    # Set constants
+    try:
+        # pylint: disable=invalid-name
+        ALTITUDE = config["altitude"]
+        DRONE_TIMEOUT = config["drone_timeout"]
+        CONNECTION_ADDRESS = config["connection_address"]
+        LOG_DIRECTORY_PATH = pathlib.Path(config['log_directory_path'])
+        KML_FILE_PREFIX = config["kml_file_prefix"]
+        DELAY = config["delay"]
+        MAXIMUM_FLIGHT_TIME = config["maximum_flight_time"]
+        # pylint: enable=invalid-name
+    except KeyError:
+        print("Config key(s) not found")
+        return -1
+
     pathlib.Path(LOG_DIRECTORY_PATH).mkdir(exist_ok=True)
 
     # Wait ready is false as the drone may be on the ground

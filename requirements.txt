@@ -1,6 +1,7 @@
 # Packages listed in alphabetical order
 dronekit
 pytest
+pyyaml
 
 # Linters and formatters are explicitly versioned
 black==24.2.0
