@@ -66,6 +66,14 @@ def main() -> int:
         print("ERROR: Convert waypoint dictionary to list")
         return -1
 
+    result, waypoint_commands = waypoints_to_commands.waypoints_to_spline_commands(
+        waypoints_list,
+        ALTITUDE,
+    )
+    if not result:
+        print("Error: waypoints_to_spline_commands")
+        return -1
+
     return 0
 
 
