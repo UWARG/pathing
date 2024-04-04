@@ -9,6 +9,7 @@ import dronekit
 
 from modules import load_waypoint_name_to_coordinates_map
 from modules import waypoints_dict_to_list
+from modules import waypoints_to_spline_commands
 
 
 TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1")
