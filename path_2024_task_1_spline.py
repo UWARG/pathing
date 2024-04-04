@@ -67,7 +67,7 @@ def main() -> int:
         return -1
 
     result, waypoint_commands = waypoints_to_spline_commands.waypoints_to_spline_commands(
-        waypoints_list,
+        lap_waypoint_list,
         ALTITUDE,
     )
     if not result:
