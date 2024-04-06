@@ -7,7 +7,7 @@ import time
 
 import dronekit
 
-from modules import add_takeoff_and_landing_command
+from modules import add_takeoff_and_loiter_command
 from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
 from modules import upload_commands
@@ -71,17 +71,17 @@ def main() -> int:
         print("Error: waypoints_to_commands")
         return -1
 
-    result, takeoff_landing_commands = (
-        add_takeoff_and_landing_command.add_takeoff_and_landing_command(
-            waypoint_commands,
-            ALTITUDE,
-        )
+    # get the last waypoint for loitering
+    loiter_coordinate = waypoints_list[-1]
+
+    result, takeoff_loiter_commands = add_takeoff_and_loiter_command.add_takeoff_and_loiter_command(
+        waypoint_commands, loiter_coordinate.latitude, loiter_coordinate.longitude, ALTITUDE
     )
     if not result:
-        print("Error: add_takeoff_and_landing_command")
+        print("Error: add_takeoff_and_loiter_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands, DRONE_TIMEOUT)
+    result = upload_commands.upload_commands(drone, takeoff_loiter_commands, DRONE_TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
