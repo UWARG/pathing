@@ -16,7 +16,7 @@ def check_stop_condition(
 ) -> bool:
     """
     Check if drone exceeds the maximum flight time limit and replace with new mission of returning to launch.
-    
+
     Parameters
     -----------
     start_time: float
@@ -27,7 +27,7 @@ def check_stop_condition(
         The connected drone.
     maximum_flight_time: float
         Max flight time for drone in seconds.
-    
+
     Returns
     -------
     bool: True if max flight time was exceeded, False otherwise.
