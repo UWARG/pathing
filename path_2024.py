@@ -8,9 +8,8 @@ import time
 import dronekit
 
 from modules import add_takeoff_and_landing_command
-from modules import condition_evaluator
+from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
-from modules import mission_time_condition
 from modules import upload_commands
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
@@ -88,16 +87,6 @@ def main() -> int:
         return -1
 
     start_time = time.time()
-    result, time_condition = mission_time_condition.MissionTimeCondition.create(
-        start_time, MAXIMUM_FLIGHT_TIME
-    )
-
-    if not result:
-        print("Error: Mission time condition")
-        return -1
-
-    return_to_launch_evaluator = condition_evaluator.ConditionEvaluator([time_condition])
-
     while True:
         result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
         if not result:
@@ -112,12 +101,14 @@ def main() -> int:
             print(f"Current location (Lat, Lon): {location}")
 
         # Send drone back to launch if exceeds time limit
-
-        should_return_to_launch = return_to_launch_evaluator.evaluate_all_conditions()
-        if should_return_to_launch:
+        current_time = time.time()
+        is_returning_to_launch = check_stop_condition.check_stop_condition(
+            start_time, current_time, drone, MAXIMUM_FLIGHT_TIME
+        )
+        if is_returning_to_launch:
             break
 
-        time_condition.output_time_elapsed()
+        print(f"Elapsed time (s): {current_time - start_time}")
 
         time.sleep(DELAY)
 
