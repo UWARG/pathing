@@ -21,7 +21,7 @@ from modules import upload_commands
 TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1.csv")
 LAP_WAYPOINTS_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-DELAY = 0.1  # seconds
+DELAY = 30  # seconds
 MAXIMUM_FLIGHT_TIME = 1800  # in seconds
 TAKEOFF_ALTITUDE = 10  # metres
 ALPHA_WAYPOINT_ALTITUDE = 100  # metres
@@ -103,7 +103,7 @@ def main() -> int:
     waypoint_commands = []
     waypoint_commands.extend(takeoff_waypoint_command)
     waypoint_commands.extend(lap_spline_waypoint_commands)
-    waypoint_commands.insert(-1, do_jump_command)
+    waypoint_commands.insert(len(waypoint_commands), do_jump_command)
 
     result, takeoff_and_rtl_commands = add_takeoff_and_rtl_command.add_takeoff_and_rtl_command(
         waypoint_commands,
@@ -116,7 +116,7 @@ def main() -> int:
         DRONE_TIMEOUT,
     )
     if not result:
-        print("Error: upload_commands")
+        print("ERROR: upload_commands")
         return -1
 
     start_time = time.time()
@@ -125,7 +125,7 @@ def main() -> int:
     )
 
     if not result:
-        print("Error: Mission time condition")
+        print("ERROR: Mission time condition")
         return -1
 
     return_to_launch_evaluator = condition_evaluator.ConditionEvaluator([time_condition])
@@ -140,6 +140,17 @@ def main() -> int:
         time_condition.output_time_elapsed()
 
         time.sleep(DELAY)
+
+    # Force early RTL 
+    drone.mode = dronekit.VehicleMode("RTL")
+    rtl_command = generate_command.return_to_launch()
+    result = upload_commands.upload_commands(
+        drone,
+        [rtl_command],
+        DRONE_TIMEOUT,
+    )
+    if not result:
+        print("ERROR: Failed to upload RTL command. Manually set RTL.")
 
     return 0
 
