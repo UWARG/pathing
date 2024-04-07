@@ -41,10 +41,11 @@ def main() -> int:
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Create waypoint name to coordinate dictionary for takeoff waypoint
-    result, takeoff_waypoint_dictionary = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            TAKEOFF_WAYPOINT_FILE_PATH,
-        )
+    (
+        result,
+        takeoff_waypoint_dictionary,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+        TAKEOFF_WAYPOINT_FILE_PATH,
     )
     if not result:
         print("ERROR: Load takeoff waypoint to coordinates map")
@@ -61,10 +62,11 @@ def main() -> int:
         return -1
 
     # Create waypoint name to coordinate dictionary for lap waypoints
-    result, lap_waypoint_dictionary = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            LAP_WAYPOINTS_FILE_PATH,
-        )
+    (
+        result,
+        lap_waypoint_dictionary,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+        LAP_WAYPOINTS_FILE_PATH,
     )
     if not result:
         print("ERROR: Load lap waypoints to coordinates map")
@@ -88,7 +90,10 @@ def main() -> int:
         print("ERROR: takeoff waypoint to command")
         return -1
 
-    result, lap_spline_waypoint_commands = waypoints_to_spline_commands.waypoints_to_spline_commands(
+    (
+        result,
+        lap_spline_waypoint_commands,
+    ) = waypoints_to_spline_commands.waypoints_to_spline_commands(
         lap_waypoint_list,
         LAP_WAYPOINT_ALTITUDE,
     )
@@ -108,7 +113,7 @@ def main() -> int:
     result, takeoff_and_rtl_commands = add_takeoff_and_rtl_command.add_takeoff_and_rtl_command(
         waypoint_commands,
         TAKEOFF_ALTITUDE,
-    ) 
+    )
 
     result = upload_commands.upload_commands(
         drone,
@@ -141,7 +146,7 @@ def main() -> int:
 
         time.sleep(DELAY)
 
-    # Force early RTL 
+    # Force early RTL
     drone.mode = dronekit.VehicleMode("RTL")
     rtl_command = generate_command.return_to_launch()
     result = upload_commands.upload_commands(

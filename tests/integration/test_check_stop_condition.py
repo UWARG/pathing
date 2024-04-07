@@ -46,10 +46,11 @@ def main() -> int:
         print("Unable to create waypoint commands.")
         return -1
 
-    result, commands_with_takeoff_landing = (
-        add_takeoff_and_landing_command.add_takeoff_and_landing_command(
-            test_waypoint_commands, ALTITUDE
-        )
+    (
+        result,
+        commands_with_takeoff_landing,
+    ) = add_takeoff_and_landing_command.add_takeoff_and_landing_command(
+        test_waypoint_commands, ALTITUDE
     )
     if not result:
         print("Unable to add takeoff and landing commands.")

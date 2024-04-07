@@ -196,6 +196,7 @@ def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> dron
         altitude,
     )
 
+
 def do_jump(waypoint_sequence_number: int, repeat: int) -> dronekit.Command:
     """
     Returns do jump command.
