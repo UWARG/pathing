@@ -12,6 +12,7 @@ WAYPOINT_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 WAYPOINT_SPLINE_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 LOITER_TIMED_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 LOITER_UNLIMITED_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+DO_JUMP_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 
 
 def landing() -> dronekit.Command:
@@ -193,4 +194,29 @@ def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> dron
         latitude,
         longitude,
         altitude,
+    )
+
+
+def do_jump(waypoint_sequence_number: int, repeat: int) -> dronekit.Command:
+    """
+    Returns do jump command.
+
+    waypoint_sequence_number: The sequence number of the mission command to jump to.
+    repeat: Maximum number of times to perform the jump.
+    """
+    return dronekit.Command(
+        0,
+        0,
+        0,
+        DO_JUMP_FRAME,
+        dronekit.mavutil.mavlink.MAV_CMD_DO_JUMP,
+        0,
+        0,
+        waypoint_sequence_number,  # param1
+        repeat,
+        0,
+        0,
+        0,
+        0,
+        0,
     )

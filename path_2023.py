@@ -40,10 +40,11 @@ def main() -> int:
     # Wait ready is false as the drone may be on the ground
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
-    result, waypoint_name_to_coordinates = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            WAYPOINT_FILE_PATH,
-        )
+    (
+        result,
+        waypoint_name_to_coordinates,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+        WAYPOINT_FILE_PATH,
     )
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
@@ -88,9 +89,10 @@ def main() -> int:
         print("Error: waypoints_to_commands")
         return -1
 
-    result, takeoff_landing_commands = (
-        add_takeoff_and_landing_command.add_takeoff_and_landing_command(waypoint_commands, ALTITUDE)
-    )
+    (
+        result,
+        takeoff_landing_commands,
+    ) = add_takeoff_and_landing_command.add_takeoff_and_landing_command(waypoint_commands, ALTITUDE)
     if not result:
         print("Error: add_takeoff_and_landing_command")
         return -1
