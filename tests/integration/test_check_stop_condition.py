@@ -5,7 +5,8 @@ Test the drone stop condition.
 import time
 
 from modules import add_takeoff_and_landing_command
-from modules import check_stop_condition
+from modules import condition_evaluator
+from modules import mission_time_condition
 from modules import upload_commands
 from modules import waypoints_to_commands
 from modules.common.kml.modules import location_ground
@@ -63,16 +64,22 @@ def main() -> int:
 
     # Loop mimics path_2024.py structure
     start_time = time.time()
+    success, check_time_condition = mission_time_condition.MissionTimeCondition.create(
+        start_time, MAXIMUM_FLIGHT_TIME
+    )
+    if not success:
+        print("Unable to create the MissionTimeCondition object.")
+        return -1
+
+    return_to_launch_evaluator = condition_evaluator.ConditionEvaluator([check_time_condition])
+
     while True:
         # Check whether drone exceeds max flight time
-        current_time = time.time()
-        is_returning_to_launch = check_stop_condition.check_stop_condition(
-            start_time, current_time, controller.drone, MAXIMUM_FLIGHT_TIME
-        )
-        if is_returning_to_launch:
+        should_return_to_launch = return_to_launch_evaluator.evaluate_all_conditions()
+        if should_return_to_launch:
             break
 
-        print(f"Elapsed time (s): {current_time - start_time}")
+        check_time_condition.output_time_elapsed()
 
         time.sleep(DELAY)
 
