@@ -26,7 +26,7 @@ def main() -> int:
     """
     Main function.
     """
-     # Open config file
+    # Open config file
     try:
         with CONFIG_FILE_PATH.open("r", encoding="utf8") as file:
             try:
@@ -39,14 +39,14 @@ def main() -> int:
     except IOError as exc:
         print(f"Error when opening file: {exc}")
         return -1
-    
+
     # Set constants
     try:
         # pylint: disable=invalid-name
         ALTITUDE = config["altitude"]
         DRONE_TIMEOUT = config["drone_timeout"]
         CONNECTION_ADDRESS = config["connection_address"]
-        LOG_DIRECTORY_PATH = pathlib.Path(config['log_directory_path'])
+        LOG_DIRECTORY_PATH = pathlib.Path(config["log_directory_path"])
         KML_FILE_PREFIX = config["kml_file_prefix"]
         DELAY = config["delay"]
         MAXIMUM_FLIGHT_TIME = config["maximum_flight_time"]
