@@ -26,7 +26,6 @@ def main() -> int:
     """
     Main function.
     """
-
      # Open config file
     try:
         with CONFIG_FILE_PATH.open("r", encoding="utf8") as file:
