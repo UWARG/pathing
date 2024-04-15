@@ -28,9 +28,15 @@ def test_valid_waypoint_dict() -> None:
     assert result
     assert actual == expected
 
-    delta = location_ground_and_altitude.LocationGroundAndAltitude("Delta", 43.4340501, -80.5789803, 10.0)
-    echo = location_ground_and_altitude.LocationGroundAndAltitude("Echo", 43.4335758, -80.5775237, 10.0)
-    golf = location_ground_and_altitude.LocationGroundAndAltitude("Golf", 43.4336672, -80.57839, 10.0)
+    delta = location_ground_and_altitude.LocationGroundAndAltitude(
+        "Delta", 43.4340501, -80.5789803, 10.0
+    )
+    echo = location_ground_and_altitude.LocationGroundAndAltitude(
+        "Echo", 43.4335758, -80.5775237, 10.0
+    )
+    golf = location_ground_and_altitude.LocationGroundAndAltitude(
+        "Golf", 43.4336672, -80.57839, 10.0
+    )
 
     waypoint_mapping = {"Delta": delta, "Echo": echo, "Golf": golf}
     expected = [delta, echo, golf]

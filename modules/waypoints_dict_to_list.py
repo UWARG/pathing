@@ -31,8 +31,9 @@ def waypoints_dict_to_list(
 
     return True, waypoints_list
 
+
 def waypoints_dict_to_list(
-        waypoint_name_to_coordinates_and_altitude: "dict[str, location_ground_and_altitude.LocationGroundAndAltitude]",
+    waypoint_name_to_coordinates_and_altitude: "dict[str, location_ground_and_altitude.LocationGroundAndAltitude]",
 ) -> "tuple[bool, list[location_ground_and_altitude.LocationGroundAndAltitude]]":
     """
     Converts dictionary of waypoints into a list.
