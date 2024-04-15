@@ -35,17 +35,17 @@ class LocationGroundAndAltitude:
         self.location_ground = location_ground.LocationGround(name, latitude, longitude)
         self.altitude = altitude
 
-        def __eq__(self, other: "LocationGroundAndAltitude") -> bool:
-            """
-            Checks if two LocationGroundAndAltitude objects are equal.
+    def __eq__(self, other: "LocationGroundAndAltitude") -> bool:
+        """
+        Checks if two LocationGroundAndAltitude objects are equal.
 
-            Args:
-             other (LocationGroundAndAltitude): The other LocationGroundAndAltitude object to compare to.
-            """
-            if not isinstance(other, LocationGroundAndAltitude):
-                return False
+        Args:
+            other (LocationGroundAndAltitude): The other LocationGroundAndAltitude object to compare to.
+        """
+        if not isinstance(other, LocationGroundAndAltitude):
+            return False
 
-            return self.location_ground == other.location_ground and self.altitude == other.altitude
+        return self.location_ground == other.location_ground and self.altitude == other.altitude
 
     def __repr__(self) -> str:
         """
