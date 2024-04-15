@@ -49,9 +49,9 @@ class LocationGroundAndAltitude:
                and self.altitude == other.altitude
            )
 
-        def __repr__(self) -> str:
-           """
-           String representation
-           """
-           return \
-               f"{repr(self.location_ground)}, altitude: {self.altitude}" 
+    def __repr__(self) -> str:
+        """
+        String representation
+        """
+        return \
+            f"{repr(self.location_ground)}, altitude: {self.altitude}" 
