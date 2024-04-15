@@ -64,6 +64,7 @@ def test_waypoints_to_commands() -> None:
         assert command.y == lng_expected
         assert command.z == altitude
 
+
 def test_waypoints_with_altitude_to_commands() -> None:
     """
     Tests functionality correctness of waypoints_with_altitude_to commands.

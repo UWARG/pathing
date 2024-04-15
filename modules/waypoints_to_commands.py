@@ -44,6 +44,7 @@ def waypoints_to_commands(
 
     return True, dronekit_command_list
 
+
 def waypoints_with_altitude_to_commands(
     waypoints: "list[location_ground_and_altitude.LocationGroundAndAltitude]",
 ) -> "tuple[bool, list[dronekit.Command] | None]":
@@ -63,12 +64,16 @@ def waypoints_with_altitude_to_commands(
     """
     if len(waypoints) == 0:
         return False, None
-    
+
     dronekit_command_list = []
 
     for point in waypoints:
         command = generate_command.waypoint(
-            0.0, ACCEPT_RADIUS, point.location_ground.latitude, point.location_ground.longitude, point.altitude
+            0.0,
+            ACCEPT_RADIUS,
+            point.location_ground.latitude,
+            point.location_ground.longitude,
+            point.altitude,
         )
 
         dronekit_command_list.append(command)
