@@ -42,7 +42,7 @@ def test_valid_waypoint_dict() -> None:
     expected = [delta, echo, golf]
 
     # Determine if action was successful
-    result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
+    result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(waypoint_mapping)
 
     assert result
     assert actual == expected
@@ -56,6 +56,12 @@ def test_empty_waypoint_dict() -> None:
 
     # Determine if action was successful
     result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
+
+    assert not result
+    assert actual is None
+
+    # Determine if action was successful
+    result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(waypoint_mapping)
 
     assert not result
     assert actual is None
