@@ -76,10 +76,10 @@ def main() -> int:
     loiter_coordinate = waypoints_list[-1]
 
     result, takeoff_loiter_commands = add_takeoff_and_loiter_command.add_takeoff_and_loiter_command(
-        waypoint_commands, 
-        loiter_coordinate.location_ground.latitude, 
-        loiter_coordinate.location_ground.longitude, 
-        loiter_coordinate.altitude, 
+        waypoint_commands,
+        loiter_coordinate.location_ground.latitude,
+        loiter_coordinate.location_ground.longitude,
+        loiter_coordinate.altitude,
     )
     if not result:
         print("Error: add_takeoff_and_loiter_command")
