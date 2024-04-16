@@ -59,10 +59,11 @@ def test_normal_file_with_altitude() -> None:
     }
 
     # Run
-    result, actual = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
-            normal_csv_file_with_altitude_path,
-        )
+    (
+        result,
+        actual,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
+        normal_csv_file_with_altitude_path,
     )
 
     # Test
@@ -87,10 +88,11 @@ def test_empty_file() -> None:
     assert actual is None
 
     # Run
-    result, actual = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
-            empty_csv_file_path,
-        )
+    (
+        result,
+        actual,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
+        empty_csv_file_path,
     )
 
     # Test
@@ -115,10 +117,11 @@ def test_nonexistent_file() -> None:
     assert actual is None
 
     # Run
-    result, actual = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
-            nonexistent_file_path,
-        )
+    (
+        result,
+        actual,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
+        nonexistent_file_path,
     )
 
     # Test
