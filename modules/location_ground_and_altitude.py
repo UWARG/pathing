@@ -51,4 +51,4 @@ class LocationGroundAndAltitude:
         """
         String representation
         """
-        return f"{repr(self.location_ground)}, altitude: {self.altitude}"
+        return f"LocationGroundAndAltitude: {repr(self.location_ground)}, altitude: {self.altitude}"
