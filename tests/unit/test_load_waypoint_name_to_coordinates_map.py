@@ -47,9 +47,7 @@ def test_normal_file_with_altitude() -> None:
         "tests", "test_csv", "test_normal_csv_with_altitude.csv"
     )
     excepted = {
-        "WARG": waypoint.Waypoint(
-            "WARG", 43.47323264522664, -80.54011639872981, 10.0
-        ),
+        "WARG": waypoint.Waypoint("WARG", 43.47323264522664, -80.54011639872981, 10.0),
         "University of Waterloo Station for 301 ION": waypoint.Waypoint(
             "University of Waterloo Station for 301 ION",
             43.4735247614021,

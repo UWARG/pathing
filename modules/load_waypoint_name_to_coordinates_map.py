@@ -55,10 +55,8 @@ def load_waypoint_name_to_coordinates_and_altitude_map(
                 continue
 
             name, latitude, longitude, altitude = parts
-            name_to_coordinates_and_altitude_map[name] = (
-                waypoint.Waypoint(
-                    name, float(latitude), float(longitude), float(altitude)
-                )
+            name_to_coordinates_and_altitude_map[name] = waypoint.Waypoint(
+                name, float(latitude), float(longitude), float(altitude)
             )
 
     if len(name_to_coordinates_and_altitude_map) > 0:
