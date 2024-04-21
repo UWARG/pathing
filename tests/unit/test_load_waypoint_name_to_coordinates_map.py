@@ -4,7 +4,7 @@ Testing with real files.
 
 import pathlib
 
-from modules import load_waypoint_name_to_coordinates_map, location_ground_and_altitude
+from modules import load_waypoint_name_to_coordinates_map, waypoint
 from modules.common.kml.modules import location_ground
 
 
@@ -47,10 +47,10 @@ def test_normal_file_with_altitude() -> None:
         "tests", "test_csv", "test_normal_csv_with_altitude.csv"
     )
     excepted = {
-        "WARG": location_ground_and_altitude.LocationGroundAndAltitude(
+        "WARG": waypoint.Waypoint(
             "WARG", 43.47323264522664, -80.54011639872981, 10.0
         ),
-        "University of Waterloo Station for 301 ION": location_ground_and_altitude.LocationGroundAndAltitude(
+        "University of Waterloo Station for 301 ION": waypoint.Waypoint(
             "University of Waterloo Station for 301 ION",
             43.4735247614021,
             -80.54144667502672,

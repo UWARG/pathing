@@ -5,7 +5,7 @@ Class to store LocationGround and corresponding altitude.
 from .common.kml.modules import location_ground
 
 
-class LocationGroundAndAltitude:
+class Waypoint:
     """
     LocationGroundAndAltitude represents a geographical ground location and an altitude
     with a name, latitude, longitude, and altitude.
@@ -22,7 +22,7 @@ class LocationGroundAndAltitude:
         __repr__(): Returns a string representation of the LocationGroundAndAltitude object.
     """
 
-    def __init__(self, name: str, latitude: float, longitude: float, altitude: float):
+    def __init__(self, name: str, latitude: float, longitude: float, altitude: float) -> None:
         """
         Constructor for the LocationGroundAndAltitude object.
 
@@ -35,14 +35,14 @@ class LocationGroundAndAltitude:
         self.location_ground = location_ground.LocationGround(name, latitude, longitude)
         self.altitude = altitude
 
-    def __eq__(self, other: "LocationGroundAndAltitude") -> bool:
+    def __eq__(self, other: "Waypoint") -> bool:
         """
         Checks if two LocationGroundAndAltitude objects are equal.
 
         Args:
             other (LocationGroundAndAltitude): The other LocationGroundAndAltitude object to compare to.
         """
-        if not isinstance(other, LocationGroundAndAltitude):
+        if not isinstance(other, Waypoint):
             return False
 
         return self.location_ground == other.location_ground and self.altitude == other.altitude

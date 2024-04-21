@@ -2,7 +2,7 @@
 Testing various formats of waypoints dictionary during conversion to list process.
 """
 
-from modules import waypoints_dict_to_list, location_ground_and_altitude
+from modules import waypoint, waypoints_dict_to_list
 from modules.common.kml.modules import location_ground
 
 
@@ -28,13 +28,13 @@ def test_valid_waypoint_dict() -> None:
     assert result
     assert actual == expected
 
-    delta = location_ground_and_altitude.LocationGroundAndAltitude(
+    delta = waypoint.Waypoint(
         "Delta", 43.4340501, -80.5789803, 10.0
     )
-    echo = location_ground_and_altitude.LocationGroundAndAltitude(
+    echo = waypoint.Waypoint(
         "Echo", 43.4335758, -80.5775237, 10.0
     )
-    golf = location_ground_and_altitude.LocationGroundAndAltitude(
+    golf = waypoint.Waypoint(
         "Golf", 43.4336672, -80.57839, 10.0
     )
 

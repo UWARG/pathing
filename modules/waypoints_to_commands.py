@@ -4,7 +4,7 @@ Function to convert list of waypoints to dronekit commands.
 
 import dronekit
 
-from . import generate_command, location_ground_and_altitude
+from . import generate_command, waypoint
 from .common.kml.modules import location_ground
 
 
@@ -46,7 +46,7 @@ def waypoints_to_commands(
 
 
 def waypoints_with_altitude_to_commands(
-    waypoints: "list[location_ground_and_altitude.LocationGroundAndAltitude]",
+    waypoints: "list[waypoint.Waypoint]",
 ) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Convert list of waypoints to dronekit commands.

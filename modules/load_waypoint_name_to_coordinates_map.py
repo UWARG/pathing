@@ -4,7 +4,7 @@ Name-coordinate mapping from CSV file.
 
 import pathlib
 
-from . import location_ground_and_altitude
+from . import waypoint
 
 from .common.kml.modules import location_ground
 
@@ -39,7 +39,7 @@ def load_waypoint_name_to_coordinates_map(
 
 def load_waypoint_name_to_coordinates_and_altitude_map(
     waypoint_file_path: pathlib.Path,
-) -> "tuple[bool, dict[str, location_ground_and_altitude.LocationGroundAndAltitude]]":
+) -> "tuple[bool, dict[str, waypoint.Waypoint]]":
     """
     Creates a name to coordinate and altitude dictionary from the CSV file.
     """
@@ -56,7 +56,7 @@ def load_waypoint_name_to_coordinates_and_altitude_map(
 
             name, latitude, longitude, altitude = parts
             name_to_coordinates_and_altitude_map[name] = (
-                location_ground_and_altitude.LocationGroundAndAltitude(
+                waypoint.Waypoint(
                     name, float(latitude), float(longitude), float(altitude)
                 )
             )

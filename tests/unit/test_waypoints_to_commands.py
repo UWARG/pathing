@@ -4,7 +4,7 @@ Test process.
 
 import dronekit
 
-from modules import waypoints_to_commands, location_ground_and_altitude
+from modules import waypoint, waypoints_to_commands
 from modules.common.kml.modules import location_ground
 
 
@@ -70,9 +70,9 @@ def test_waypoints_with_altitude_to_commands() -> None:
     Tests functionality correctness of waypoints_with_altitude_to commands.
     """
     waypoints = [
-        location_ground_and_altitude.LocationGroundAndAltitude("Waypoint 1", 42.123, -73.456, 10.0),
-        location_ground_and_altitude.LocationGroundAndAltitude("Waypoint 2", 42.789, -73.987, 20.0),
-        location_ground_and_altitude.LocationGroundAndAltitude("Waypoint 3", 42.555, -73.321, 30.0),
+        waypoint.Waypoint("Waypoint 1", 42.123, -73.456, 10.0),
+        waypoint.Waypoint("Waypoint 2", 42.789, -73.987, 20.0),
+        waypoint.Waypoint("Waypoint 3", 42.555, -73.321, 30.0),
     ]
 
     result, commands_actual = waypoints_to_commands.waypoints_with_altitude_to_commands(waypoints)
