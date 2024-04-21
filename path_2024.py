@@ -41,22 +41,23 @@ def main() -> int:
     (
         result,
         waypoint_name_to_coordinates,
-    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
         WAYPOINT_FILE_PATH,
     )
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
 
-    result, waypoints_list = waypoints_dict_to_list.waypoints_dict_to_list(
+    result, waypoints_list = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(
         waypoint_name_to_coordinates
     )
     if not result:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
 
+    location_ground_list = list(map(lambda waypoint: waypoint.location_ground, waypoints_list))
     result, _ = ground_locations_to_kml.ground_locations_to_kml(
-        waypoints_list,
+        location_ground_list,
         KML_FILE_PREFIX,
         LOG_DIRECTORY_PATH,
     )
@@ -64,9 +65,8 @@ def main() -> int:
         print("ERROR: Unable to generate KML file")
         return -1
 
-    result, waypoint_commands = waypoints_to_commands.waypoints_to_commands(
+    result, waypoint_commands = waypoints_to_commands.waypoints_with_altitude_to_commands(
         waypoints_list,
-        ALTITUDE,
     )
     if not result:
         print("Error: waypoints_to_commands")
@@ -76,7 +76,10 @@ def main() -> int:
     loiter_coordinate = waypoints_list[-1]
 
     result, takeoff_loiter_commands = add_takeoff_and_loiter_command.add_takeoff_and_loiter_command(
-        waypoint_commands, loiter_coordinate.latitude, loiter_coordinate.longitude, ALTITUDE
+        waypoint_commands,
+        loiter_coordinate.location_ground.latitude,
+        loiter_coordinate.location_ground.longitude,
+        loiter_coordinate.altitude,
     )
     if not result:
         print("Error: add_takeoff_and_loiter_command")

@@ -2,7 +2,7 @@
 Testing various formats of waypoints dictionary during conversion to list process.
 """
 
-from modules import waypoints_dict_to_list
+from modules import waypoint, waypoints_dict_to_list
 from modules.common.kml.modules import location_ground
 
 
@@ -28,6 +28,19 @@ def test_valid_waypoint_dict() -> None:
     assert result
     assert actual == expected
 
+    delta = waypoint.Waypoint("Delta", 43.4340501, -80.5789803, 10.0)
+    echo = waypoint.Waypoint("Echo", 43.4335758, -80.5775237, 10.0)
+    golf = waypoint.Waypoint("Golf", 43.4336672, -80.57839, 10.0)
+
+    waypoint_mapping = {"Delta": delta, "Echo": echo, "Golf": golf}
+    expected = [delta, echo, golf]
+
+    # Determine if action was successful
+    result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(waypoint_mapping)
+
+    assert result
+    assert actual == expected
+
 
 def test_empty_waypoint_dict() -> None:
     """
@@ -37,6 +50,12 @@ def test_empty_waypoint_dict() -> None:
 
     # Determine if action was successful
     result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
+
+    assert not result
+    assert actual is None
+
+    # Determine if action was successful
+    result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(waypoint_mapping)
 
     assert not result
     assert actual is None
