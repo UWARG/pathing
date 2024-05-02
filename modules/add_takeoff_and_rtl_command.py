@@ -1,5 +1,5 @@
 """
-Prefixes a takeoff command and suffixes a landing command to the end of the list of commands.
+Prefixes a takeoff command and suffixes a RTL command to the end of the list of commands.
 """
 
 import dronekit
@@ -7,11 +7,11 @@ import dronekit
 from . import generate_command
 
 
-def add_takeoff_and_landing_command(
+def add_takeoff_and_rtl_command(
     commands: "list[dronekit.Command]", altitude: float
 ) -> "tuple[bool, list[dronekit.Command] | None]":
     """
-    Prepends a takeoff command and appends a landing command to a list of dronekit commands.
+    Prepends a takeoff command and appends a RTL command to a list of dronekit commands.
 
     Parameters
     ----------
@@ -32,7 +32,7 @@ def add_takeoff_and_landing_command(
     takeoff_command = generate_command.takeoff(altitude)
     commands.insert(0, takeoff_command)
 
-    landing_command = generate_command.landing()
-    commands.append(landing_command)
+    rtl_command = generate_command.return_to_launch()
+    commands.insert(len(commands), rtl_command)
 
     return True, commands
