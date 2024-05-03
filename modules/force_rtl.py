@@ -9,7 +9,7 @@ from . import generate_command
 
 MAVLINK_RTL_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
 MAVLINK_RTL_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
-
+DRONE_TIMEOUT = 30.0  # seconds
 
 def force_rtl(drone: dronekit.Vehicle) -> bool:
     """
@@ -32,7 +32,7 @@ def force_rtl(drone: dronekit.Vehicle) -> bool:
     drone.mode = dronekit.VehicleMode("RTL")
 
     # utilize upload_command function to give RTL command to drone
-    result = upload_commands.upload_commands(drone, [rtl_command])
+    result = upload_commands.upload_commands(drone, [rtl_command], DRONE_TIMEOUT)
 
     # error if unsuccessful
     if not result:
