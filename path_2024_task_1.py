@@ -166,7 +166,7 @@ def main() -> int:
                     # Disable flag since starting lap time is recorded
                     starting_lap = False
                 else:
-                    # Calculate lap time 
+                    # Calculate lap time
                     lap_end_time = time.time()
                     lap_time = lap_end_time - lap_start_time
 
@@ -181,7 +181,7 @@ def main() -> int:
                         f"Estimated finish time of next lap (s): {(time.time() - start_time) + lap_time}"
                     )
                     print("--------------------------------------------------------")
-            
+
                     # Update lap time and decided to continue or force early RTL
                     time_condition.update_lap_time(lap_time)
                     should_return_to_launch = return_to_launch_evaluator.evaluate_all_conditions()
