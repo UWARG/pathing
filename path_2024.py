@@ -17,7 +17,7 @@ from modules import waypoints_dict_to_list
 from modules.common.kml.modules import ground_locations_to_kml
 
 
-WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")
+WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc_waypoints_task_2.csv")
 ALTITUDE = 40
 DRONE_TIMEOUT = 30.0  # seconds
 CONNECTION_ADDRESS = "tcp:localhost:14550"
