@@ -23,12 +23,14 @@ LAP_WAYPOINTS_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 DELAY = 30  # seconds
 MAXIMUM_FLIGHT_TIME = 1800  # in seconds
-TAKEOFF_ALTITUDE = 10  # metres
+TAKEOFF_ALTITUDE = 0  # metres
 ALPHA_WAYPOINT_ALTITUDE = 100  # metres
-LAP_WAYPOINT_ALTITUDE = 50  # metres
+MISSION_WAIT_ALTITUDE_THRESHOLD = 5  # metres
+LAP_WAYPOINT_ALTITUDE = 20  # metres
 DRONE_TIMEOUT = 30.0  # seconds
+MISSION_WAIT_TIMEOUT = 5.0  # seconds
 LAP_START_SEQUENCE_NUMBER = 3
-MAXIMUM_NUMBER_OF_LAPS = 2
+MAXIMUM_NUMBER_OF_LAPS = 4
 
 
 def main() -> int:
@@ -73,7 +75,6 @@ def main() -> int:
         return -1
 
     # Convert lap waypoint dictionary to list
-    # TODO: In progress
     # pylint: disable-next=unused-variable
     result, lap_waypoint_list = waypoints_dict_to_list.waypoints_dict_to_list(
         lap_waypoint_dictionary,
@@ -124,6 +125,14 @@ def main() -> int:
         print("ERROR: upload_commands")
         return -1
 
+    print("Upload successful, waiting for takeoff ...")
+
+    # Wait for the drone to takeoff
+    location_info = drone.location
+    while location_info.global_relative_frame.alt < MISSION_WAIT_ALTITUDE_THRESHOLD:
+        location_info = drone.location
+        time.sleep(MISSION_WAIT_TIMEOUT)
+
     start_time = time.time()
     result, time_condition = mission_time_condition.MissionTimeCondition.create(
         start_time, MAXIMUM_FLIGHT_TIME
@@ -134,15 +143,62 @@ def main() -> int:
         return -1
 
     return_to_launch_evaluator = condition_evaluator.ConditionEvaluator([time_condition])
+    should_return_to_launch = False
+    starting_lap = True
+    lap_start_time, lap_end_time = 0, 0
+    lap_counter = 0
 
     while True:
-        # Send drone back to launch if exceeds time limit
+        # Time how long it takes for the drone to fly a lap and decide if there is enough time to fly another lap
+        if drone.commands.next == LAP_START_SEQUENCE_NUMBER:
+            if starting_lap:
+                if lap_start_time == 0:
+                    # Record the start time when running a new lap
+                    lap_start_time = time.time()
+                    lap_counter += 1
 
-        should_return_to_launch = return_to_launch_evaluator.evaluate_all_conditions()
+                    # Log lap and time data
+                    print("\n--------------------------------------------------------")
+                    print(f"Starting lap {lap_counter}")
+                    print("--------------------------------------------------------")
+                    time_condition.output_time_elapsed()
+
+                    # Disable flag since starting lap time is recorded
+                    starting_lap = False
+                else:
+                    # Calculate lap time
+                    lap_end_time = time.time()
+                    lap_time = lap_end_time - lap_start_time
+
+                    # Log lap and time data
+                    time_condition.output_time_elapsed()
+                    print("--------------------------------------------------------")
+                    print(f"Lap {lap_counter} start time (s): {lap_start_time}")
+                    print(f"Lap {lap_counter} end time (s): {lap_end_time}")
+                    print(f"Lap {lap_counter} time (s): {lap_time}")
+                    print(f"Maximum flight time (s): {MAXIMUM_FLIGHT_TIME}")
+                    print(
+                        f"Estimated finish time of next lap (s): {(time.time() - start_time) + lap_time}"
+                    )
+                    print("--------------------------------------------------------")
+
+                    # Update lap time and decided to continue or force early RTL
+                    time_condition.update_lap_time(lap_time)
+                    should_return_to_launch = return_to_launch_evaluator.evaluate_all_conditions()
+
+                    # Reset lap start time and end time
+                    lap_start_time, lap_end_time = 0, 0
+            else:
+                # Log time data
+                time_condition.output_time_elapsed()
+        else:
+            # Log time data
+            time_condition.output_time_elapsed()
+            # Enable flag so when lap start waypoint is reached again, lap time can be calculated
+            starting_lap = True
+
         if should_return_to_launch:
             break
-
-        time_condition.output_time_elapsed()
 
         time.sleep(DELAY)
 

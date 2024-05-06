@@ -41,13 +41,14 @@ class MissionTimeCondition(condition.Condition):
         assert class_private_create_key is MissionTimeCondition.__create_key
         self.start_time = start_time
         self.maximum_flight_time = maximum_flight_time
+        self.lap_time = 0
 
     def evaluate_condition(self) -> bool:
         """
         Evaluates whether the drone should land based on time remaining.
         """
         current_time = time.time()
-        if current_time - self.start_time < self.maximum_flight_time:
+        if (current_time + self.lap_time) - self.start_time < self.maximum_flight_time:
             return False
 
         return True
@@ -59,11 +60,26 @@ class MissionTimeCondition(condition.Condition):
         current_time = time.time()
         print(f"Elapsed time (s): {current_time - self.start_time}")
 
+    def update_lap_time(self, lap_time: float) -> None:
+        """
+        Updates the time taken to fly one lap.
+        """
+        self.lap_time = lap_time
+
     def message(self) -> None:
         """
         Outputs status when the drone has exceeded the time limit.
         """
+        current_time = time.time()
+
+        print("\n###########################################################")
         print("This mission has exceeded the maximum flight time limit.")
         print(f"Specified maximum flight time limit: {self.maximum_flight_time}")
         print(f"Mission start time: {self.start_time}")
-        print(f"Time when condition was met: {time.time()}")
+        print(f"Time when condition was met: {current_time}")
+        print(f"Total flight time: {current_time - self.start_time}")
+        print(f"Time of previous lap: {self.lap_time}")
+        print(
+            f"Total flight time + time to fly another lap: {(current_time - self.start_time) + self.lap_time}"
+        )
+        print("###########################################################\n")
