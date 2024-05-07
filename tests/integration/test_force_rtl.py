@@ -152,7 +152,7 @@ def main() -> int:
     result = force_rtl.force_rtl(controller.drone)
 
     if not result:
-        print("Drone failed during return to launch sequence")
+        print("Drone failed during return to launch sequence.")
         return -1
 
     return 0
