@@ -78,9 +78,9 @@ def diversion_waypoints_from_vertices(
             if temp_dist < dist[node]:
                 dist[node], prev[node] = temp_dist, temp_node
 
-        temp_current: location_ground.LocationGround = rejoin_waypoint
-        while temp_current != current_location:
-            diversion_waypoints = prev[temp_current] + diversion_waypoints
-            temp_current = prev[temp_current]
+    temp_current: location_ground.LocationGround = rejoin_waypoint
+    while temp_current != current_location:
+        temp_current = prev[temp_current]
+        diversion_waypoints = temp_current + diversion_waypoints
 
     return diversion_waypoints
