@@ -11,7 +11,7 @@ from modules.common.mavlink.modules import flight_controller
 from modules import force_rtl
 
 DELAY_TIME = 1.0  # seconds
-DELAY_TIME_MINUTE = 60.0 # seconds
+DELAY_TIME_MINUTE = 60.0  # seconds
 MISSION_PLANNER_ADDRESS = "tcp:127.0.0.1:14550"
 TIMEOUT = 1.0  # seconds
 
@@ -144,16 +144,16 @@ def main() -> int:
         time.sleep(DELAY_TIME)
 
     print("Drone's destination is final waypoint.")
-    
+
     # Delay for one minute
     time.sleep(DELAY_TIME_MINUTE)
-    
+
     # Force drone to return to launch (RTL)
     result = force_rtl.force_rtl(controller.drone)
-    
+
     if not result:
         print("Drone failed during return to launch sequence")
-    
+
     return 0
 
 
