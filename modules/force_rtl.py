@@ -26,16 +26,16 @@ def force_rtl(drone: dronekit.Vehicle) -> bool:
     bool: True if uploading RTL command is successful, False otherwise.
     """
 
-    # generate and set RTL command
+    # Generate and set RTL command
     rtl_command = generate_command.return_to_launch()
 
-    # change drone mode
+    # Change drone mode
     drone.mode = dronekit.VehicleMode("RTL")
 
-    # utilize upload_command function to give RTL command to drone
+    # Utilize upload_command function to give RTL command to drone
     result = upload_commands.upload_commands(drone, [rtl_command], DRONE_TIMEOUT)
 
-    # error if unsuccessful
+    # Error if unsuccessful
     if not result:
         print("Unable to upload RTL command to drone command sequence.")
 
