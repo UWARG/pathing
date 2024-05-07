@@ -153,6 +153,7 @@ def main() -> int:
 
     if not result:
         print("Drone failed during return to launch sequence")
+        return -1
 
     return 0
 
