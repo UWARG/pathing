@@ -125,26 +125,6 @@ def main() -> int:
         print("Failed to upload mission.")
         return -1
 
-    while True:
-        result, is_drone_destination_final_waypoint = (
-            controller.is_drone_destination_final_waypoint()
-        )
-        if not result:
-            print("Failed to get if the drone's destination is the final waypoint.")
-            return -1
-
-        # Get Pylance to stop complaining
-        assert is_drone_destination_final_waypoint is not None
-
-        if is_drone_destination_final_waypoint:
-            break
-
-        print("Drone's destination is not final waypoint.")
-
-        time.sleep(DELAY_TIME)
-
-    print("Drone's destination is final waypoint.")
-
     # Delay for one minute
     time.sleep(DELAY_TIME_MINUTE)
 
