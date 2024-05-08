@@ -47,33 +47,30 @@ def diversion_waypoints_from_vertices(
         [(vertex.longitude, vertex.latitude) for vertex in verticies]
     ).buffer(15, join_style="mitre")
 
+    # Dijkstra's algorithm
+
     graph: "list[location_ground.LocationGround]" = [current_location, rejoin_waypoint] + [
         location_ground.LocationGround("", coord[0], coord[1])
         for coord in diversion_area.exterior.coords
     ]
 
     dist: "dict[location_ground.LocationGround, float]" = {elem: float("inf") for elem in graph}
-    prev: "dict[location_ground.LocationGround, float]" = {elem: 0 for elem in graph}
+    prev: "dict[location_ground.LocationGround, float]" = {elem: None for elem in graph}
     queue: "list[location_ground.LocationGround]" = graph
 
     dist[current_location] = 0
 
     while queue:
-        unvisited: "list[location_ground.LocationGround]" = []
-        temp_node: location_ground.LocationGround = min(
-            queue, key=lambda location: location.latitude + location.longitude
-        )
-
-        for node in graph:
-            if node == temp_node:
-                continue
-            if not shapely.geometry.LineString(
-                [(temp_node.latitude, temp_node.longitude), (node.latitude, node.longitude)]
-            ).intersects(diversion_area):
-                unvisited.append(node)
+        temp_node: location_ground.LocationGround = min(queue, key=lambda node: dist[node])
 
         queue.remove(temp_node)
-        for node in unvisited:
+
+        for node in queue:
+            if shapely.geometry.LineString(
+                [(temp_node.latitude, temp_node.longitude), (node.latitude, node.longitude)]
+            ).intersects(diversion_area):
+                continue
+
             temp_dist = dist[temp_node] + _calculate_waypoint_distance_squared(temp_node, node)
             if temp_dist < dist[node]:
                 dist[node], prev[node] = temp_dist, temp_node
