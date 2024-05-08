@@ -44,7 +44,7 @@ def diversion_waypoints_from_vertices(
     ]
 
     diversion_area: shapely.geometry.Polygon = shapely.geometry.Polygon(
-        [(vertex.longitude, vertex.latitude) for vertex in verticies]
+        [(vertex.latitude, vertex.longitude) for vertex in verticies]
     ).buffer(15, join_style="mitre")
 
     # Dijkstra's algorithm
