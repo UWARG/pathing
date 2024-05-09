@@ -55,7 +55,7 @@ def diversion_waypoints_from_vertices(
     # dist and prev indexes associated with graph
     dist: "list[location_ground.LocationGround, float]" = [float("inf")] * len(graph)
     prev: "list[location_ground.LocationGround, float]" = [None] * len(graph)
-    queue: "list[location_ground.LocationGround]" = list(graph)  # shallow copy
+    queue: "list[location_ground.LocationGround]" = list(graph)  # deep copy
 
     dist[graph.index(current_location)] = 0
 
