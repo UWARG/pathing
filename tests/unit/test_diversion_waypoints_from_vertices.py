@@ -55,7 +55,7 @@ def test_diversion_waypoints_from_vertices() -> None:
         ).intersects(bounded_area)
 
 
-def test_concave_restricted_area():
+def test_concave_restricted_area() -> None:
     """
     Test correctness of diversion_waypoints_from_vertices when restricted area has concavity
     """
@@ -84,7 +84,7 @@ def test_concave_restricted_area():
         ).intersects(bounded_area)
 
 
-def test_efficiency():
+def test_efficiency() -> None:
     """
     Test if diversion_waypoints_from_vertices produces shortest path to rejoin point
     """
