@@ -39,9 +39,7 @@ def diversion_waypoints_from_vertices(
             latitude_difference * latitude_difference + longitude_difference * longitude_difference
         )
 
-    diversion_waypoints: "list[location_ground.LocationGround]" = [
-        rejoin_waypoint,
-    ]
+    diversion_waypoints: "list[location_ground.LocationGround]" = [rejoin_waypoint]
 
     diversion_area: shapely.geometry.Polygon = shapely.geometry.Polygon(
         [(vertex.latitude, vertex.longitude) for vertex in verticies]
