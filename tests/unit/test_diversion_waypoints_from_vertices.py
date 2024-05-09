@@ -2,8 +2,6 @@
 Test cases for creating waypoints to avoid area bounded by verticies and rejoining path
 """
 
-import pytest
-
 import shapely.geometry
 
 from modules import diversion_waypoints_from_vertices
