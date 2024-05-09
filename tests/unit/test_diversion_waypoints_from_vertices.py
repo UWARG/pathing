@@ -22,7 +22,7 @@ def test_no_vertices_given() -> None:
     end: location_ground.LocationGround = location_ground.LocationGround("end", 0, 50)
     verticies: "list[location_ground.LocationGround]" = []
 
-    expected_path: "list[location_ground.LocationGround]" = [end]
+    expected_path: "list[location_ground.LocationGround]" = [start, end]
 
     assert (
         diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(start, end, verticies)

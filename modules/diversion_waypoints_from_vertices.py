@@ -45,23 +45,26 @@ def diversion_waypoints_from_vertices(
 
     diversion_area: shapely.geometry.Polygon = shapely.geometry.Polygon(
         [(vertex.latitude, vertex.longitude) for vertex in verticies]
-    ).buffer(15, join_style="mitre")
+    )
 
     # Dijkstra's algorithm
 
     graph: "list[location_ground.LocationGround]" = [current_location, rejoin_waypoint] + [
         location_ground.LocationGround("", coord[0], coord[1])
-        for coord in diversion_area.exterior.coords
+        for coord in diversion_area.buffer(15, join_style="mitre").exterior.coords
     ]
 
-    dist: "dict[location_ground.LocationGround, float]" = {elem: float("inf") for elem in graph}
-    prev: "dict[location_ground.LocationGround, float]" = {elem: None for elem in graph}
-    queue: "list[location_ground.LocationGround]" = graph
+    # dist and prev indexes associated with graph
+    dist: "list[location_ground.LocationGround, float]" = [float("inf")] * len(graph)
+    prev: "list[location_ground.LocationGround, float]" = [None] * len(graph)
+    queue: "list[location_ground.LocationGround]" = [node for node in graph]  # shallow copy
 
-    dist[current_location] = 0
+    dist[graph.index(current_location)] = 0
 
     while queue:
-        temp_node: location_ground.LocationGround = min(queue, key=lambda node: dist[node])
+        temp_node: location_ground.LocationGround = min(
+            queue, key=lambda node: dist[graph.index(node)]
+        )
 
         queue.remove(temp_node)
 
@@ -71,13 +74,17 @@ def diversion_waypoints_from_vertices(
             ).intersects(diversion_area):
                 continue
 
-            temp_dist = dist[temp_node] + _calculate_waypoint_distance_squared(temp_node, node)
-            if temp_dist < dist[node]:
-                dist[node], prev[node] = temp_dist, temp_node
+            temp_dist = dist[graph.index(temp_node)] + _calculate_waypoint_distance_squared(
+                temp_node, node
+            )
+
+            if temp_dist < dist[graph.index(node)]:
+                dist[graph.index(node)] = temp_dist
+                prev[graph.index(node)] = temp_node
 
     temp_current: location_ground.LocationGround = rejoin_waypoint
     while temp_current != current_location:
-        temp_current = prev[temp_current]
-        diversion_waypoints = temp_current + diversion_waypoints
+        temp_current = prev[graph.index(temp_current)]
+        diversion_waypoints.insert(0, temp_current)
 
     return diversion_waypoints
