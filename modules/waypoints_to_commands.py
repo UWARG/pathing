@@ -8,7 +8,7 @@ from . import generate_command, waypoint
 from .common.kml.modules import location_ground
 
 
-ACCEPT_RADIUS = 10.0  # metres
+ACCEPT_RADIUS = 5.0  # metres
 
 
 def waypoints_to_commands(
