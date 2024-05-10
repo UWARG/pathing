@@ -18,7 +18,7 @@ from modules.common.kml.modules import ground_locations_to_kml
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc_waypoints_task_2.csv")
-ALTITUDE = 40
+TAKEOFF_ALTITUDE = 10
 DRONE_TIMEOUT = 30.0  # seconds
 CONNECTION_ADDRESS = "tcp:localhost:14550"
 LOG_DIRECTORY_PATH = pathlib.Path("logs")
@@ -79,6 +79,7 @@ def main() -> int:
         waypoint_commands,
         loiter_coordinate.location_ground.latitude,
         loiter_coordinate.location_ground.longitude,
+        TAKEOFF_ALTITUDE,
         loiter_coordinate.altitude,
     )
     if not result:

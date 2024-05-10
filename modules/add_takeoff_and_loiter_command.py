@@ -8,7 +8,7 @@ from . import generate_command
 
 
 def add_takeoff_and_loiter_command(
-    commands: "list[dronekit.Command]", latitude: float, longitude: float, altitude: float
+    commands: "list[dronekit.Command]", latitude: float, longitude: float, takeoff_altitude: float, loiter_altitude: float
 ) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     Prepends a takeoff command and appends a loiter command to a list of dronekit commands.
@@ -33,10 +33,10 @@ def add_takeoff_and_loiter_command(
     if len(commands) == 0:
         return False, None
 
-    takeoff_command = generate_command.takeoff(altitude)
+    takeoff_command = generate_command.takeoff(takeoff_altitude)
     commands.insert(0, takeoff_command)
 
-    loiter_command = generate_command.loiter_unlimited(latitude, longitude, altitude)
+    loiter_command = generate_command.loiter_unlimited(latitude, longitude, loiter_altitude)
     commands.append(loiter_command)
 
     return True, commands
