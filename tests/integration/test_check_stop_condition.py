@@ -80,7 +80,7 @@ def main() -> int:
         if should_return_to_launch:
             break
 
-        check_time_condition.output_time_elapsed()
+        check_time_condition.output_time_elapsed(30)
 
         time.sleep(DELAY)
 

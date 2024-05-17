@@ -21,7 +21,7 @@ from modules import upload_commands
 TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1.csv")
 LAP_WAYPOINTS_FILE_PATH = pathlib.Path("2024", "waypoints", "lap_waypoints_task_1.csv")
 CONNECTION_ADDRESS = "tcp:localhost:14550"
-DELAY = 30  # seconds
+PRINT_FREQUENCY = 30  # seconds
 MAXIMUM_FLIGHT_TIME = 1800  # in seconds
 TAKEOFF_ALTITUDE = 0  # metres
 ALPHA_WAYPOINT_ALTITUDE = 100  # metres
@@ -161,7 +161,7 @@ def main() -> int:
                     print("\n--------------------------------------------------------")
                     print(f"Starting lap {lap_counter}")
                     print("--------------------------------------------------------")
-                    time_condition.output_time_elapsed()
+                    time_condition.output_time_elapsed(PRINT_FREQUENCY)
 
                     # Disable flag since starting lap time is recorded
                     starting_lap = False
@@ -171,7 +171,7 @@ def main() -> int:
                     lap_time = lap_end_time - lap_start_time
 
                     # Log lap and time data
-                    time_condition.output_time_elapsed()
+                    time_condition.output_time_elapsed(PRINT_FREQUENCY)
                     print("--------------------------------------------------------")
                     print(f"Lap {lap_counter} start time (s): {lap_start_time}")
                     print(f"Lap {lap_counter} end time (s): {lap_end_time}")
@@ -190,17 +190,15 @@ def main() -> int:
                     lap_start_time, lap_end_time = 0, 0
             else:
                 # Log time data
-                time_condition.output_time_elapsed()
+                time_condition.output_time_elapsed(PRINT_FREQUENCY)
         else:
             # Log time data
-            time_condition.output_time_elapsed()
+            time_condition.output_time_elapsed(PRINT_FREQUENCY)
             # Enable flag so when lap start waypoint is reached again, lap time can be calculated
             starting_lap = True
 
         if should_return_to_launch:
             break
-
-        time.sleep(DELAY)
 
     # Force early RTL
     drone.mode = dronekit.VehicleMode("RTL")

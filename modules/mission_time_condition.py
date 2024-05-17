@@ -42,6 +42,7 @@ class MissionTimeCondition(condition.Condition):
         self.start_time = start_time
         self.maximum_flight_time = maximum_flight_time
         self.lap_time = 0
+        self.previous_time_elapsed = -1
 
     def evaluate_condition(self) -> bool:
         """
@@ -53,12 +54,17 @@ class MissionTimeCondition(condition.Condition):
 
         return True
 
-    def output_time_elapsed(self) -> None:
+    def output_time_elapsed(self, frequency: int) -> None:
         """
         Outputs the total time elapsed during the mission.
+        frequency: int
+            Frequency to print time elapsed to the console.
         """
-        current_time = time.time()
-        print(f"Elapsed time (s): {current_time - self.start_time}")
+        time_elapsed = int(time.time() - self.start_time)
+
+        if time_elapsed % frequency == 0 and time_elapsed != self.previous_time_elapsed:
+            self.previous_time_elapsed = time_elapsed
+            print(f"Elapsed time (s): {time_elapsed}")
 
     def update_lap_time(self, lap_time: float) -> None:
         """
