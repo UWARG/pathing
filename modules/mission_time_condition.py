@@ -61,7 +61,7 @@ class MissionTimeCondition(condition.Condition):
             Frequency to print time elapsed to the console.
         """
         time_elapsed = int(time.time() - self.start_time)
-        
+
         if time_elapsed % frequency == 0 and time_elapsed != self.previous_time_elapsed:
             self.previous_time_elapsed = time_elapsed
             print(f"Elapsed time (s): {time_elapsed}")
