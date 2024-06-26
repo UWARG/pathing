@@ -1,4 +1,4 @@
-altitude: 40
+takeoff_altitude: 40
 
 drone_timeout: 30.0  # seconds
 
