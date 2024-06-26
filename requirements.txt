@@ -2,6 +2,7 @@
 dronekit
 pytest
 pyyaml
+shapely
 
 # Linters and formatters are explicitly versioned
 black==24.2.0

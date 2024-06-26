@@ -33,6 +33,6 @@ def add_takeoff_and_rtl_command(
     commands.insert(0, takeoff_command)
 
     rtl_command = generate_command.return_to_launch()
-    commands.append(rtl_command)
+    commands.insert(len(commands), rtl_command)
 
     return True, commands

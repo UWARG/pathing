@@ -8,7 +8,7 @@ import yaml
 
 import dronekit
 
-from modules import add_takeoff_and_landing_command
+from modules import add_takeoff_and_loiter_command
 from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
 from modules import upload_commands
@@ -43,7 +43,7 @@ def main() -> int:
     # Set constants
     try:
         # pylint: disable=invalid-name
-        ALTITUDE = config["altitude"]
+        TAKEOFF_ALTITUDE = config["takeoff_altitude"]
         DRONE_TIMEOUT = config["drone_timeout"]
         CONNECTION_ADDRESS = config["connection_address"]
         LOG_DIRECTORY_PATH = pathlib.Path(config["log_directory_path"])
@@ -62,24 +62,26 @@ def main() -> int:
 
     # Read in hardcoded waypoints from CSV file
     # Waypoints are stored in order of insertion, starting with the top row
-    result, waypoint_name_to_coordinates = (
-        load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
-            WAYPOINT_FILE_PATH,
-        )
+    (
+        result,
+        waypoint_name_to_coordinates,
+    ) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_and_altitude_map(
+        WAYPOINT_FILE_PATH,
     )
     if not result:
         print("ERROR: load_waypoint_name_to_coordinates_map")
         return -1
 
-    result, waypoints_list = waypoints_dict_to_list.waypoints_dict_to_list(
+    result, waypoints_list = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(
         waypoint_name_to_coordinates
     )
     if not result:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
 
+    location_ground_list = list(map(lambda waypoint: waypoint.location_ground, waypoints_list))
     result, _ = ground_locations_to_kml.ground_locations_to_kml(
-        waypoints_list,
+        location_ground_list,
         KML_FILE_PREFIX,
         LOG_DIRECTORY_PATH,
     )
@@ -87,25 +89,28 @@ def main() -> int:
         print("ERROR: Unable to generate KML file")
         return -1
 
-    result, waypoint_commands = waypoints_to_commands.waypoints_to_commands(
+    result, waypoint_commands = waypoints_to_commands.waypoints_with_altitude_to_commands(
         waypoints_list,
-        ALTITUDE,
     )
     if not result:
         print("Error: waypoints_to_commands")
         return -1
 
-    result, takeoff_landing_commands = (
-        add_takeoff_and_landing_command.add_takeoff_and_landing_command(
-            waypoint_commands,
-            ALTITUDE,
-        )
+    # get the last waypoint for loitering
+    loiter_coordinate = waypoints_list[-1]
+
+    result, takeoff_loiter_commands = add_takeoff_and_loiter_command.add_takeoff_and_loiter_command(
+        waypoint_commands,
+        loiter_coordinate.location_ground.latitude,
+        loiter_coordinate.location_ground.longitude,
+        TAKEOFF_ALTITUDE,
+        loiter_coordinate.altitude,
     )
     if not result:
-        print("Error: add_takeoff_and_landing_command")
+        print("Error: add_takeoff_and_loiter_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands, DRONE_TIMEOUT)
+    result = upload_commands.upload_commands(drone, takeoff_loiter_commands, DRONE_TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
