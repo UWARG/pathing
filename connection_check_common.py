@@ -46,7 +46,22 @@ def main():
         print("ERROR: FlightController failed to instantiate")
         return -1
     
-    controller.get_odometry()
+    if WRITE_TEST:
+        assert(NotImplementedError)
+        return -1
+
+    if READ_TEST:
+        success, odometry = controller.get_odometry()
+        print("------")
+        print("Position:")
+        print(odometry.position.altitude)
+        print(odometry.position.latitude)
+        print(odometry.position.longitude)
+        print("Attitude:")
+        print(odometry.orientation.pitch)
+        print(odometry.orientation.roll)
+        print(odometry.orientation.yaw)
+        # i dont think theres code to download from flight controller yet 💀
     
     return 0
 
