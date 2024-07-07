@@ -1,0 +1,14 @@
+takeoff_altitude: 40
+
+drone_timeout: 30.0  # seconds
+
+connection_address: "tcp:localhost:14550"
+
+log_directory_path: "logs"
+
+kml_file_prefix: "waypoints"
+
+delay: 0.1  # seconds
+
+maximum_flight_time: 1800  # seconds
+

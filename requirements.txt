@@ -1,6 +1,7 @@
 # Packages listed in alphabetical order
 dronekit
 pytest
+pyyaml
 shapely
 
 # Linters and formatters are explicitly versioned
