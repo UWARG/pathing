@@ -108,12 +108,12 @@ def csv_to_commands_list(
         for line in file:
             # Skip header and empty lines
             parts = line.split(",")
-
-            if (
-                line in "frame,command_type,param1,param2,param3,param4,param5,param6,param7\n"
-                or len(parts) < 9
-            ):
+            if line in "frame,command_type,param1,param2,param3,param4,param5,param6,param7\n":
                 continue
+
+            # If the parameters are messed up
+            if len(parts) != 9:
+                return False, None
 
             frame, command_type, param1, param2, param3, param4, param5, param6, param7 = parts
             success, command = generate_command_advanced(

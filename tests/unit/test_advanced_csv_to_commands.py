@@ -85,3 +85,14 @@ def test_file_path_does_not_exist() -> None:
     success, mission = advanced_csv_to_commands.csv_to_commands_list(invalid_path)
     assert not success
     assert mission is None
+
+
+def test_bad_line() -> None:
+    """
+    A line does not have the correct number of parameters.
+    Fourth line (third command) is missing a 0 and therefore an invalid command
+    """
+    invalid_path = pathlib.Path("tests", "test_csv", "test_incorrect_num_params_csv.csv")
+    success, mission = advanced_csv_to_commands.csv_to_commands_list(invalid_path)
+    assert not success
+    assert mission is None
