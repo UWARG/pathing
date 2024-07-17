@@ -14,7 +14,9 @@ def test_normal_file() -> None:
     """
     A normal advanced CSV file
     """
-    normal_advanced_csv_path = pathlib.Path("tests", "test_csv", "test_normal_advanced_csv.csv")
+    normal_advanced_csv_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_normal_advanced_csv.csv"
+    )
 
     expected_mission = [
         generate_command.takeoff(50),
@@ -51,7 +53,9 @@ def test_empty_csv() -> None:
     """
     CSV file is empty, expected to fail
     """
-    empty_advanced_csv_path = pathlib.Path("tests", "test_csv", "test_empty_advanced_csv.csv")
+    empty_advanced_csv_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_empty_advanced_csv.csv"
+    )
     success, mission = advanced_csv_to_commands.csv_to_commands_list(empty_advanced_csv_path)
     assert not success
     assert mission is None
@@ -61,7 +65,9 @@ def test_invalid_command_name() -> None:
     """
     waypoint is misspelled as "wayypoint", expected to fail
     """
-    invalid_command_name_path = pathlib.Path("tests", "test_csv", "test_invalid_command_name.csv")
+    invalid_command_name_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_invalid_command_name.csv"
+    )
     success, mission = advanced_csv_to_commands.csv_to_commands_list(invalid_command_name_path)
     assert not success
     assert mission is None
@@ -71,7 +77,9 @@ def test_invalid_frame_name() -> None:
     """
     global is misspelled as "globbal", expected to fail
     """
-    invalid_frame_name_path = pathlib.Path("tests", "test_csv", "test_invalid_frame_name.csv")
+    invalid_frame_name_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_invalid_frame_name.csv"
+    )
     success, mission = advanced_csv_to_commands.csv_to_commands_list(invalid_frame_name_path)
     assert not success
     assert mission is None
@@ -92,7 +100,35 @@ def test_bad_line() -> None:
     A line does not have the correct number of parameters.
     Fourth line (third command) is missing a 0 and therefore an invalid command
     """
-    invalid_path = pathlib.Path("tests", "test_csv", "test_incorrect_num_params_csv.csv")
+    invalid_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_incorrect_num_params_csv.csv"
+    )
     success, mission = advanced_csv_to_commands.csv_to_commands_list(invalid_path)
+    assert not success
+    assert mission is None
+
+
+def test_nonzero_param() -> None:
+    """
+    A parameter that should be set to zero is not zero (takeoff param1),
+    expected to fail
+    """
+    nonzero_param_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_nonzero_param_csv.csv"
+    )
+    success, mission = advanced_csv_to_commands.csv_to_commands_list(nonzero_param_path)
+    assert not success
+    assert mission is None
+
+
+def test_non_int_param() -> None:
+    """
+    Do-jump's parameters are supposed to be integers but they are not,
+    expected to fail
+    """
+    non_integer_param_path = pathlib.Path(
+        "tests", "test_csv", "advanced_csv", "test_non_integer_param_csv.csv"
+    )
+    success, mission = advanced_csv_to_commands.csv_to_commands_list(non_integer_param_path)
     assert not success
     assert mission is None

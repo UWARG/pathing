@@ -23,6 +23,41 @@ VALID_COMMANDS = {
     "do_jump": dronekit.mavutil.mavlink.MAV_CMD_DO_JUMP,
 }
 
+"""
+The input matrix maps the command types to the valid parameters.
+See documentation for more information: https://uwarg-docs.atlassian.net/wiki/spaces/CV/pages/2567274629/Encoded+MAVLink+commands 
+0: Command should be set to zero
+1: Command should be a float
+2: Command should be an integer
+"""
+COMMAND_TO_PARAMETER_MATRIX = {
+    "land": [0, 0, 0, 0, 1, 1, 0],
+    "return_to_launch": [0, 0, 0, 0, 0, 0, 0],
+    "takeoff": [0, 0, 0, 0, 0, 0, 1],
+    "waypoint": [1, 1, 0, 0, 1, 1, 1],
+    "waypoint_spline": [1, 0, 0, 0, 1, 1, 1],
+    "loiter_timed": [1, 0, 0, 0, 1, 1, 1],
+    "loiter_unlimited": [0, 0, 0, 0, 1, 1, 1],
+    "do_jump": [2, 2, 0, 0, 0, 0, 0],
+}
+
+
+def check_validity(params: "list[float]", matrix_rules: "list[float]") -> bool:
+    """
+    Compares a command's parameters to the matrix rules, and returns whether
+    the command is valid or not
+    """
+    if len(params) != len(matrix_rules):
+        return False
+
+    for index, param in enumerate(params):
+        if matrix_rules[index] == 0 and param != 0:
+            return False
+        if matrix_rules[index] == 2 and not param.is_integer():
+            return False
+
+    return True
+
 
 def generate_command_advanced(
     frame: str,
@@ -34,30 +69,11 @@ def generate_command_advanced(
     param5: float,
     param6: float,
     param7: float,
-) -> "tuple[bool,dronekit.Command]":
+) -> "tuple[bool,dronekit.Command | None]":
     """
-    Parameters:
+    Parameters: See documentation: https://uwarg-docs.atlassian.net/wiki/spaces/CV/pages/2567274629/Encoded+MAVLink+commands
 
-    frame: The command's frame of reference. Frame should be one of the following two values.
-        - global (usually used for landing or return to launch)
-        - global_relative_alt (all other commands, such as waypoint, spline waypoint, etc.)
-
-    command_type: The command type. Depending on this value, params 1 through 7 will take on different meanings. This should be one of the following enums:
-        - land:
-        - return_to_launch: Return to the home location where the vehicle was last armed.
-        - takeoff
-        - waypoint: Navigate to the specified waypoint
-        - waypoint_spline
-        - loiter_timed: Loiter at the specified location for an specified amount of time
-        - loiter_unlimited: Loiter at the specified location for an unlimited amount of time
-        - do_jump: Jump to the specified command in the mission list.
-
-    param1 through param7: These take different meanings depending on the command type. See the documentation for meanings:
-                            https://uwarg-docs.atlassian.net/wiki/spaces/CV/pages/2567274629/Encoded+MAVLink+commands
-                            Alteratively, here is the official documentation:
-                            https://ardupilot.org/copter/docs/common-mavlink-mission-command-messages-mav_cmd.html#commands-supported-by-copter
-
-    Returns: Whether or not the command was successful, and the mission command.
+    Returns: Whether the command was successful and the mission command.
     """
 
     # Invalid command
@@ -66,6 +82,11 @@ def generate_command_advanced(
 
     # Invalid frame type
     if frame not in VALID_FRAMES:
+        return False, None
+
+    params = [param1, param2, param3, param4, param5, param6, param7]
+
+    if not check_validity(params, COMMAND_TO_PARAMETER_MATRIX[command_type]):
         return False, None
 
     return True, dronekit.Command(
@@ -88,7 +109,7 @@ def generate_command_advanced(
 
 def csv_to_commands_list(
     mission_file_path: pathlib.Path,
-) -> "tuple[bool, list[dronekit.Command]]":
+) -> "tuple[bool, list[dronekit.Command] | None]":
     """
     A method that reads a list of advanced commands from a csv file and generates a mission.
     Parameters:
@@ -99,7 +120,6 @@ def csv_to_commands_list(
         - A list of dronekit commands that represent the mission
 
     """
-    # Does the file path exist?
     if not mission_file_path.exists():
         return False, None
 
@@ -107,16 +127,17 @@ def csv_to_commands_list(
     with open(mission_file_path, encoding="utf-8") as file:
         for line in file:
             # Skip header and empty lines
-            parts = line.split(",")
             if line in "frame,command_type,param1,param2,param3,param4,param5,param6,param7\n":
                 continue
 
-            # If the parameters are messed up
+            parts = line.split(",")
+
+            # Incorrect number of parameters
             if len(parts) != 9:
                 return False, None
 
             frame, command_type, param1, param2, param3, param4, param5, param6, param7 = parts
-            success, command = generate_command_advanced(
+            result, command = generate_command_advanced(
                 frame,
                 command_type,
                 float(param1),
@@ -127,13 +148,12 @@ def csv_to_commands_list(
                 float(param6),
                 float(param7),
             )
-            # Was the command successfully generated?
-            if not success:
+            if not result:
                 return False, None
 
             mission.append(command)
 
-    if len(mission) > 0:
-        return True, mission
+    if len(mission) == 0:
+        return False, None
 
-    return False, None
+    return True, mission

@@ -6,4 +6,4 @@ global_relative_alt,waypoint,0,0.1,0,0,43.47352476,-80.54144668,10
 global_relative_alt,waypoint_spline,0,0,0,0,43.47323264522664,-80.5401164,10
 global,return_to_launch,0,0,0,0,0,0,0
 global,land,0,0,0,0,0,0,0
-global_relative_alt,do_jump,4,2,0,0,0,0,0
+global_relative_alt,do_jump,4.0,2,0,0,0,0,0
