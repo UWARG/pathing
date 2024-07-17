@@ -6,6 +6,7 @@ import pathlib
 import time
 import sys
 import select
+import msvcrt
 
 import dronekit
 
@@ -19,14 +20,13 @@ from modules import waypoint_names_to_coordinates
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
 from modules import waypoints_to_commands
-from modules.common.kml.modules import ground_locations_to_kml
 from modules import diversion_waypoints_from_vertices
 from modules import diversion_qr_to_waypoint_list
 from modules import generate_command
 
-WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "competition_task_1.csv")
-DIVERSION_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "diversion_waypoints.csv")
-REJOIN_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "rejoin_waypoint.csv")
+WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "competition_task_1.csv")
+DIVERSION_WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "diversion_waypoints.csv")
+REJOIN_WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "rejoin_waypoint.csv")
 CAMERA = 0
 ALTITUDE = 40
 DRONE_TIMEOUT = 30.0  # seconds
@@ -67,15 +67,6 @@ def main() -> int:
         print("ERROR: convert waypoints from dict to list")
         return -1
 
-    result, _ = ground_locations_to_kml.ground_locations_to_kml(
-        waypoints_list,
-        KML_FILE_PREFIX,
-        LOG_DIRECTORY_PATH,
-    )
-    if not result:
-        print("ERROR: Unable to generate KML file")
-        return -1
-
     # result, qr_text = qr_input.qr_input(CAMERA)
     # if not result:
     #     print("ERROR: qr_input")
@@ -94,7 +85,7 @@ def main() -> int:
     #     print("ERROR: waypoint_names_to_coordinates")
     #     return -1
 
-    result, waypoint_commands = waypoints_to_commands.waypoints_with_altitude_to_commands(waypoints_list)
+    result, waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints_list, ALTITUDE)
     if not result:
         print("Error: waypoints_to_commands")
         return -1
@@ -112,6 +103,7 @@ def main() -> int:
         print("Error: upload_commands")
         return -1
 
+    is_qr_text_found = False    
     # Drone starts flying
     while True:
         result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
@@ -126,18 +118,15 @@ def main() -> int:
         else:
             print(f"Current location (Lat, Lon): {location}")
 
+        is_qr_text_found = False 
         # nonblocking, just takes single picture
         # is_qr_text_found, diversion_qr_text = diversion_qr_input.diversion_qr_input(CAMERA)
-
-        # wait for text input in console
-        is_qr_text_found = False
-
         # wait for text input in console
         print("Press 'q' to simulate QR code found or any other key to continue waiting.")
         if not is_qr_text_found:
             # Check if input is available
-            if select.select([sys.stdin], [], [], 0.1)[0]:
-                input_char = sys.stdin.readline().strip()
+            if msvcrt.kbhit():
+                input_char = msvcrt.getwche() 
                 if input_char == 'q':
                     is_qr_text_found = True
                     print("Simulated QR code found.")
@@ -158,6 +147,8 @@ def main() -> int:
             if not result:
                 print("ERROR: diversion_waypoint_name_to_coordinates_map")
                 return -1
+            
+            diversion_waypoint_values_list = list(diversion_waypoint_list.values())
 
             (result, rejoin_waypoint_list) = load_waypoint_name_to_coordinates_map.load_waypoint_name_to_coordinates_map(
                 REJOIN_WAYPOINT_FILE_PATH,
@@ -166,11 +157,17 @@ def main() -> int:
                 print("ERROR: rejoin_waypoint_name_to_coordinates_map")
                 return -1
 
+            print("rejoin_waypoint_list:", rejoin_waypoint_list)
+
+            print("diversion_waypoint_list:", diversion_waypoint_values_list)
+            print("length: ", len(diversion_waypoint_values_list))
+
             waypoints_around_diversion = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
                 location,
-                rejoin_waypoint_list[0],
-                diversion_waypoint_list,
+                next(iter(rejoin_waypoint_list.values())),
+                diversion_waypoint_values_list,
             )
+            print("made waypoints_around_diversion")
 
             result, waypoints_around_diversion_commands = waypoints_to_commands.waypoints_to_commands(waypoints_around_diversion, ALTITUDE)
             if not result:
@@ -193,6 +190,7 @@ def main() -> int:
             landing_command = generate_command.landing()
             diversion_route_commands.append(landing_command)
 
+            print("Commands ready to upload")
             # upload waypoint_around_diversion + waypoints_after_diversion as new ones
             result = upload_commands.upload_commands(drone, diversion_route_commands, DRONE_TIMEOUT)
             if not result:
