@@ -26,9 +26,9 @@ VALID_COMMANDS = {
 """
 The input matrix maps the command types to the valid parameters.
 See documentation for more information: https://uwarg-docs.atlassian.net/wiki/spaces/CV/pages/2567274629/Encoded+MAVLink+commands 
-0: Command should be set to zero
-1: Command should be a float
-2: Command should be an integer
+0: Parameter should be set to zero
+1: Parameter should be a float
+2: Parameter should be an integer
 """
 COMMAND_TO_PARAMETER_MATRIX = {
     "land": [0, 0, 0, 0, 1, 1, 0],
