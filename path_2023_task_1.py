@@ -172,15 +172,14 @@ def main() -> int:
                 next(iter(rejoin_waypoint_list.values())),
                 diversion_waypoint_values_list,
             )
-            print("made waypoints_around_diversion")
+            print("Content of waypoints_around_diversion:", waypoints_around_diversion) 
 
             result, waypoints_around_diversion_commands = waypoints_to_commands.waypoints_to_commands(waypoints_around_diversion, ALTITUDE)
             if not result:
                 print("Error: diversion_waypoints_to_commands")
                 return -1
-            print("made waypoints_around_diversion_commands")
-
             print("Content of waypoints_list:", waypoints_list)            
+            
             # add the waypoint_around_diversion in between current commands
             # rest of commands starting from rejoin waypoint
             first_key = next(iter(rejoin_waypoint_list))
