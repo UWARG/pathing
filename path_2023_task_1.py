@@ -23,6 +23,7 @@ from modules import waypoints_to_commands
 from modules import diversion_waypoints_from_vertices
 from modules import diversion_qr_to_waypoint_list
 from modules import generate_command
+from modules.common.kml.modules.location_ground import LocationGround
 
 WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "competition_task_1.csv")
 DIVERSION_WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "diversion_waypoints.csv")
@@ -122,7 +123,7 @@ def main() -> int:
         # nonblocking, just takes single picture
         # is_qr_text_found, diversion_qr_text = diversion_qr_input.diversion_qr_input(CAMERA)
         # wait for text input in console
-        print("Press 'q' to simulate QR code found or any other key to continue waiting.")
+        print("Press 'q' to simulate QR code found.")
         if not is_qr_text_found:
             # Check if input is available
             if msvcrt.kbhit():
@@ -162,6 +163,10 @@ def main() -> int:
             print("diversion_waypoint_list:", diversion_waypoint_values_list)
             print("length: ", len(diversion_waypoint_values_list))
 
+            # convert tuple[float, float] to location ground
+            current_latitude, current_longitude = location
+            location = LocationGround("current", current_latitude, current_longitude)
+
             waypoints_around_diversion = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
                 location,
                 next(iter(rejoin_waypoint_list.values())),
@@ -173,12 +178,15 @@ def main() -> int:
             if not result:
                 print("Error: diversion_waypoints_to_commands")
                 return -1
-            
+            print("made waypoints_around_diversion_commands")
+
+            print("Content of waypoints_list:", waypoints_list)            
             # add the waypoint_around_diversion in between current commands
             # rest of commands starting from rejoin waypoint
-            waypoints_after_diversion_commands = waypoint_commands[waypoint_commands.index(rejoin_waypoint_list[0]):]
+            first_key = next(iter(rejoin_waypoint_list))
+            waypoints_after_diversion = waypoints_list[waypoints_list.index(rejoin_waypoint_list[first_key]):]
 
-            result, waypoints_after_diversion_commands = waypoints_to_commands.waypoints_to_commands(waypoints_after_diversion_commands, ALTITUDE)
+            result, waypoints_after_diversion_commands = waypoints_to_commands.waypoints_to_commands(waypoints_after_diversion, ALTITUDE)
             if not result:
                 print("Error: post_diversion_waypoints_to_commands")
                 return -1
