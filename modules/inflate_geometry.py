@@ -96,9 +96,3 @@ def inflate_polygon(vertices: np.ndarray, scale_distance: int) -> np.ndarray:
 
     # Return the offset vertices
     return offset_verts
-
-
-triangle = np.array(
-    [[48.8567, 2.3508, 0], [61.4140105652, 23.7281341313, 0], [51.760597, -1.261247, 0]]
-)
-print(inflate_polygon(triangle, 10))
