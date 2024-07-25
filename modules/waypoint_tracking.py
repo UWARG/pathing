@@ -35,7 +35,7 @@ def get_current_waypoint_info(
     # Get the current destination
     if current_waypoint < drone.commands.count:
         current_command = drone.commands[current_waypoint]
-        if current_command.command == FlightController.is_drone_destination_final_waypoint(): 
+        if current_command.command == FlightController.is_drone_destination_final_waypoint():
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
     return True, waypoint_info
