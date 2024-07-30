@@ -28,9 +28,6 @@ def force_rtl(drone: FlightController) -> bool:
     # Generate and set RTL command
     rtl_command = generate_command.return_to_launch()
 
-    # Change drone mode
-    drone.mode = drone.set_flight_mode("RTL")
-
     # Utilize upload_command function to give RTL command to drone
     result = upload_commands.upload_commands(drone, [rtl_command], DRONE_TIMEOUT)
 

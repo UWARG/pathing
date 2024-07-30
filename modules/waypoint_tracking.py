@@ -24,9 +24,6 @@ def get_current_waypoint_info(
         (True, destination waypoint information), where information is (index, location).
         location can be None.
     """
-    # Download the mission commands from the drone
-    drone.commands.download()
-    drone.commands.wait_ready()
 
     # Get the current waypoint sequence
     current_waypoint = drone.commands.next
@@ -35,7 +32,8 @@ def get_current_waypoint_info(
     # Get the current destination
     if current_waypoint < drone.commands.count:
         current_command = drone.commands[current_waypoint]
-        if current_command.command == drone.is_drone_destination_final_waypoint():
+        destination_reached = drone.is_drone_destination_final_waypoint()
+        if destination_reached[1]:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
     return True, waypoint_info
