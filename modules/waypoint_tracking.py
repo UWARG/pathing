@@ -8,14 +8,14 @@ from modules.common.mavlink.modules.flight_controller import FlightController
 
 
 def get_current_waypoint_info(
-    drone: FlightController,
+    controller: FlightController,
 ) -> "tuple[bool, tuple[int, tuple[float, float] | None] | None]":
     """
     Function to retrieve information about the current waypoint sequence and destination
 
     Parameters
     ----------
-    drone: FlightController
+    controller: FlightController
         The connected drone.
 
     Returns
@@ -26,26 +26,26 @@ def get_current_waypoint_info(
     """
 
     # Get the current waypoint sequence
-    current_waypoint = drone.commands.next
+    current_waypoint = controller.commands.next
     waypoint_info = (current_waypoint, None)
 
     # Get the current destination
-    if current_waypoint < drone.commands.count:
-        current_command = drone.commands[current_waypoint]
-        destination_reached = drone.is_drone_destination_final_waypoint()
-        if destination_reached[1]:
+    if current_waypoint < controller.commands.count:
+        current_command = controller.commands[current_waypoint]
+        success, destination_reached = controller.is_drone_destination_final_waypoint()
+        if success and destination_reached:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
     return True, waypoint_info
 
 
-def get_current_location(drone: FlightController) -> "tuple[bool, tuple[float, float] | None]":
+def get_current_location(controller: FlightController) -> "tuple[bool, tuple[float, float] | None]":
     """
     Function to retrieve the current location (latitude and longitude) of the drone
 
     Parameters
     ----------
-    drone: FlightController
+    controller: FlightController
         The connected drone.
 
     Returns
@@ -55,7 +55,7 @@ def get_current_location(drone: FlightController) -> "tuple[bool, tuple[float, f
         location can be None.
     """
     # Get the current location (latitude, longitude)
-    current_location = drone.location.global_frame
+    current_location = controller.location.global_frame
     if current_location is None:
         return False, None
 

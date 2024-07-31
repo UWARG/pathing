@@ -11,13 +11,13 @@ from . import generate_command
 DRONE_TIMEOUT = 30.0  # seconds
 
 
-def force_rtl(drone: FlightController) -> bool:
+def force_rtl(controller: FlightController) -> bool:
     """
     Sends RTL command using the upload_command module.
 
     Parameters
     -----------
-    drone: FlightController
+    controller: FlightController
         The connected drone.
 
     Returns
@@ -29,7 +29,7 @@ def force_rtl(drone: FlightController) -> bool:
     rtl_command = generate_command.return_to_launch()
 
     # Utilize upload_command function to give RTL command to drone
-    result = upload_commands.upload_commands(drone, [rtl_command], DRONE_TIMEOUT)
+    result = upload_commands.upload_commands(controller, [rtl_command], DRONE_TIMEOUT)
 
     # Error if unsuccessful
     if not result:
