@@ -26,7 +26,7 @@ def get_current_waypoint_info(
     """
 
     # Get the current waypoint sequence
-    download_success, current_waypoint = controller.download_commands()
+    current_waypoint = controller.download_commands()[1]
     waypoint_info = (current_waypoint, None)
 
     # Get the current destination
