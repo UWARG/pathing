@@ -3,18 +3,19 @@ Module for obtaining information about the drone,
 including the current waypoint sequence, location, and destination.
 """
 
-import dronekit
+# import dronekit
+from modules.common.mavlink.modules.flight_controller import FlightController
 
 
 def get_current_waypoint_info(
-    drone: dronekit.Vehicle,
+    controller: FlightController,
 ) -> "tuple[bool, tuple[int, tuple[float, float] | None] | None]":
     """
     Function to retrieve information about the current waypoint sequence and destination
 
     Parameters
     ----------
-    drone: dronekit.Vehicle
+    controller: FlightController
         The connected drone.
 
     Returns
@@ -23,30 +24,30 @@ def get_current_waypoint_info(
         (True, destination waypoint information), where information is (index, location).
         location can be None.
     """
-    # Download the mission commands from the drone
-    drone.commands.download()
-    drone.commands.wait_ready()
 
     # Get the current waypoint sequence
-    current_waypoint = drone.commands.next
+    current_waypoint = controller.download_commands()[1]
     waypoint_info = (current_waypoint, None)
 
     # Get the current destination
-    if current_waypoint < drone.commands.count:
-        current_command = drone.commands[current_waypoint]
-        if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
+    if current_waypoint < controller.commands.count:
+        current_command = controller.commands[current_waypoint]
+        retreive_info_success, destination_reached = (
+            controller.is_drone_destination_final_waypoint()
+        )
+        if retreive_info_success and destination_reached:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
     return True, waypoint_info
 
 
-def get_current_location(drone: dronekit.Vehicle) -> "tuple[bool, tuple[float, float] | None]":
+def get_current_location(controller: FlightController) -> "tuple[bool, tuple[float, float] | None]":
     """
     Function to retrieve the current location (latitude and longitude) of the drone
 
     Parameters
     ----------
-    drone: dronekit.Vehicle
+    controller: FlightController
         The connected drone.
 
     Returns
@@ -56,7 +57,7 @@ def get_current_location(drone: dronekit.Vehicle) -> "tuple[bool, tuple[float, f
         location can be None.
     """
     # Get the current location (latitude, longitude)
-    current_location = drone.location.global_frame
+    current_location = controller.location.global_frame
     if current_location is None:
         return False, None
 
