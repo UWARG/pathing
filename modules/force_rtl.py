@@ -5,10 +5,7 @@ Forces drone to return to launch (RTL).
 # import dronekit
 from modules.common.mavlink.modules.flight_controller import FlightController
 
-from . import upload_commands
 from . import generate_command
-
-DRONE_TIMEOUT = 30.0  # seconds
 
 
 def force_rtl(controller: FlightController) -> bool:
@@ -29,7 +26,7 @@ def force_rtl(controller: FlightController) -> bool:
     rtl_command = generate_command.return_to_launch()
 
     # Utilize upload_command function to give RTL command to drone
-    result = upload_commands.upload_commands(controller, [rtl_command], DRONE_TIMEOUT)
+    result = controller.upload_commands([rtl_command])
 
     # Error if unsuccessful
     if not result:
