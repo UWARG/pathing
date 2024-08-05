@@ -4,9 +4,9 @@ import math
 import numpy as np
 
 
-def inflate_polygon(vertices: np.ndarray, scale_distance: int) -> np.ndarray:
+def inflate_convex_polygon(vertices: np.ndarray, scale_distance: int) -> np.ndarray:
     """
-    Given a list of vertices representing a polygon geometry, offset the vertices such that the perpendicular
+    Given a list of vertices representing a convex polygon geometry, offset the vertices such that the perpendicular
     distance between the original and offset edges is equal to the scale distance.
 
     Parameters
@@ -96,3 +96,9 @@ def inflate_polygon(vertices: np.ndarray, scale_distance: int) -> np.ndarray:
 
     # Return the offset vertices
     return offset_verts
+
+
+triangle = np.array(
+    [[48.8567, 2.3508, 0], [61.4140105652, 23.7281341313, 0], [51.760597, -1.261247, 0]]
+)
+print(inflate_convex_polygon(triangle, 5))
