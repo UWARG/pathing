@@ -21,7 +21,7 @@ def force_rtl(controller: FlightController) -> bool:
     -------
     bool: True if uploading RTL command is successful, False otherwise.
     """
-    
+
     # Generate and set RTL command
     rtl_command = generate_command.return_to_launch()
 
