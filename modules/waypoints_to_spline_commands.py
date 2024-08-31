@@ -2,10 +2,9 @@
 Function to convert list of waypoints a list of spline waypoint dronekit commands.
 """
 
-import dronekit
-
 from . import generate_command
 from .common.kml.modules import location_ground
+from .common.mavlink import dronekit
 
 
 def waypoints_to_spline_commands(

@@ -2,7 +2,7 @@
 Function to upload dronekit commands.
 """
 
-import dronekit
+from .common.mavlink import dronekit
 
 
 def upload_commands(

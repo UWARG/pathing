@@ -2,10 +2,9 @@
 Function to convert list of waypoints to dronekit commands.
 """
 
-import dronekit
-
 from . import generate_command, waypoint
 from .common.kml.modules import location_ground
+from .common.mavlink import dronekit
 
 
 ACCEPT_RADIUS = 5.0  # metres

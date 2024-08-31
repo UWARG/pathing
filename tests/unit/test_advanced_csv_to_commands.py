@@ -4,10 +4,9 @@ Testing the advanced_csv_to_commands module
 
 import pathlib
 
-import dronekit
-
 from modules import advanced_csv_to_commands
 from modules import generate_command
+from modules.common.mavlink import dronekit
 
 
 def test_normal_file() -> None:

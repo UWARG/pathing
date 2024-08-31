@@ -4,23 +4,25 @@ An command generator with advanced parameters and greater flexibility
 
 import pathlib
 
-import dronekit
+from pymavlink import mavutil
+
+from .common.mavlink import dronekit
 
 
 VALID_FRAMES = {
-    "global": dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL,
-    "global_relative_alt": dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+    "global": mavutil.mavlink.MAV_FRAME_GLOBAL,
+    "global_relative_alt": mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
 }
 
 VALID_COMMANDS = {
-    "land": dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND,
-    "return_to_launch": dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
-    "takeoff": dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
-    "waypoint": dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
-    "waypoint_spline": dronekit.mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT,
-    "loiter_timed": dronekit.mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME,
-    "loiter_unlimited": dronekit.mavutil.mavlink.MAV_CMD_NAV_LOITER_UNLIM,
-    "do_jump": dronekit.mavutil.mavlink.MAV_CMD_DO_JUMP,
+    "land": mavutil.mavlink.MAV_CMD_NAV_LAND,
+    "return_to_launch": mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
+    "takeoff": mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
+    "waypoint": mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+    "waypoint_spline": mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT,
+    "loiter_timed": mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME,
+    "loiter_unlimited": mavutil.mavlink.MAV_CMD_NAV_LOITER_UNLIM,
+    "do_jump": mavutil.mavlink.MAV_CMD_DO_JUMP,
 }
 
 """

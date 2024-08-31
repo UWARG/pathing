@@ -2,10 +2,9 @@
 Function that appends waypoints for N laps to create a mission
 """
 
-import dronekit
-
 from . import waypoints_to_commands
 from .common.kml.modules import location_ground
+from .common.mavlink import dronekit
 
 
 def create_mission_from_waypoints(

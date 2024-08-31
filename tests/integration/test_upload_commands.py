@@ -4,10 +4,9 @@ Integration test for upload_commands.
 
 import math
 
-import dronekit
-
 from modules import generate_command
 from modules import upload_commands
+from modules.common.mavlink import dronekit
 
 
 ALTITUDE = 40

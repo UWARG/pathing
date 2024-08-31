@@ -5,8 +5,6 @@ Task 1 path. Uploads mission to run a maximum number of laps and monitors the mi
 import pathlib
 import time
 
-import dronekit
-
 from modules import condition_evaluator
 from modules import load_waypoint_name_to_coordinates_map
 from modules import mission_time_condition
@@ -16,6 +14,7 @@ from modules import waypoints_to_spline_commands
 from modules import generate_command
 from modules import add_takeoff_and_rtl_command
 from modules import upload_commands
+from modules.common.mavlink import dronekit
 
 
 TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1.csv")

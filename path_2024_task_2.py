@@ -6,8 +6,6 @@ import pathlib
 import time
 import yaml
 
-import dronekit
-
 from modules import add_takeoff_and_loiter_command
 from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
@@ -16,6 +14,7 @@ from modules import waypoints_to_commands
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
 from modules.common.kml.modules import ground_locations_to_kml
+from modules.common.mavlink import dronekit
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")

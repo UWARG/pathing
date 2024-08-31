@@ -1,5 +1,5 @@
 # Packages listed in alphabetical order
-dronekit
+pymavlink
 pytest
 pyyaml
 shapely
