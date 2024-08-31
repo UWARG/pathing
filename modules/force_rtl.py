@@ -2,7 +2,6 @@
 Forces drone to return to launch (RTL).
 """
 
-# import dronekit
 from modules.common.mavlink.modules.flight_controller import FlightController
 
 from . import generate_command
