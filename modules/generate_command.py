@@ -2,17 +2,19 @@
 Command generators.
 """
 
-import dronekit
+from pymavlink import mavutil
+
+from .common.mavlink import dronekit
 
 
-LANDING_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
-RTL_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL
-TAKEOFF_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-WAYPOINT_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-WAYPOINT_SPLINE_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-LOITER_TIMED_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-LOITER_UNLIMITED_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-DO_JUMP_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+LANDING_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL
+RTL_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL
+TAKEOFF_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+WAYPOINT_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+WAYPOINT_SPLINE_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+LOITER_TIMED_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+LOITER_UNLIMITED_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+DO_JUMP_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 
 
 def landing() -> dronekit.Command:
@@ -24,7 +26,7 @@ def landing() -> dronekit.Command:
         0,
         0,
         LANDING_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_LAND,
+        mavutil.mavlink.MAV_CMD_NAV_LAND,
         0,
         0,
         0,  # param1
@@ -46,7 +48,7 @@ def return_to_launch() -> dronekit.Command:
         0,
         0,
         RTL_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
+        mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
         0,
         0,
         0,  # param1
@@ -70,7 +72,7 @@ def takeoff(altitude: float) -> dronekit.Command:
         0,
         0,
         TAKEOFF_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
+        mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
         0,
         0,
         0,  # param1
@@ -100,7 +102,7 @@ def waypoint(
         0,
         0,
         WAYPOINT_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
         0,
         0,
         hold_time,  # param1
@@ -129,7 +131,7 @@ def waypoint_spline(
         0,
         0,
         WAYPOINT_SPLINE_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT,
+        mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT,
         0,
         0,
         hold_time,  # param1
@@ -158,7 +160,7 @@ def loiter_timed(
         0,
         0,
         LOITER_TIMED_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME,
+        mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME,
         0,
         0,
         loiter_time,  # param1
@@ -184,7 +186,7 @@ def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> dron
         0,
         0,
         LOITER_UNLIMITED_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_LOITER_UNLIM,
+        mavutil.mavlink.MAV_CMD_NAV_LOITER_UNLIM,
         0,
         0,
         0,  # param1
@@ -209,7 +211,7 @@ def do_jump(waypoint_sequence_number: int, repeat: int) -> dronekit.Command:
         0,
         0,
         DO_JUMP_FRAME,
-        dronekit.mavutil.mavlink.MAV_CMD_DO_JUMP,
+        mavutil.mavlink.MAV_CMD_DO_JUMP,
         0,
         0,
         waypoint_sequence_number,  # param1

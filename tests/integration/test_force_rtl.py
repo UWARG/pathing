@@ -4,20 +4,20 @@ Test to check if return to launch (RTL) works as intended.
 
 import time
 
-import dronekit
-
-from modules.common.mavlink.modules import flight_controller
+from pymavlink import mavutil
 
 from modules import force_rtl
+from modules.common.mavlink.modules import flight_controller
+from modules.common.mavlink import dronekit
 
 DELAY_TIME = 60.0  # seconds
 MISSION_PLANNER_ADDRESS = "tcp:127.0.0.1:14550"
 TIMEOUT = 1.0  # seconds
 
-MAVLINK_TAKEOFF_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-MAVLINK_TAKEOFF_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
-MAVLINK_FRAME = dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-MAVLINK_COMMAND = dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
+MAVLINK_TAKEOFF_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+MAVLINK_TAKEOFF_COMMAND = mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
+MAVLINK_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+MAVLINK_COMMAND = mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
 
 ALTITUDE = 10  # metres
 ACCEPT_RADIUS = 10  # metres
@@ -128,7 +128,7 @@ def main() -> int:
     time.sleep(DELAY_TIME)
 
     # Force drone to return to launch (RTL)
-    result = force_rtl.force_rtl(controller.drone)
+    result = force_rtl.force_rtl(controller)
 
     if not result:
         print("Drone failed during return to launch sequence.")

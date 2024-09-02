@@ -5,8 +5,6 @@ Reads waypoints from QR code and sends drone commands.
 import pathlib
 import time
 
-import dronekit
-
 from modules import add_takeoff_and_landing_command
 from modules import load_waypoint_name_to_coordinates_map
 from modules import qr_input
@@ -17,6 +15,7 @@ from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
 from modules import waypoints_to_commands
 from modules.common.kml.modules import ground_locations_to_kml
+from modules.common.mavlink import dronekit
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("waypoints", "wrestrc_waypoints.csv")

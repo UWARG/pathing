@@ -2,10 +2,11 @@
 Test process.
 """
 
-import dronekit
+from pymavlink import mavutil
 
 from modules import waypoint, waypoints_to_commands
 from modules.common.kml.modules import location_ground
+from modules.common.mavlink import dronekit
 
 
 # Test functions use test fixture signature names and access class privates
@@ -54,8 +55,8 @@ def test_waypoints_to_commands() -> None:
         lng_expected = waypoints[i].longitude
 
         assert isinstance(command, dronekit.Command)
-        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
+        assert command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        assert command.command == mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
         assert command.param1 == 0
         assert command.param2 == waypoints_to_commands.ACCEPT_RADIUS
         assert command.param3 == 0
@@ -88,8 +89,8 @@ def test_waypoints_with_altitude_to_commands() -> None:
         alt_expected = waypoints[i].altitude
 
         assert isinstance(command, dronekit.Command)
-        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
+        assert command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        assert command.command == mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
         assert command.param1 == 0
         assert command.param2 == waypoints_to_commands.ACCEPT_RADIUS
         assert command.param3 == 0

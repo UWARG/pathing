@@ -5,7 +5,6 @@ Name-coordinate mapping from CSV file.
 import pathlib
 
 from . import waypoint
-
 from .common.kml.modules import location_ground
 
 

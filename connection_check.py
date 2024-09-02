@@ -4,7 +4,9 @@ For testing MAVLink connection with DroneKit-Python.
 
 import time
 
-import dronekit
+from pymavlink import mavutil
+
+from modules.common.mavlink import dronekit
 
 
 # Set these to test what you want to test
@@ -28,8 +30,8 @@ def write_test_mission(drone: dronekit.Vehicle) -> bool:
         0,
         0,
         0,
-        dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
         0,
         0,
         0,  # param1
@@ -47,8 +49,8 @@ def write_test_mission(drone: dronekit.Vehicle) -> bool:
         0,
         0,
         0,
-        dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-        dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
         0,
         0,
         0,  # param1

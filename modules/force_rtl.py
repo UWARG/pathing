@@ -2,9 +2,8 @@
 Forces drone to return to launch (RTL).
 """
 
-from modules.common.mavlink.modules.flight_controller import FlightController
-
 from . import generate_command
+from .common.mavlink.modules.flight_controller import FlightController
 
 
 def force_rtl(controller: FlightController) -> bool:

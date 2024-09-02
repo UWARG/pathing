@@ -38,7 +38,7 @@ def main() -> int:
     assert controller is not None
 
     # Upload mission with a single waypoint
-    test_waypoint = location_ground.Location_ground("Test", 43.4731, -80.5419)
+    test_waypoint = location_ground.LocationGround("Test", 43.4731, -80.5419)
     result, test_waypoint_commands = waypoints_to_commands.waypoints_to_commands(
         [test_waypoint], ALTITUDE
     )

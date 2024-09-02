@@ -2,11 +2,11 @@
 Test process.
 """
 
-import dronekit
+from pymavlink import mavutil
 
 from modules import waypoints_to_spline_commands
 from modules.common.kml.modules import location_ground
-
+from modules.common.mavlink import dronekit
 
 # Test functions use test fixture signature names and access class privates
 # No enable
@@ -52,8 +52,8 @@ def test_waypoints_to_spline_commands() -> None:
 
     for i, command in enumerate(commands_actual):
         assert isinstance(command, dronekit.Command)
-        assert command.frame == dronekit.mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
-        assert command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT
+        assert command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
+        assert command.command == mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT
         assert command.param1 == 0
         assert command.param2 == 0
         assert command.param3 == 0
