@@ -5,16 +5,18 @@ import queue
 from common.qr.modules import qr_scanner
 from common.camera.modules import camera_device
 
+
 def camera_capture_thread(device, frame_queue, stop_event):
     camera = camera_device.CameraDevice(device)
     while not stop_event.is_set():
         is_image_found, frame = camera.get_image()
         if is_image_found:
             if frame_queue.full():
-                frame_queue.get() 
+                frame_queue.get()
             frame_queue.put(frame)
         else:
             print("ERROR: Failed to capture image")
+
 
 def qr_scanner_thread(frame_queue, result_queue, stop_event, qr_found_event):
     scanner = qr_scanner.QrScanner()
@@ -27,14 +29,19 @@ def qr_scanner_thread(frame_queue, result_queue, stop_event, qr_found_event):
                 qr_found_event.set()
                 stop_event.set()
 
+
 def qr_input(device: "int | str") -> "tuple[bool, str | None]":
     frame_queue = queue.Queue(maxsize=10)
     result_queue = queue.Queue()
     stop_event = threading.Event()
     qr_found_event = threading.Event()
 
-    grabber_thread = threading.Thread(target=camera_capture_thread, args=(device, frame_queue, stop_event))
-    scanner_thread = threading.Thread(target=qr_scanner_thread, args=(frame_queue, result_queue, stop_event, qr_found_event))
+    grabber_thread = threading.Thread(
+        target=camera_capture_thread, args=(device, frame_queue, stop_event)
+    )
+    scanner_thread = threading.Thread(
+        target=qr_scanner_thread, args=(frame_queue, result_queue, stop_event, qr_found_event)
+    )
 
     grabber_thread.start()
     scanner_thread.start()
