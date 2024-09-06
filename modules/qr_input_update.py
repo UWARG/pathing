@@ -6,7 +6,11 @@ from common.qr.modules import qr_scanner
 from common.camera.modules import camera_device
 
 
-def camera_capture_thread(device, frame_queue, stop_event):
+def camera_capture_thread(
+    device: "int | str",
+    frame_queue: queue.Queue,
+    stop_event: threading.Event,
+) -> None:
     camera = camera_device.CameraDevice(device)
     while not stop_event.is_set():
         is_image_found, frame = camera.get_image()
@@ -18,7 +22,12 @@ def camera_capture_thread(device, frame_queue, stop_event):
             print("ERROR: Failed to capture image")
 
 
-def qr_scanner_thread(frame_queue, result_queue, stop_event, qr_found_event):
+def qr_scanner_thread(
+    frame_queue: queue.Queue,
+    result_queue: queue.Queue,
+    stop_event: threading.Event,
+    qr_found_event: threading.Event,
+) -> None:
     scanner = qr_scanner.QrScanner()
     while not stop_event.is_set() and not qr_found_event.is_set():
         if not frame_queue.empty():
