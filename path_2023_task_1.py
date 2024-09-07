@@ -67,6 +67,7 @@ def main() -> int:
     if not result:
         print("ERROR: convert waypoints from dict to list")
         return -1
+    print("Content of waypoints_list:", waypoints_list)
 
     # result, qr_text = qr_input.qr_input(CAMERA)
     # if not result:
@@ -160,13 +161,15 @@ def main() -> int:
 
             print("rejoin_waypoint_list:", rejoin_waypoint_list)
 
-            print("diversion_waypoint_list:", diversion_waypoint_values_list)
+            print("diversion_waypoint_list/vertices:", diversion_waypoint_values_list)
             print("length: ", len(diversion_waypoint_values_list))
 
             # convert tuple[float, float] to location ground
             current_latitude, current_longitude = location
             location = LocationGround("current", current_latitude, current_longitude)
 
+            print("rejoin waypoint: ", next(iter(rejoin_waypoint_list.values())))
+            print("location: ", location)
             waypoints_around_diversion = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
                 location,
                 next(iter(rejoin_waypoint_list.values())),
@@ -177,8 +180,7 @@ def main() -> int:
             result, waypoints_around_diversion_commands = waypoints_to_commands.waypoints_to_commands(waypoints_around_diversion, ALTITUDE)
             if not result:
                 print("Error: diversion_waypoints_to_commands")
-                return -1
-            print("Content of waypoints_list:", waypoints_list)            
+                return -1        
             
             # add the waypoint_around_diversion in between current commands
             # rest of commands starting from rejoin waypoint
