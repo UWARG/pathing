@@ -1,6 +1,10 @@
-import cv2
+"""
+Function to read camera input until valid QR code using multithreading.
+"""
+
 import threading
 import queue
+import cv2
 
 from common.qr.modules import qr_scanner
 from common.camera.modules import camera_device
@@ -11,6 +15,22 @@ def camera_capture_thread(
     frame_queue: queue.Queue,
     stop_event: threading.Event,
 ) -> None:
+    """
+    Captures frames from device camera and places into a queue
+
+    Parameters
+    ----------
+    device: int | string
+        Camera device name or index (e.g. /dev/video0).
+    frame_queue: queue.Queue
+        Queue that stores frames captured by device camera.
+    stop_event: threading.Event
+        Used to signal the stop of frame capturing.
+
+    Returns
+    ----------
+    None
+    """
     camera = camera_device.CameraDevice(device)
     while not stop_event.is_set():
         is_image_found, frame = camera.get_image()
@@ -28,6 +48,20 @@ def qr_scanner_thread(
     stop_event: threading.Event,
     qr_found_event: threading.Event,
 ) -> None:
+    """
+    Scans frames for a valid QR code and places the result in a queue
+
+    Parameters
+    ----------
+    frame_queue: queue.Queue
+        Queue that contains frames captured from camera
+    result_queue: queue.Queue
+        Queue that stores QR scan result.
+    stop_event: threading.Event
+        Signals when to stop scanning for a QR code
+    qr_found_event: threading.Event
+        Set when QR code is found.
+    """
     scanner = qr_scanner.QrScanner()
     while not stop_event.is_set() and not qr_found_event.is_set():
         if not frame_queue.empty():
@@ -40,6 +74,20 @@ def qr_scanner_thread(
 
 
 def qr_input(device: "int | str") -> "tuple[bool, str | None]":
+    """
+    Checks camera input indefinitely until valid text is decoded from QR code.
+
+    Parameters
+    ----------
+    device: int | string
+        Camera device name or index (e.g. /dev/video0).
+
+    Returns
+    -------
+    tuple[bool, str | None]
+        A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
+    """
+
     frame_queue = queue.Queue(maxsize=10)
     result_queue = queue.Queue()
     stop_event = threading.Event()
