@@ -128,8 +128,9 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
 
     return is_qr_text_found, qr_text
 
+
 if __name__ == "__main__":
-    device_index = 0  
+    device_index = 0
     success, qr_text = qr_input(device_index)
     if success:
         print(f"QR Code detected: {qr_text}")
