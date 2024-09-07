@@ -6,8 +6,8 @@ import threading
 import queue
 import cv2
 
-from common.qr.modules import qr_scanner
-from common.camera.modules import camera_device
+from modules.common.qr.modules import qr_scanner
+from modules.common.camera.modules import camera_device
 
 
 def camera_capture_thread(
@@ -35,8 +35,6 @@ def camera_capture_thread(
     while not stop_event.is_set():
         is_image_found, frame = camera.get_image()
         if is_image_found:
-            if frame_queue.full():
-                frame_queue.get()
             frame_queue.put(frame)
         else:
             print("ERROR: Failed to capture image")
@@ -129,3 +127,11 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
         is_qr_text_found, qr_text = result_queue.get()
 
     return is_qr_text_found, qr_text
+
+if __name__ == "__main__":
+    device_index = 0  
+    success, qr_text = qr_input(device_index)
+    if success:
+        print(f"QR Code detected: {qr_text}")
+    else:
+        print("No QR Code detected")
