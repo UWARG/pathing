@@ -27,16 +27,16 @@ def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
 
     qr_text = None
     is_qr_text_found = False
-    
+
     # Get new image from camera as long as QR text not found
     is_image_found, frame = camera.get_image()
-    
+
     if not is_image_found:
         # Log error is camera fails to get image
         print("ERROR: is_image_found returned false. Cannot get image from camera")
     else:
         cv2.imshow("Camera", frame)
-        
+
         # Check frame for valid QR code if found
         is_qr_text_found, qr_text = scanner.get_qr_text(frame)
 
