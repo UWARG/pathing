@@ -69,24 +69,6 @@ def main() -> int:
         return -1
     print("Content of waypoints_list:", waypoints_list)
 
-    # result, qr_text = qr_input.qr_input(CAMERA)
-    # if not result:
-    #     print("ERROR: qr_input")
-    #     return -1
-
-    # result, waypoint_names = qr_to_waypoint_names.qr_to_waypoint_names(qr_text)
-    # if not result:
-    #     print("ERROR: qr_to_waypoint_names")
-    #     return -1
-
-    # result, waypoints = waypoint_names_to_coordinates.waypoint_names_to_coordinates(
-    #     waypoint_names,
-    #     waypoint_name_to_coordinates,
-    # )
-    # if not result:
-    #     print("ERROR: waypoint_names_to_coordinates")
-    #     return -1
-
     result, waypoint_commands = waypoints_to_commands.waypoints_to_commands(waypoints_list, ALTITUDE)
     if not result:
         print("Error: waypoints_to_commands")
@@ -133,13 +115,8 @@ def main() -> int:
                     is_qr_text_found = True
                     print("Simulated QR code found.")
 
-        # this part should run only once when new qrcode is passed through
+        # run once when qr code is detected
         if is_qr_text_found:
-
-            # result, diversion_waypoint_information = diversion_qr_to_waypoint_list.diversion_qr_to_waypoint_list(DIVERSION_WAYPOINT_FILE_PATH)
-            # if not result:
-            #     print("ERROR: diversion_qr_to_waypoint_list")
-            #     return -1
             
             # Read in hardcoded waypoints from CSV file
             # Waypoints are stored in order of insertion, starting with the top row
@@ -159,23 +136,15 @@ def main() -> int:
                 print("ERROR: rejoin_waypoint_name_to_coordinates_map")
                 return -1
 
-            print("rejoin_waypoint_list:", rejoin_waypoint_list)
-
-            print("diversion_waypoint_list/vertices:", diversion_waypoint_values_list)
-            print("length: ", len(diversion_waypoint_values_list))
-
             # convert tuple[float, float] to location ground
             current_latitude, current_longitude = location
             location = LocationGround("current", current_latitude, current_longitude)
 
-            print("rejoin waypoint: ", next(iter(rejoin_waypoint_list.values())))
-            print("location: ", location)
             waypoints_around_diversion = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
                 location,
                 next(iter(rejoin_waypoint_list.values())),
                 diversion_waypoint_values_list,
             )
-            print("Content of waypoints_around_diversion:", waypoints_around_diversion) 
 
             result, waypoints_around_diversion_commands = waypoints_to_commands.waypoints_to_commands(waypoints_around_diversion, ALTITUDE)
             if not result:
