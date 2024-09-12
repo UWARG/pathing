@@ -4,24 +4,17 @@ Reads waypoints from QR code and sends drone commands.
 
 import pathlib
 import time
-import sys
-import select
 import msvcrt
 
 import dronekit
 
 from modules import add_takeoff_and_landing_command
 from modules import load_waypoint_name_to_coordinates_map
-from modules import qr_input
-from modules import diversion_qr_input
-from modules import qr_to_waypoint_names
 from modules import upload_commands
-from modules import waypoint_names_to_coordinates
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
 from modules import waypoints_to_commands
 from modules import diversion_waypoints_from_vertices
-from modules import diversion_qr_to_waypoint_list
 from modules import generate_command
 from modules.common.kml.modules.location_ground import LocationGround
 
