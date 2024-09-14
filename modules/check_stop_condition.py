@@ -2,10 +2,9 @@
 Checks whether the drone has reached its max flight time and sends it back to launch.
 """
 
-import dronekit
-
 from . import generate_command
 from . import upload_commands
+from .common.mavlink import dronekit
 
 
 DRONE_TIMEOUT = 30.0  # seconds

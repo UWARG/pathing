@@ -3,7 +3,9 @@ Module for obtaining information about the drone,
 including the current waypoint sequence, location, and destination.
 """
 
-import dronekit
+from pymavlink import mavutil
+
+from .common.mavlink import dronekit
 
 
 def get_current_waypoint_info(
@@ -34,7 +36,7 @@ def get_current_waypoint_info(
     # Get the current destination
     if current_waypoint < drone.commands.count:
         current_command = drone.commands[current_waypoint]
-        if current_command.command == dronekit.mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
+        if current_command.command == mavutil.mavlink.MAV_CMD_NAV_WAYPOINT:
             waypoint_info = (current_waypoint, (current_command.x, current_command.y))
 
     return True, waypoint_info
