@@ -47,9 +47,10 @@ def diversion_waypoints_from_vertices(
 
     # Dijkstra's algorithm
 
+    # modify this buffer since units are MUCH SMALLER (long lat are by like 0.0001 differences)
     graph: "list[location_ground.LocationGround]" = [current_location, rejoin_waypoint] + [
         location_ground.LocationGround("", coord[0], coord[1])
-        for coord in diversion_area.buffer(15, join_style="mitre").exterior.coords
+        for coord in diversion_area.buffer(0.0001, join_style="mitre").exterior.coords
     ]
 
     # dist and prev indexes associated with graph
