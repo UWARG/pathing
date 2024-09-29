@@ -2,11 +2,12 @@
 Converts field of view to display dimensions in metres.
 """
 
-from math import tan, atan, pi
+from math import tan, pi
 
 
-FIELD_OF_VISION_X = atan(18 * (13 / 23) / 2 / 15.125) * 2
-FIELD_OF_VISION_Y = atan(18 * (13 / 23) / 2 / 15.125 * (10 / 16)) * 2
+# Measurements from https://uwarg-docs.atlassian.net/wiki/spaces/CV/pages/2236613655/200+CV+Camera
+FIELD_OF_VISION_X = 0.64889
+FIELD_OF_VISION_Y = 0.41438
 
 
 def search_area_dimensions(
@@ -32,10 +33,10 @@ def search_area_dimensions(
         - tuple containing the rectangular dimensions of the field of view of the camera, in metres
     """
     frustum_factor = 1
-    if frustum_radians:
+    if not frustum_radians:
         frustum_factor = pi / 180
     field_of_vision_factor = 1
-    if field_of_vision_radians:
+    if not field_of_vision_radians:
         field_of_vision_factor = pi / 180
 
     left_distance = (
