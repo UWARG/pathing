@@ -27,10 +27,10 @@ def search_area_dimensions(
     Return:
         - tuple containing the rectangular dimensions of the field of view of the camera
     """
-    left_distance = tan((field_of_vision_x - frustum_angle_x) / 2) * height
-    right_distance = tan((field_of_vision_x + frustum_angle_x) / 2) * height
+    left_distance = tan((field_of_vision_x) / 2 - frustum_angle_x) * height
+    right_distance = tan((field_of_vision_x) / 2 + frustum_angle_x) * height
     horizontal_distance = left_distance + right_distance
-    up_distance = tan((field_of_vision_y - frustum_angle_y) / 2) * height
-    down_distance = tan((field_of_vision_y + frustum_angle_y) / 2) * height
+    up_distance = tan((field_of_vision_y) / 2 - frustum_angle_y) * height
+    down_distance = tan((field_of_vision_y) / 2 + frustum_angle_y) * height
     vertical_distance = up_distance + down_distance
     return horizontal_distance, vertical_distance
