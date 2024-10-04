@@ -3,6 +3,7 @@ Module to plot n circular waypoints, given a center and radius.
 """
 
 import math
+import csv
 
 from waypoint import Waypoint
 
@@ -65,3 +66,25 @@ def generate_circular_path(center: Waypoint, radius: float, num_points: int) -> 
         )
 
     return waypoints
+
+
+def save_waypoints_to_csv(waypoints: "list[Waypoint]", filename: str) -> None:
+    """Save a list of waypoints to a CSV file.
+
+    Args:
+        waypoints (list[Waypoint]): The list of waypoints to save
+        filename (str): The name of the CSV file to save the waypoints to
+    """
+
+    with open(filename, mode="w", encoding="UTF-8") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Name", "Latitude", "Longitude", "Altitude"])
+        for waypoint in waypoints:
+            writer.writerow(
+                [
+                    waypoint.location_ground.name,
+                    waypoint.location_ground.latitude,
+                    waypoint.location_ground.longitude,
+                    waypoint.altitude,
+                ]
+            )
