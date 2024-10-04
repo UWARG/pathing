@@ -5,7 +5,7 @@ Module to plot n circular waypoints, given a center and radius.
 import math
 import csv
 
-from waypoint import Waypoint
+from .waypoint import Waypoint
 
 
 def move_coordinates_by_offset(
