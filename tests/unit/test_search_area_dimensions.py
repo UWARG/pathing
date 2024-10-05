@@ -4,7 +4,7 @@ Test cases for the search_area_dimensions module.
 
 from math import pi, sqrt
 
-from ...modules import search_area_dimensions
+from modules import search_area_dimensions
 
 # Test functions use test fixture signature names and access class privates
 # No enable
