@@ -51,4 +51,4 @@ class Waypoint:
         """
         String representation
         """
-        return f"LocationGroundAndAltitude: {repr(self.location_ground)}, altitude: {self.altitude}"
+        return f"LocationGroundAndAltitude: {str(self.location_ground)}, altitude: {self.altitude}"
