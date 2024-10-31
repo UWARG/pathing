@@ -6,6 +6,9 @@ import math
 import csv
 
 from .waypoint import Waypoint
+from modules.common.mavlink.modules.drone_odometry import DronePosition
+from modules.common.mavlink.modules.drone_odometry_local import DronePositionLocal
+from modules.common.mavlink.modules.local_global_conversion import drone_position_global_from_local
 
 
 def move_coordinates_by_offset(
@@ -26,18 +29,24 @@ def move_coordinates_by_offset(
         Waypoint: the resulting waypoint after being moved by offset from the
         original waypoint.
     """
-    # both latitude and longitude are in degrees
-    lat = start_point.location_ground.latitude
-    lon = start_point.location_ground.longitude
+    offset_local = DronePositionLocal.create(offset_y, offset_x, 0)
 
-    earth_radius = 6371000  # Earth's radius, in meters
-    # the radius of the horizontal slice of the Earth, at the specific longitude
-    slice_radius = earth_radius * math.cos(math.radians(lat))
+    # Because drone_position_global_from_local requires DronePosition class,
+    # we need to convert Waypoint to DronePosition first
+    start_lat = start_point.location_ground.latitude
+    start_lon = start_point.location_ground.longitude
+    start_alt = start_point.altitude
+    start_point_converted = DronePosition.create(start_lat, start_lon, start_alt)
 
-    new_lat = lat + offset_y * (360 / (2 * math.pi * earth_radius))
-    new_lon = lon + offset_x * (360 / (2 * math.pi * slice_radius))
+    success, end_point = drone_position_global_from_local(
+        start_point_converted, start_point, offset_local
+    )
 
-    return Waypoint(name, new_lat, new_lon, start_point.altitude)
+    end_lat = end_point.latitude
+    end_lon = end_point.longitude
+    end_alt = end_point.altitude
+    end_point_converted = Waypoint(name, end_lat, end_lon, end_alt)
+    return end_point_converted
 
 
 def generate_circular_path(center: Waypoint, radius: float, num_points: int) -> "list[Waypoint]":
