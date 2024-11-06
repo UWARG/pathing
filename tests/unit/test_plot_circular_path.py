@@ -29,12 +29,12 @@ def test_move_north_east() -> None:
     offset_y = 100_000  # north
     expected_point = Waypoint("End", 10.899322, 12.913195, 1)
 
-    result_point = plot_circular_path.move_coordinates_by_offset(
+    success, result_point = plot_circular_path.move_coordinates_by_offset(
         starting_point, offset_x, offset_y, "End"
     )
 
-    print(f"result_point: {result_point}")
-
+    assert success
+    assert isinstance(result_point, Waypoint)
     assert_close_enough(result_point, expected_point)
 
 
@@ -45,8 +45,6 @@ def test_generate_circular_path() -> None:
     center = Waypoint("Center", 10, 12, 1)
     radius = 1_000_000
     num_points = 20
-    waypoints = plot_circular_path.generate_circular_path(center, radius, num_points)
-
     expected_points = [
         (10.0, 21.131950912937036),
         (12.77905659637457, 20.685001422236247),
@@ -70,12 +68,44 @@ def test_generate_circular_path() -> None:
         (7.220943403625428, 20.685001422236247),
     ]
 
+    success, waypoints = plot_circular_path.generate_circular_path(center, radius, num_points)
+
+    assert success
+    assert isinstance(waypoints, list)
     assert len(waypoints) == num_points
 
     for i in range(num_points):
+        assert isinstance(waypoints[i], Waypoint)
         assert_close_enough(
             waypoints[i], Waypoint(f"Waypoint {i}", expected_points[i][0], expected_points[i][1], 1)
         )
+
+
+def test_move_north_east_invalid_inputs() -> None:
+    """
+    Test that moving a Waypoint with 0 altitude fails
+    """
+    success, result_point = plot_circular_path.move_coordinates_by_offset(
+        Waypoint("Start", 12, 36, 0), -0.2, 3.6, "End"
+    )
+    assert not success
+    assert result_point is None
+
+
+def test_generate_circular_path_invalid_input() -> None:
+    """
+    Test generating circular path with invalid inputs.
+    """
+    inputs = [
+        (Waypoint("Center", 22.4, -6.7, -0.2), 2, 4),
+        (Waypoint("Center", 3.99, 12.6, 3.4), 0, 10),
+        (Waypoint("Center", 3, 6, 12), 500, 0),
+    ]
+
+    for center, radius, num_points in inputs:
+        success, waypoints = plot_circular_path.generate_circular_path(center, radius, num_points)
+        assert not success
+        assert waypoints is None
 
 
 def test_save_waypoints_to_csv(tmp_path: str) -> None:

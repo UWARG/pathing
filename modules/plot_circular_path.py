@@ -14,38 +14,47 @@ from .waypoint import Waypoint
 
 def move_coordinates_by_offset(
     start_point: Waypoint, offset_x: float, offset_y: float, name: str
-) -> Waypoint:
+) -> "tuple[bool, Waypoint | None]":
     """Given a starting waypoint and offsets x and y displacements, find the
     resulting waypoint.
 
     Args:
         starting_point (Waypoint): The starting waypoint
-        offset_x (float): The (potentially negative) displacement in west-east
-            direction, in meters
-        offset_y (float): The (potentially negative) displacement in north-south
-            direction, in meters
+        offset_x (float): The offset in the west-east direction. Positive for
+            east, negative for west.
+        offset_y (float): The offset in the north-south direction. Positive for
+            north, negative for south.
         name (str): The name for the resulting waypoint
 
     Returns:
-        Waypoint: the resulting waypoint after being moved by offset from the
-        original waypoint.
+        tuple[bool, Waypoint | None]: Either return (False, None), indicating a
+            a failure in execution, or (True, waypoint), where waypoint is the
+            resulting waypoint.
     """
-    _, offset_local = DronePositionLocal.create(offset_y, offset_x, 0)
+    success, offset_local = DronePositionLocal.create(offset_y, offset_x, 0)
+    if not success:
+        return False, None
 
     # Because drone_position_global_from_local requires DronePosition class,
     # we need to convert Waypoint to DronePosition first
-    _, start_point_converted = DronePosition.create(
+    success, start_point_converted = DronePosition.create(
         start_point.location_ground.latitude,
         start_point.location_ground.longitude,
         start_point.altitude,
     )
+    if not success:
+        return False, None
 
-    _, end_point = drone_position_global_from_local(start_point_converted, offset_local)
+    success, end_point = drone_position_global_from_local(start_point_converted, offset_local)
+    if not success:
+        return False, None
 
-    return Waypoint(name, end_point.latitude, end_point.longitude, end_point.altitude)
+    return True, Waypoint(name, end_point.latitude, end_point.longitude, end_point.altitude)
 
 
-def generate_circular_path(center: Waypoint, radius: float, num_points: int) -> "list[Waypoint]":
+def generate_circular_path(
+    center: Waypoint, radius: float, num_points: int
+) -> "tuple[bool, list[Waypoint] | None]":
     """Generate a list of `num_points` evenly-separated waypoints given a center
     and radius.
 
@@ -55,9 +64,15 @@ def generate_circular_path(center: Waypoint, radius: float, num_points: int) -> 
         num_points (int): The number of waypoints to generate
 
     Returns:
-        list[Waypoint]: `num_points` waypoints, evenly separated on the circular
-        path.
+        tuple[bool, list[Waypoint] | None]: Either return (False, None),
+            indicating a failure in execution, or (True, waypoints), where
+            waypoints is the list of waypoints forming a circle `radius` away
+            from `center`.
     """
+    # validate input
+    if radius <= 0 or num_points <= 0:
+        return False, None
+
     waypoints = []
 
     # any two consecutive points are separated by 2 * pi / n radians.
@@ -66,11 +81,16 @@ def generate_circular_path(center: Waypoint, radius: float, num_points: int) -> 
         rad = 2 * math.pi / num_points * i
         offset_x = radius * math.cos(rad)
         offset_y = radius * math.sin(rad)
-        waypoints.append(
-            move_coordinates_by_offset(center, offset_x, offset_y, f"Waypoint {i + 1}")
-        )
 
-    return waypoints
+        success, waypoint = move_coordinates_by_offset(
+            center, offset_x, offset_y, f"Waypoint {i + 1}"
+        )
+        if not success:
+            return False, None
+
+        waypoints.append(waypoint)
+
+    return True, waypoints
 
 
 def save_waypoints_to_csv(waypoints: "list[Waypoint]", filename: str) -> None:
