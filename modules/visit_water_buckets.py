@@ -10,7 +10,7 @@ from .waypoint import waypoint_distance
 
 
 def _calculate_travel_distance(
-    origin: Waypoint, buckets: "list[Waypoint]", buckets_at_once
+    origin: Waypoint, buckets: "list[Waypoint]", buckets_at_once: int
 ) -> "tuple[bool, float]":
     """Calculate the distance (in meters) by visting `buckets` in order, if you
     had to visit the origin at the start and end, and each time after visiting
