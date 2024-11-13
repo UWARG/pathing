@@ -9,8 +9,8 @@ from modules import condition_evaluator
 from modules import mission_time_condition
 from modules import upload_commands
 from modules import waypoints_to_commands
-from modules.common.kml.modules import location_ground
-from modules.common.mavlink.modules import flight_controller
+from modules.common.modules import location_global
+from modules.common.modules.mavlink import flight_controller
 
 
 MISSION_PLANNER_ADDRESS = "tcp:127.0.0.1:14550"
@@ -20,9 +20,6 @@ ALTITUDE = 50  # metres
 DRONE_TIMEOUT = 30.0  # seconds
 
 DELAY = 1  # seconds
-
-
-# No enable
 
 
 def main() -> int:
@@ -38,7 +35,11 @@ def main() -> int:
     assert controller is not None
 
     # Upload mission with a single waypoint
-    test_waypoint = location_ground.LocationGround("Test", 43.4731, -80.5419)
+    result, test_waypoint = location_global.LocationGlobal.create(43.4731, -80.5419)
+    if not result:
+        print("Unable to create waypoint")
+        return -1
+
     result, test_waypoint_commands = waypoints_to_commands.waypoints_to_commands(
         [test_waypoint], ALTITUDE
     )

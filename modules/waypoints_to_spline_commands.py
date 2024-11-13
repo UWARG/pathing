@@ -3,30 +3,22 @@ Function to convert list of waypoints a list of spline waypoint dronekit command
 """
 
 from . import generate_command
-from .common.kml.modules import location_ground
-from .common.mavlink import dronekit
+from .common.modules import location_global
+from .common.modules.mavlink import dronekit
 
 
 def waypoints_to_spline_commands(
-    waypoints: "list[location_ground.LocationGround]", altitude: float
-) -> "tuple[bool, list[dronekit.Command] | None]":
+    waypoints: list[location_global.LocationGlobal], altitude: float
+) -> tuple[True, list[dronekit.Command]] | tuple[False, None]:
     """
     Convert list of waypoints to a list of spline waypoint dronekit commands.
     Spline waypoint dronekit commands fly to the target waypoint following a spline path
     (a path that curves around a waypoint).
 
-    Parameters
-    ----------
-    waypoints: list[LocationGround]
-        list of locationGround objects containing names and coordinates in decimal degrees.
-    altitude: float
-        altitude in meters to command the drone to.
+    waypoints: List of locations.
+    altitude: Altitude in metres above home to command the drone to.
 
-    Returns
-    -------
-    tuple[bool, list[dronekit.Command] | None]:
-        (False, None) if empty waypoints list,
-        (True, list of spline waypoint commands) if waypoints list is not empty.
+    Return: Success, list of spline waypoint commands.
     """
     if len(waypoints) == 0:
         return False, None

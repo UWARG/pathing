@@ -5,7 +5,7 @@ Test process for the create_mission_from_waypoints module
 import pytest
 
 from modules import create_mission_from_waypoints
-from modules.common.kml.modules import location_ground
+from modules.common.modules import location_global
 
 
 TAKEOFF_ALTITUDE = 100
@@ -19,33 +19,51 @@ NUM_LAPS = 2
 
 
 @pytest.fixture
-def non_empty_start_sequence() -> "list[location_ground.LocationGround]":  # type: ignore
+def non_empty_start_sequence() -> list[location_global.LocationGlobal]:  # type: ignore
     """
-    Fixture for a nonempty start sequence list
+    Fixture for a nonempty start sequence list.
     """
+    # Alpha
+    result, location = location_global.LocationGlobal.create(48.5112750, -71.6505486)
+    assert result
+    assert location is not None
+
     takeoff_sequence = [
-        location_ground.LocationGround("Alpha", 48.5112750, -71.6505486),
+        location,
     ]
+
     yield takeoff_sequence
 
 
 @pytest.fixture
-def non_empty_lap_sequence() -> "list[location_ground.LocationGround]":  # type: ignore
+def non_empty_lap_sequence() -> list[location_global.LocationGlobal]:  # type: ignore
     """
-    Fixture for a nonempty lap sequence list
+    Fixture for a nonempty lap sequence list.
     """
-    lap_sequence = [
-        location_ground.LocationGround("waypoint 1", 43.4363951, -80.5861617),
-        location_ground.LocationGround("waypoint 2", 43.4335848, -80.5767288),
-        location_ground.LocationGround("waypoint 3", 43.4338880, -80.5764634),
-        location_ground.LocationGround("waypoint 4", 43.4366668, -80.5859371),
-    ]
+    result, waypoint_1 = location_global.LocationGlobal.create(43.4363951, -80.5861617)
+    assert result
+    assert waypoint_1 is not None
+
+    result, waypoint_2 = location_global.LocationGlobal.create(43.4335848, -80.5767288)
+    assert result
+    assert waypoint_2 is not None
+
+    result, waypoint_3 = location_global.LocationGlobal.create(43.4338880, -80.5764634)
+    assert result
+    assert waypoint_3 is not None
+
+    result, waypoint_4 = location_global.LocationGlobal.create(43.4366668, -80.5859371)
+    assert result
+    assert waypoint_4 is not None
+
+    lap_sequence = [waypoint_1, waypoint_2, waypoint_3, waypoint_4]
+
     yield lap_sequence
 
 
 def test_no_laps(
-    non_empty_start_sequence: "list[location_ground.LocationGround]",
-    non_empty_lap_sequence: "list[location_ground.LocationGround]",
+    non_empty_start_sequence: list[location_global.LocationGlobal],
+    non_empty_lap_sequence: list[location_global.LocationGlobal],
 ) -> None:
     """
     Tests for correct functionality when we pass in no laps
@@ -62,7 +80,7 @@ def test_no_laps(
 
 
 def test_empty_start_sequence(
-    non_empty_lap_sequence: "list[location_ground.LocationGround]",
+    non_empty_lap_sequence: list[location_global.LocationGlobal],
 ) -> None:
     """
     Tests functionaltiy for an empty start sequence
@@ -80,7 +98,7 @@ def test_empty_start_sequence(
 
 
 def test_empty_lap_sequence(
-    non_empty_start_sequence: "list[location_ground.LocationGround]",
+    non_empty_start_sequence: list[location_global.LocationGlobal],
 ) -> None:
     """
     Tests functionaltiy for an empty lap sequence
@@ -98,8 +116,8 @@ def test_empty_lap_sequence(
 
 
 def test_valid_waypoints(
-    non_empty_start_sequence: "list[location_ground.LocationGround]",
-    non_empty_lap_sequence: "list[location_ground.LocationGround]",
+    non_empty_start_sequence: list[location_global.LocationGlobal],
+    non_empty_lap_sequence: list[location_global.LocationGlobal],
 ) -> None:
     """
     Ensures that mission is correctly made based on valid parameters

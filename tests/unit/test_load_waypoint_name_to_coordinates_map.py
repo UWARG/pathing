@@ -4,13 +4,39 @@ Testing with real files.
 
 import pathlib
 
-from modules import load_waypoint_name_to_coordinates_map, waypoint
-from modules.common.kml.modules import location_ground
+import pytest
+
+from modules import load_waypoint_name_to_coordinates_map
+from modules.common.modules import location_global
+from modules.common.modules import position_global_relative_altitude
 
 
 # Test functions use test fixture signature names and access class privates
 # No enable
 # pylint: disable=protected-access,redefined-outer-name
+
+
+def verify_name_to_coordinate_map(
+    actual: dict[str, location_global.LocationGlobal],
+    expected: dict[str, location_global.LocationGlobal],
+) -> bool:
+    """
+    Verify dictionaries are identical.
+    """
+    if not len(expected) == len(actual):
+        return False
+
+    for name in actual:
+        expected_location = expected[name]
+        actual_location = actual[name]
+
+        if not actual_location.latitude == pytest.approx(expected_location.latitude):
+            return False
+
+        if not actual_location.longitude == pytest.approx(expected_location.longitude):
+            return False
+
+    return True
 
 
 def test_normal_file() -> None:
@@ -19,13 +45,24 @@ def test_normal_file() -> None:
     """
     # Setup
     normal_csv_file_path = pathlib.Path("tests", "test_csv", "test_normal_csv.csv")
+
+    name_warg = "WARG"
+    result, waypoint_warg = location_global.LocationGlobal.create(
+        43.47323264522664, -80.54011639872981
+    )
+    assert result
+    assert waypoint_warg is not None
+
+    name_ion = "University of Waterloo Station for 301 ION"
+    result, waypoint_ion = location_global.LocationGlobal.create(
+        43.4735247614021, -80.54144667502672
+    )
+    assert result
+    assert waypoint_ion is not None
+
     expected = {
-        "WARG": location_ground.LocationGround("WARG", 43.47323264522664, -80.54011639872981),
-        "University of Waterloo Station for 301 ION": location_ground.LocationGround(
-            "University of Waterloo Station for 301 ION",
-            43.4735247614021,
-            -80.54144667502672,
-        ),
+        name_warg: waypoint_warg,
+        name_ion: waypoint_ion,
     }
 
     # Run
@@ -35,7 +72,7 @@ def test_normal_file() -> None:
 
     # Test
     assert result
-    assert actual == expected
+    assert verify_name_to_coordinate_map(actual, expected)
 
 
 def test_normal_file_with_altitude() -> None:
@@ -46,14 +83,24 @@ def test_normal_file_with_altitude() -> None:
     normal_csv_file_with_altitude_path = pathlib.Path(
         "tests", "test_csv", "test_normal_csv_with_altitude.csv"
     )
-    excepted = {
-        "WARG": waypoint.Waypoint("WARG", 43.47323264522664, -80.54011639872981, 10.0),
-        "University of Waterloo Station for 301 ION": waypoint.Waypoint(
-            "University of Waterloo Station for 301 ION",
-            43.4735247614021,
-            -80.54144667502672,
-            10.0,
-        ),
+
+    name_warg = "WARG"
+    result, waypoint_warg = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+        43.47323264522664, -80.54011639872981, 10.0
+    )
+    assert result
+    assert waypoint_warg is not None
+
+    name_ion = "University of Waterloo Station for 301 ION"
+    result, waypoint_ion = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+        43.4735247614021, -80.54144667502672, 10.0
+    )
+    assert result
+    assert waypoint_ion is not None
+
+    expected = {
+        name_warg: waypoint_warg,
+        name_ion: waypoint_ion,
     }
 
     # Run
@@ -66,7 +113,7 @@ def test_normal_file_with_altitude() -> None:
 
     # Test
     assert result
-    assert actual == excepted
+    assert verify_name_to_coordinate_map(actual, expected)
 
 
 def test_empty_file() -> None:

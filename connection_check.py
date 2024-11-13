@@ -6,7 +6,7 @@ import time
 
 from pymavlink import mavutil
 
-from modules.common.mavlink import dronekit
+from modules.common.modules.mavlink import dronekit
 
 
 # Set these to test what you want to test

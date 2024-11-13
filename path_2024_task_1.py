@@ -14,7 +14,7 @@ from modules import waypoints_to_spline_commands
 from modules import generate_command
 from modules import add_takeoff_and_rtl_command
 from modules import upload_commands
-from modules.common.mavlink import dronekit
+from modules.common.modules.mavlink import dronekit
 
 
 TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1.csv")
@@ -37,8 +37,6 @@ def main() -> int:
     Main function.
     """
     # Wait ready is false as the drone may be on the ground
-    # TODO: In progress
-    # pylint: disable-next=unused-variable
     drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
 
     # Create waypoint name to coordinate dictionary for takeoff waypoint
@@ -53,8 +51,6 @@ def main() -> int:
         return -1
 
     # Convert named waypoint dictionary to list
-    # TODO: In progress
-    # pylint: disable-next=unused-variable
     result, waypoint_takeoff_list = waypoints_dict_to_list.waypoints_dict_to_list(
         takeoff_waypoint_dictionary,
     )
@@ -74,7 +70,6 @@ def main() -> int:
         return -1
 
     # Convert lap waypoint dictionary to list
-    # pylint: disable-next=unused-variable
     result, lap_waypoint_list = waypoints_dict_to_list.waypoints_dict_to_list(
         lap_waypoint_dictionary,
     )

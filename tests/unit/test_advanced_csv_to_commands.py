@@ -6,7 +6,7 @@ import pathlib
 
 from modules import advanced_csv_to_commands
 from modules import generate_command
-from modules.common.mavlink import dronekit
+from modules.common.modules.mavlink import dronekit
 
 
 def test_normal_file() -> None:

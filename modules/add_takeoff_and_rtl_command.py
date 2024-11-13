@@ -3,7 +3,7 @@ Prefixes a takeoff command and suffixes a RTL command to the end of the list of 
 """
 
 from . import generate_command
-from .common.mavlink import dronekit
+from .common.modules.mavlink import dronekit
 
 
 def add_takeoff_and_rtl_command(

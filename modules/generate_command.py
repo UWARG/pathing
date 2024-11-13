@@ -4,7 +4,7 @@ Command generators.
 
 from pymavlink import mavutil
 
-from .common.mavlink import dronekit
+from .common.modules.mavlink import dronekit
 
 
 LANDING_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL

@@ -6,7 +6,7 @@ import math
 
 from modules import generate_command
 from modules import upload_commands
-from modules.common.mavlink import dronekit
+from modules.common.modules.mavlink import dronekit
 
 
 ALTITUDE = 40

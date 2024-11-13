@@ -4,8 +4,8 @@ Function to read camera input until valid QR code.
 
 import cv2
 
-from .common.qr.modules import qr_scanner
-from .common.camera.modules import camera_device
+from .common.modules.camera import camera_device
+from .common.modules.qr import qr_scanner
 
 
 def qr_input(device: "int | str") -> "tuple[bool, str | None]":

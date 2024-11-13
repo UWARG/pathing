@@ -2,41 +2,34 @@
 Function to convert list of waypoints to dronekit commands.
 """
 
-from . import generate_command, waypoint
-from .common.kml.modules import location_ground
-from .common.mavlink import dronekit
+from . import generate_command
+from .common.modules import location_global
+from .common.modules import position_global_relative_altitude
+from .common.modules.mavlink import dronekit
 
 
 ACCEPT_RADIUS = 5.0  # metres
 
 
 def waypoints_to_commands(
-    waypoints: "list[location_ground.LocationGround]", altitude: float
-) -> "tuple[bool, list[dronekit.Command] | None]":
+    waypoints: list[location_global.LocationGlobal], altitude: float
+) -> tuple[True, list[dronekit.Command]] | tuple[False, None]:
     """
     Convert list of waypoints to dronekit commands.
 
-    Parameters
-    ----------
-    waypoints: list[LocationGround]
-        list of LocationGround objects containing names and coordinates in decimal degrees.
-    altitude: float
-        altitude in meters to command the drone to.
+    waypoints: List of locations.
+    altitude: Altitude above home in metres to command the drone to.
 
-    Returns
-    -------
-    tuple[bool, list[dronekit.Command] | None]:
-        (False, None) if empty waypoints list,
-        (True, dronekit commands that can be sent to the drone) otherwise.
+    Return: Success, dronekit commands that can be sent to the drone.
     """
     if len(waypoints) == 0:
         return False, None
 
     dronekit_command_list = []
 
-    for point in waypoints:
+    for waypoint in waypoints:
         command = generate_command.waypoint(
-            0.0, ACCEPT_RADIUS, point.latitude, point.longitude, altitude
+            0.0, ACCEPT_RADIUS, waypoint.latitude, waypoint.longitude, altitude
         )
 
         dronekit_command_list.append(command)
@@ -45,34 +38,27 @@ def waypoints_to_commands(
 
 
 def waypoints_with_altitude_to_commands(
-    waypoints: "list[waypoint.Waypoint]",
-) -> "tuple[bool, list[dronekit.Command] | None]":
+    waypoints: list[position_global_relative_altitude.PositionGlobalRelativeAltitude],
+) -> tuple[True, list[dronekit.Command]] | tuple[False, None]:
     """
     Convert list of waypoints to dronekit commands.
 
-    Parameters
-    ----------
-    waypoints: list[LocationGroundAndAltitude]
-        list of LocationGroundAndAltitude objects containing names, coordinates in decimal degrees, and altitude in metres.
+    waypoints: List of positions.
 
-    Returns
-    -------
-    tuple[bool, list[dronekit.Command] | None]:
-        (False, None) if empty waypoints list,
-        (True, dronekit commands that can be sent to the drone) otherwise.
+    Return: Success, dronekit commands that can be sent to the drone.
     """
     if len(waypoints) == 0:
         return False, None
 
     dronekit_command_list = []
 
-    for point in waypoints:
+    for waypoint in waypoints:
         command = generate_command.waypoint(
             0.0,
             ACCEPT_RADIUS,
-            point.location_ground.latitude,
-            point.location_ground.longitude,
-            point.altitude,
+            waypoint.latitude,
+            waypoint.longitude,
+            waypoint.relative_altitude,
         )
 
         dronekit_command_list.append(command)

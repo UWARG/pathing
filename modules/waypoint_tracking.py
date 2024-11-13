@@ -5,7 +5,7 @@ including the current waypoint sequence, location, and destination.
 
 from pymavlink import mavutil
 
-from .common.mavlink import dronekit
+from .common.modules.mavlink import dronekit
 
 
 def get_current_waypoint_info(

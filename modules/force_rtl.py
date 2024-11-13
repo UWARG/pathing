@@ -3,21 +3,16 @@ Forces drone to return to launch (RTL).
 """
 
 from . import generate_command
-from .common.mavlink.modules.flight_controller import FlightController
+from .common.modules.mavlink import flight_controller
 
 
-def force_rtl(controller: FlightController) -> bool:
+def force_rtl(controller: flight_controller.FlightController) -> bool:
     """
     Sends RTL command using the upload_command module.
 
-    Parameters
-    -----------
-    controller: FlightController
-        The connected drone's flightcontroller instance.
+    controller: The connected drone's flight controller instance.
 
-    Returns
-    -------
-    bool: True if uploading RTL command is successful, False otherwise.
+    Return: True if uploading RTL command is successful, False otherwise.
     """
 
     # Generate and set RTL command

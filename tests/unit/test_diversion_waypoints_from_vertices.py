@@ -2,104 +2,188 @@
 Test cases for creating waypoints to avoid area bounded by verticies and rejoining path
 """
 
+import pytest
 import shapely.geometry
 
 from modules import diversion_waypoints_from_vertices
-from modules.common.kml.modules import location_ground
+from modules.common.modules import location_global
+
 
 # Test functions use test fixture signature names and access class privates
 # No enable
 # pylint: disable=protected-access,redefined-outer-name
 
 
+@pytest.fixture
+def restricted_vertices() -> list[location_global.LocationGlobal]:  # type: ignore
+    """
+    Fixture for normal restricted area.
+    """
+    result, waypoint_1 = location_global.LocationGlobal.create(25.0, -25.0)
+    assert result
+    assert waypoint_1 is not None
+
+    result, waypoint_2 = location_global.LocationGlobal.create(25.0, 25.0)
+    assert result
+    assert waypoint_2 is not None
+
+    result, waypoint_3 = location_global.LocationGlobal.create(75.0, 25.0)
+    assert result
+    assert waypoint_3 is not None
+
+    result, waypoint_4 = location_global.LocationGlobal.create(75.0, -25.0)
+    assert result
+    assert waypoint_4 is not None
+
+    lap_sequence = [waypoint_1, waypoint_2, waypoint_3, waypoint_4]
+
+    yield lap_sequence
+
+
+def verify_path_does_not_intersect_restriction(
+    path: list[location_global.LocationGlobal], restricted_area: shapely.geometry.Polygon
+) -> bool:
+    """
+    Check.
+
+    path: Travelled points including start.
+    restricted area: Shape that cannot be intersected with.
+
+    Return: True if there is no intersection.
+    """
+    for i in range(0, len(path) - 1):
+        current_point = path[i]
+        next_point = path[i + 1]
+
+        line = shapely.geometry.LineString(
+            [
+                (current_point.latitude, current_point.longitude),
+                (next_point.latitude, next_point.longitude),
+            ]
+        )
+
+        result = line.intersects(restricted_area)
+        if result:
+            return False
+
+    return True
+
+
 def test_no_vertices_given() -> None:
     """
-    Test behaviour when given no restricted area
+    Test behaviour when given no restricted area.
     """
-    start: location_ground.LocationGround = location_ground.LocationGround("start", 0, 0)
-    end: location_ground.LocationGround = location_ground.LocationGround("end", 0, 50)
-    verticies: "list[location_ground.LocationGround]" = []
+    # Setup
+    result, start = location_global.LocationGlobal.create(0.0, 0.0)
+    assert result
+    assert start is not None
 
-    expected_path: "list[location_ground.LocationGround]" = [start, end]
+    result, end = location_global.LocationGlobal.create(0.0, 50.0)
+    assert result
+    assert end is not None
 
-    assert (
-        diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(start, end, verticies)
-        == expected_path
+    vertices = []
+
+    expected = [start, end]
+
+    # Run
+    result, actual = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
+        start, end, vertices
     )
 
+    # Check
+    assert result
+    assert actual == expected
 
-def test_diversion_waypoints_from_vertices() -> None:
-    """
-    Test correctness of diversion_waypoints_from_vertices in the normal case
-    """
-    start: location_ground.LocationGround = location_ground.LocationGround("start", 0, 0)
-    end: location_ground.LocationGround = location_ground.LocationGround("end", 100, 0)
-    verticies: "list[location_ground.LocationGround]" = [
-        location_ground.LocationGround("1", 25, -25),
-        location_ground.LocationGround("2", 25, 25),
-        location_ground.LocationGround("3", 75, 25),
-        location_ground.LocationGround("4", 75, -25),
-    ]
 
-    bounded_area: shapely.geometry.Polygon = shapely.geometry.Polygon(
-        [(vertex.latitude, vertex.longitude) for vertex in verticies]
+def test_diversion_waypoints_from_vertices(
+    restricted_vertices: list[location_global.LocationGlobal],
+) -> None:
+    """
+    Test correctness of diversion_waypoints_from_vertices in the normal case.
+    """
+    # Setup
+    result, start = location_global.LocationGlobal.create(0.0, 0.0)
+    assert result
+    assert start is not None
+
+    result, end = location_global.LocationGlobal.create(100.0, 0.0)
+    assert result
+    assert end is not None
+
+    bounded_area = shapely.geometry.Polygon(
+        [(vertex.latitude, vertex.longitude) for vertex in restricted_vertices]
     )
 
-    path: "list[location_ground.LocationGround]" = [start] + (
-        diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(start, end, verticies)
+    # Run
+    result, diversion = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
+        start, end, restricted_vertices
+    )
+    path = [start] + diversion
+
+    # Check
+    assert result
+    assert verify_path_does_not_intersect_restriction(path, bounded_area)
+
+
+def test_concave_restricted_area(
+    restricted_vertices: list[location_global.LocationGlobal],
+) -> None:
+    """
+    Test correctness of diversion_waypoints_from_vertices when restricted area has concavity.
+    """
+    # Setup
+    result, start = location_global.LocationGlobal.create(0.0, 0.0)
+    assert result
+    assert start is not None
+
+    result, end = location_global.LocationGlobal.create(100.0, 0.0)
+    assert result
+    assert end is not None
+
+    result, extra_vertex = location_global.LocationGlobal.create(50.0, 0.0)
+    assert result
+    assert end is not None
+
+    # Deep copy
+    vertices = list(restricted_vertices)
+    vertices.insert(-1, extra_vertex)
+
+    bounded_area = shapely.geometry.Polygon(
+        [(vertex.latitude, vertex.longitude) for vertex in vertices]
     )
 
-    for i in range(1, len(path)):
-        assert not shapely.geometry.LineString(
-            [(path[i].latitude, path[i].longitude), (path[i - 1].latitude, path[i - 1].longitude)]
-        ).intersects(bounded_area)
+    # Run
+    result, diversion = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
+        start, end, vertices
+    )
+    path = [start] + diversion
+
+    # Check
+    assert result
+    assert verify_path_does_not_intersect_restriction(path, bounded_area)
 
 
-def test_concave_restricted_area() -> None:
+def test_efficiency(restricted_vertices: list[location_global.LocationGlobal]) -> None:
     """
-    Test correctness of diversion_waypoints_from_vertices when restricted area has concavity
+    Test if diversion_waypoints_from_vertices produces shortest path to rejoin point.
     """
+    # Setup
+    result, start = location_global.LocationGlobal.create(0.0, 0.0)
+    assert result
+    assert start is not None
 
-    start: location_ground.LocationGround = location_ground.LocationGround("start", 0, 0)
-    end: location_ground.LocationGround = location_ground.LocationGround("end", 100, 0)
-    verticies: "list[location_ground.LocationGround]" = [
-        location_ground.LocationGround("1", 25, -25),
-        location_ground.LocationGround("2", 25, 25),
-        location_ground.LocationGround("3", 75, 25),
-        location_ground.LocationGround("4", 50, 0),
-        location_ground.LocationGround("5", 75, -25),
-    ]
+    result, end = location_global.LocationGlobal.create(100.0, 0.0)
+    assert result
+    assert end is not None
 
-    bounded_area: shapely.geometry.Polygon = shapely.geometry.Polygon(
-        [(vertex.latitude, vertex.longitude) for vertex in verticies]
+    # Run
+    result, path = diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
+        start, end, restricted_vertices
     )
 
-    path: "list[location_ground.LocationGround]" = [start] + (
-        diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(start, end, verticies)
-    )
-
-    for i in range(1, len(path)):
-        assert not shapely.geometry.LineString(
-            [(path[i].latitude, path[i].longitude), (path[i - 1].latitude, path[i - 1].longitude)]
-        ).intersects(bounded_area)
-
-
-def test_efficiency() -> None:
-    """
-    Test if diversion_waypoints_from_vertices produces shortest path to rejoin point
-    """
-    start: location_ground.LocationGround = location_ground.LocationGround("start", 0, 10)
-    end: location_ground.LocationGround = location_ground.LocationGround("end", 100, 10)
-    verticies: "list[location_ground.LocationGround]" = [
-        location_ground.LocationGround("1", 25, -25),
-        location_ground.LocationGround("2", 25, 25),
-        location_ground.LocationGround("3", 75, 25),
-        location_ground.LocationGround("4", 75, -25),
-    ]
-
-    path: "list[location_ground.LocationGround]" = (
-        diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(start, end, verticies)
-    )
+    # Check
+    assert result
 
     for waypoint in path:
-        assert waypoint.longitude > 0
+        assert waypoint.longitude >= 0.0

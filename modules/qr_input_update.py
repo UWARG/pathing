@@ -2,12 +2,13 @@
 Function to read camera input until valid QR code using multithreading.
 """
 
-import threading
 import queue
+import threading
+
 import cv2
 
-from modules.common.qr.modules import qr_scanner
-from modules.common.camera.modules import camera_device
+from .common.modules.camera import camera_device
+from .common.modules.qr import qr_scanner
 
 
 def camera_capture_thread(

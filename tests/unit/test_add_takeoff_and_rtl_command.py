@@ -9,7 +9,8 @@ import pytest
 
 from modules import add_takeoff_and_rtl_command
 from modules import generate_command
-from modules.common.mavlink import dronekit
+from modules.common.modules.mavlink import dronekit
+
 
 ALTITUDE = 50.0  # metres
 ACCEPT_RADIUS = 10.0  # metres

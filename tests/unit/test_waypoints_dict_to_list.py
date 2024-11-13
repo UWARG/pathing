@@ -2,8 +2,9 @@
 Testing various formats of waypoints dictionary during conversion to list process.
 """
 
-from modules import waypoint, waypoints_dict_to_list
-from modules.common.kml.modules import location_ground
+from modules import waypoints_dict_to_list
+from modules.common.modules import location_global
+from modules.common.modules import position_global_relative_altitude
 
 
 # Test functions use test fixture signature names and access class privates
@@ -11,51 +12,112 @@ from modules.common.kml.modules import location_ground
 # pylint: disable=protected-access,redefined-outer-name
 
 
-def test_valid_waypoint_dict() -> None:
+class TestWaypointsDict:
     """
-    Test conversion to list for a valid dict.
+    No altitude.
     """
-    alpha = location_ground.LocationGround("Alpha", 43.4340501, -80.5789803)
-    bravo = location_ground.LocationGround("Bravo", 43.4335758, -80.5775237)
-    charlie = location_ground.LocationGround("Charlie", 43.4336672, -80.57839)
 
-    waypoint_mapping = {"Alpha": alpha, "Bravo": bravo, "Charlie": charlie}
-    expected = [alpha, bravo, charlie]
+    def test_valid(self) -> None:
+        """
+        Test conversion to list for a valid map.
+        """
+        # Setup
+        name_alpha = "Alpha"
+        result, alpha = location_global.LocationGlobal.create(43.4340501, -80.5789803)
+        assert result
+        assert alpha is not None
 
-    # Determine if action was successful
-    result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
+        name_bravo = "Bravo"
+        result, bravo = location_global.LocationGlobal.create(43.4335758, -80.5775237)
+        assert result
+        assert bravo is not None
 
-    assert result
-    assert actual == expected
+        name_charlie = "Charlie"
+        result, charlie = location_global.LocationGlobal.create(43.4336672, -80.57839)
+        assert result
+        assert charlie is not None
 
-    delta = waypoint.Waypoint("Delta", 43.4340501, -80.5789803, 10.0)
-    echo = waypoint.Waypoint("Echo", 43.4335758, -80.5775237, 10.0)
-    golf = waypoint.Waypoint("Golf", 43.4336672, -80.57839, 10.0)
+        waypoint_mapping = {name_alpha: alpha, name_bravo: bravo, name_charlie: charlie}
 
-    waypoint_mapping = {"Delta": delta, "Echo": echo, "Golf": golf}
-    expected = [delta, echo, golf]
+        expected = [alpha, bravo, charlie]
 
-    # Determine if action was successful
-    result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(waypoint_mapping)
+        # Run
+        result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
 
-    assert result
-    assert actual == expected
+        # Check
+        assert result
+        assert actual == expected
+
+    def test_empty(self) -> None:
+        """
+        Test conversion to list for an empty map.
+        """
+        # Setup
+        waypoint_mapping = {}
+
+        # Run
+        result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
+
+        # Check
+        assert not result
+        assert actual is None
 
 
-def test_empty_waypoint_dict() -> None:
+class TestWaypointsDictWithAltitude:
     """
-    Test conversion to list for an empty dict.
+    With altitude.
     """
-    waypoint_mapping = {}
 
-    # Determine if action was successful
-    result, actual = waypoints_dict_to_list.waypoints_dict_to_list(waypoint_mapping)
+    def test_valid(self) -> None:
+        """
+        Test conversion to list for a valid map.
+        """
+        # Setup
+        name_alpha = "Alpha"
+        result, alpha = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+            43.4340501, -80.5789803, 10.0
+        )
+        assert result
+        assert alpha is not None
 
-    assert not result
-    assert actual is None
+        name_bravo = "Bravo"
+        result, bravo = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+            43.4335758, -80.5775237, 10.0
+        )
+        assert result
+        assert bravo is not None
 
-    # Determine if action was successful
-    result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(waypoint_mapping)
+        name_charlie = "Charlie"
+        result, charlie = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+            43.4336672, -80.57839, 10.0
+        )
+        assert result
+        assert charlie is not None
 
-    assert not result
-    assert actual is None
+        waypoint_mapping = {name_alpha: alpha, name_bravo: bravo, name_charlie: charlie}
+        expected = [alpha, bravo, charlie]
+
+        # Run
+        result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(
+            waypoint_mapping
+        )
+
+        # Check
+        assert result
+        assert actual == expected
+
+    def test_empty(self) -> None:
+        """
+        Test conversion to list for an empty map.
+        """
+        # Setup
+        waypoint_mapping = {}
+
+        # Run
+        result, actual = waypoints_dict_to_list.waypoints_dict_with_altitude_to_list(
+            waypoint_mapping
+        )
+
+        # Check
+        assert not result
+        assert actual is None

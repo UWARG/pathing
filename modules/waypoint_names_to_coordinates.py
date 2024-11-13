@@ -2,23 +2,20 @@
 This file contains a function for converting waypoint names to coordinates.
 """
 
-from .common.kml.modules import location_ground
+from .common.modules import location_global
 
 
 def waypoint_names_to_coordinates(
-    waypoint_names: "list[str]", waypoint_mapping: "dict[str, location_ground.LocationGround]"
-) -> "tuple[bool, list[location_ground.LocationGround]]":
+    waypoint_names: list[str],
+    waypoint_mapping: dict[str, location_global.LocationGlobal],
+) -> tuple[True, list[location_global.LocationGlobal]] | tuple[False, None]:
     """
     Converts a list of waypoint names to their corresponding coordinates based on a waypoint mapping.
 
-    Args:
-        waypoint_names (list[str]): A list of waypoint names.
-        waypoint_mapping (dict[str, LocationGround]): A dictionary mapping waypoint names to their
-            corresponding LocationGround objects with coordinates.
+    waypoint_names: A list of waypoint names.
+    waypoint_mapping: A dictionary mapping waypoint names to their corresponding coordinates.
 
-    Returns:
-        tuple[bool, list[LocationGround]]: A tuple containing a boolean indicating the success of the conversion
-            and a list of LocationGround objects with coordinates corresponding to the given waypoint names.
+    Return: Success, list of named coordinates.
     """
     # Handle the case when waypoint_names is empty
     if len(waypoint_names) == 0:
