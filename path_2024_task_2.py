@@ -13,8 +13,8 @@ from modules import upload_commands
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
-from modules.common.kml.modules import ground_locations_to_kml
-from modules.common.mavlink import dronekit
+from modules.common.modules.kml import kml_conversion
+from modules.common.modules.mavlink import dronekit
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")
@@ -78,9 +78,8 @@ def main() -> int:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
 
-    location_ground_list = list(map(lambda waypoint: waypoint.location_ground, waypoints_list))
-    result, _ = ground_locations_to_kml.ground_locations_to_kml(
-        location_ground_list,
+    result, _ = kml_conversion.positions_to_kml(
+        waypoints_list,
         KML_FILE_PREFIX,
         LOG_DIRECTORY_PATH,
     )
@@ -100,10 +99,10 @@ def main() -> int:
 
     result, takeoff_loiter_commands = add_takeoff_and_loiter_command.add_takeoff_and_loiter_command(
         waypoint_commands,
-        loiter_coordinate.location_ground.latitude,
-        loiter_coordinate.location_ground.longitude,
+        loiter_coordinate.latitude,
+        loiter_coordinate.longitude,
         TAKEOFF_ALTITUDE,
-        loiter_coordinate.altitude,
+        loiter_coordinate.relative_altitude,
     )
     if not result:
         print("Error: add_takeoff_and_loiter_command")

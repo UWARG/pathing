@@ -7,10 +7,11 @@ import time
 from pymavlink import mavutil
 
 from modules import force_rtl
-from modules.common.mavlink.modules import flight_controller
-from modules.common.mavlink import dronekit
+from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
-DELAY_TIME = 60.0  # seconds
+
+DELAY_TIME = 30.0  # seconds
 MISSION_PLANNER_ADDRESS = "tcp:127.0.0.1:14550"
 TIMEOUT = 1.0  # seconds
 
@@ -32,17 +33,10 @@ def upload_mission(
     Add a takeoff command and waypoint following commands to the drone's
     command sequence, and upload them.
 
-    Parameters
-    ----------
-    controller: "flight_controller.FlightController"
-    waypoints: "list[tuple[float, float, float]]"
-        The three values in the tuple represent latitude (decimal degrees),
-        longitude (decimal degrees), and altitude (metres) respectively.
+    controller: Flight controller.
+    waypoints: Latitude (decimal degrees), longitude (decimal degrees), and altitude (metres).
 
-    Returns
-    -------
-    bool
-        Returns if the mission is successfully uploaded or not.
+    Return: If the mission is successfully uploaded or not.
     """
     # Clear existing mission
     controller.drone.commands.download()

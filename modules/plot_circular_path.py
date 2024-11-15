@@ -4,88 +4,94 @@ Module to plot n circular waypoints, given a center and radius.
 
 import csv
 import math
+import pathlib
 
-from modules.common.mavlink.modules.drone_odometry import DronePosition
-from modules.common.mavlink.modules.drone_odometry_local import DronePositionLocal
-from modules.common.mavlink.modules.local_global_conversion import drone_position_global_from_local
-
-from .waypoint import Waypoint
+from modules.common.modules import position_global
+from modules.common.modules import position_global_relative_altitude
+from modules.common.modules import location_local
+from modules.common.modules.mavlink import local_global_conversion
 
 
 def move_coordinates_by_offset(
-    start_point: Waypoint, offset_x: float, offset_y: float, name: str
-) -> "tuple[bool, Waypoint | None]":
-    """Given a starting waypoint and offsets x and y displacements, find the
+    start_point: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    offset_x: float,
+    offset_y: float,
+) -> (
+    tuple[bool, position_global_relative_altitude.PositionGlobalRelativeAltitude]
+    | tuple[False, None]
+):
+    """
+    Given a starting waypoint and offsets x and y displacements, find the
     resulting waypoint.
 
-    Args:
-        starting_point (Waypoint): The starting waypoint
-        offset_x (float): The offset in the west-east direction. Positive for
-            east, negative for west.
-        offset_y (float): The offset in the north-south direction. Positive for
-            north, negative for south.
-        name (str): The name for the resulting waypoint
+    starting_point: The starting waypoint.
+    offset_x: Offset in west-east direction in metres. East is positive.
+    offset_y: Offset in north-south direction in metres. North is positive.
 
-    Returns:
-        tuple[bool, Waypoint | None]: Either return (False, None), indicating a
-            a failure in execution, or (True, waypoint), where waypoint is the
-            resulting waypoint.
+    Return: Success, waypoint.
     """
-    success, offset_local = DronePositionLocal.create(offset_y, offset_x, 0)
-    if not success:
+    if start_point.relative_altitude <= 0.0:
         return False, None
 
-    # Because drone_position_global_from_local requires DronePosition class,
-    # we need to convert Waypoint to DronePosition first
-    success, start_point_converted = DronePosition.create(
-        start_point.location_ground.latitude,
-        start_point.location_ground.longitude,
-        start_point.altitude,
+    result, offset_local = location_local.LocationLocal.create(offset_y, offset_x)
+    if not result:
+        return False, None
+
+    # Required for conversion input
+    # TODO: Change when local_global_conversion is updated
+    result, start_point_converted = position_global.PositionGlobal.create(
+        start_point.latitude,
+        start_point.longitude,
+        0.0,
     )
-    if not success:
+    if not result:
         return False, None
 
-    success, end_point = drone_position_global_from_local(start_point_converted, offset_local)
-    if not success:
+    result, end_point = local_global_conversion.position_global_from_location_local(
+        start_point_converted, offset_local
+    )
+    if not result:
         return False, None
 
-    return True, Waypoint(name, end_point.latitude, end_point.longitude, end_point.altitude)
+    return position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+        end_point.latitude, end_point.longitude, start_point.relative_altitude
+    )
 
 
 def generate_circular_path(
-    center: Waypoint, radius: float, num_points: int
-) -> "tuple[bool, list[Waypoint] | None]":
-    """Generate a list of `num_points` evenly-separated waypoints given a center
-    and radius.
-
-    Args:
-        center (Waypoint): The center of the circular path
-        radius (float): The length of the radius, in meters
-        num_points (int): The number of waypoints to generate
-
-    Returns:
-        tuple[bool, list[Waypoint] | None]: Either return (False, None),
-            indicating a failure in execution, or (True, waypoints), where
-            waypoints is the list of waypoints forming a circle `radius` away
-            from `center`.
+    centre: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    radius: float,
+    num_points: int,
+) -> (
+    tuple[bool, list[position_global_relative_altitude.PositionGlobalRelativeAltitude]]
+    | tuple[False, None]
+):
     """
-    # validate input
-    if radius <= 0 or num_points <= 0:
+    Generate a list of `num_points` evenly-separated waypoints given a centre and radius.
+
+    centre: The centre of the circular path.
+    radius: The length of the radius, in metres.
+    num_points: The number of waypoints to generate.
+
+    Return: Success, list of waypoints.
+    """
+    if radius <= 0.0:
+        return False, None
+
+    if num_points <= 0:
         return False, None
 
     waypoints = []
 
-    # any two consecutive points are separated by 2 * pi / n radians.
+    # Any two consecutive points are separated by 2 * pi / n radians.
     for i in range(num_points):
-        # number of radians away from standard position
-        rad = 2 * math.pi / num_points * i
-        offset_x = radius * math.cos(rad)
-        offset_y = radius * math.sin(rad)
+        # Angle of rotation
+        angle = 2 * math.pi / num_points * i
+        offset_x = radius * math.cos(angle)
+        offset_y = radius * math.sin(angle)
 
-        success, waypoint = move_coordinates_by_offset(
-            center, offset_x, offset_y, f"Waypoint {i + 1}"
-        )
-        if not success:
+        result, waypoint = move_coordinates_by_offset(centre, offset_x, offset_y)
+        if not result:
             return False, None
 
         waypoints.append(waypoint)
@@ -93,23 +99,33 @@ def generate_circular_path(
     return True, waypoints
 
 
-def save_waypoints_to_csv(waypoints: "list[Waypoint]", filename: str) -> None:
-    """Save a list of waypoints to a CSV file.
+def save_waypoints_to_csv(
+    waypoints: list[position_global_relative_altitude.PositionGlobalRelativeAltitude],
+    filepath: pathlib.Path,
+) -> bool:
+    """
+    Save a list of waypoints to a CSV file.
 
-    Args:
-        waypoints (list[Waypoint]): The list of waypoints to save
-        filename (str): The name of the CSV file to save the waypoints to
+    waypoints: The list of waypoints to save.
+    filepath: The full path of the CSV file to save the waypoints to, including name.
     """
 
-    with open(filename, mode="w", encoding="UTF-8") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Name", "Latitude", "Longitude", "Altitude"])
-        for waypoint in waypoints:
-            writer.writerow(
-                [
-                    waypoint.location_ground.name,
-                    waypoint.location_ground.latitude,
-                    waypoint.location_ground.longitude,
-                    waypoint.altitude,
-                ]
-            )
+    try:
+        with open(filepath, mode="w", encoding="utf-8", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Latitude", "Longitude", "Altitude"])
+            for waypoint in waypoints:
+                writer.writerow(
+                    [
+                        waypoint.latitude,
+                        waypoint.longitude,
+                        waypoint.relative_altitude,
+                    ]
+                )
+        return True
+    # Required for catching library exceptions
+    # pylint: disable-next=broad-exception-caught
+    except Exception as exception:
+        print(f"Failed to write with exception: {exception}")
+
+    return False

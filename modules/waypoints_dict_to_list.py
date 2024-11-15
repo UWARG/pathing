@@ -2,51 +2,44 @@
 Module to convert waypoints dict to waypoints list.
 """
 
-from . import waypoint
-from .common.kml.modules import location_ground
+from .common.modules import location_global
+from .common.modules import position_global_relative_altitude
 
 
 def waypoints_dict_to_list(
-    waypoint_name_to_coordinates: "dict[str, location_ground.LocationGround]",
-) -> "tuple[bool, list[location_ground.LocationGround]]":
+    waypoint_name_to_coordinates: dict[str, location_global.LocationGlobal],
+) -> tuple[True, list[location_global.LocationGlobal]] | tuple[False, None]:
     """
     Converts dictionary of waypoints into a list.
 
-    Parameters
-    ----------
-    waypoint_name_to_coordinates: dict[str, LocationGround]
-        Waypoint mapping of name to (latitude, longitude).
+    waypoint_name_to_coordinates: Waypoint mapping of name to coordinate.
 
-    Returns
-    -------
-    bool: Whether waypoint data conversion was a success.
-    list[Waypoint]: List of the waypoint coordinates.
+    Return: Success, list of coordinates.
     """
     # Check for empty input dictionary
     if len(waypoint_name_to_coordinates) == 0:
         return False, None
 
-    # Create list of all the values in the input dictionary, ie. the LocationGround
+    # Create list of all the values in the input dictionary
     waypoints_list = list(waypoint_name_to_coordinates.values())
 
     return True, waypoints_list
 
 
 def waypoints_dict_with_altitude_to_list(
-    waypoint_name_to_coordinates_and_altitude: "dict[str, waypoint.Waypoint]",
-) -> "tuple[bool, list[waypoint.Waypoint]]":
+    waypoint_name_to_coordinates_and_altitude: dict[
+        str, position_global_relative_altitude.PositionGlobalRelativeAltitude
+    ],
+) -> (
+    tuple[True, list[position_global_relative_altitude.PositionGlobalRelativeAltitude]]
+    | tuple[False, None]
+):
     """
     Converts dictionary of waypoints into a list.
 
-    Parameters
-    ----------
-    waypoint_name_to_coordinates_and_altitude: dict[str, LocationGroundAndAltitude]
-        Waypoint mapping of name to (latitude, longitude, altitude).
+    waypoint_name_to_coordinates: Waypoint mapping of name to coordinate.
 
-    Returns
-    -------
-    bool: Whether waypoint data conversion was a success.
-    list[Waypoint]: List of the waypoint coordinates and altitude.
+    Return: Success, list of coordinates.
     """
     # Check for empty input dictionary
     if len(waypoint_name_to_coordinates_and_altitude) == 0:

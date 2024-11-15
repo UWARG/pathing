@@ -2,126 +2,276 @@
 Test plotting waypoints in a circular fashion around a center
 """
 
+import pathlib
+
+import pytest
+
 from modules import plot_circular_path
-from modules.waypoint import Waypoint
+from modules.common.modules import position_global_relative_altitude
 
 
-def assert_close_enough(point_1: Waypoint, point_2: Waypoint, epsilon: float = 1e-7) -> bool:
+DEFAULT_TOLERANCE = 1e-6
+
+
+def verify_close_enough(
+    actual: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    expected: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    tolerance: float,
+) -> bool:
     """
-    Assert whether two waypoints are within epsilon within each other, in both
-    the x and y directions.
-    A default epsilon of 1e-7 was chosen so that any error within that range is
-    within an error of 1.1 centimeter.
+    Check equality of positions.
     """
-    return (
-        abs(point_1.location_ground.latitude - point_2.location_ground.latitude) < epsilon
-        and abs(point_1.location_ground.longitude - point_2.location_ground.longitude) < epsilon
-        and abs(point_1.altitude - point_2.altitude) < epsilon
-    )
+    if not actual.latitude == pytest.approx(expected.latitude, rel=tolerance):
+        return False
+
+    if not actual.longitude == pytest.approx(expected.longitude, rel=tolerance):
+        return False
+
+    if not actual.relative_altitude == pytest.approx(expected.relative_altitude, rel=tolerance):
+        return False
+
+    return True
 
 
-def test_move_north_east() -> None:
+class TestMoveOffset:
     """
-    Move the drone north east
+    Test move_coordinates_by_offset function.
     """
-    starting_point = Waypoint("Start", 10, 12, 1)
-    offset_x = 100_000  # east
-    offset_y = 100_000  # north
-    expected_point = Waypoint("End", 10.899322, 12.913195, 1)
 
-    success, result_point = plot_circular_path.move_coordinates_by_offset(
-        starting_point, offset_x, offset_y, "End"
-    )
+    def test_normal(self) -> None:
+        """
+        Move the drone north east.
+        """
+        # Setup
+        result, starting_point = (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(10, 12, 1)
+        )
+        assert result
+        assert starting_point is not None
 
-    assert success
-    assert isinstance(result_point, Waypoint)
-    assert_close_enough(result_point, expected_point)
+        offset_x = 100_000  # east
+        offset_y = 100_000  # north
 
+        result, expected = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+            10.902630923020318, 12.914531732240036, 1
+        )
+        assert result
+        assert expected is not None
 
-def test_generate_circular_path() -> None:
-    """
-    Generate a circular path
-    """
-    center = Waypoint("Center", 10, 12, 1)
-    radius = 1_000_000
-    num_points = 20
-    expected_points = [
-        (10.0, 21.131950912937036),
-        (12.77905659637457, 20.685001422236247),
-        (15.286079770270131, 19.387903480363878),
-        (17.275664625968226, 17.367626071283176),
-        (18.55305673554031, 14.82192802389536),
-        (18.993216059187304, 12.0),
-        (18.55305673554031, 9.17807197610464),
-        (17.275664625968226, 6.632373928716825),
-        (15.286079770270131, 4.612096519636122),
-        (12.779056596374572, 3.3149985777637543),
-        (10.0, 2.868049087062964),
-        (7.220943403625431, 3.3149985777637543),
-        (4.71392022972987, 4.612096519636121),
-        (2.724335374031777, 6.632373928716823),
-        (1.4469432644596925, 9.178071976104638),
-        (1.006783940812694, 12.0),
-        (1.4469432644596907, 14.821928023895358),
-        (2.724335374031776, 17.367626071283176),
-        (4.713920229729867, 19.387903480363878),
-        (7.220943403625428, 20.685001422236247),
-    ]
-
-    success, waypoints = plot_circular_path.generate_circular_path(center, radius, num_points)
-
-    assert success
-    assert isinstance(waypoints, list)
-    assert len(waypoints) == num_points
-
-    for i in range(num_points):
-        assert isinstance(waypoints[i], Waypoint)
-        assert_close_enough(
-            waypoints[i], Waypoint(f"Waypoint {i}", expected_points[i][0], expected_points[i][1], 1)
+        # Run
+        result, actual = plot_circular_path.move_coordinates_by_offset(
+            starting_point, offset_x, offset_y
         )
 
+        # Check
+        assert result
+        assert actual is not None
 
-def test_move_north_east_invalid_inputs() -> None:
-    """
-    Test that moving a Waypoint with 0 altitude fails
-    """
-    success, result_point = plot_circular_path.move_coordinates_by_offset(
-        Waypoint("Start", 12, 36, 0), -0.2, 3.6, "End"
-    )
-    assert not success
-    assert result_point is None
+        assert verify_close_enough(actual, expected, DEFAULT_TOLERANCE)
+
+    def test_move_north_east_altitude_zero(self) -> None:
+        """
+        Test that moving with a waypoint of 0 altitude fails.
+        """
+        # Setup
+        result, start_point = (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(12, 36, 0)
+        )
+
+        # Run
+        result, actual = plot_circular_path.move_coordinates_by_offset(start_point, -0.2, 3.6)
+
+        # Check
+        assert not result
+        assert actual is None
 
 
-def test_generate_circular_path_invalid_input() -> None:
+class TestGenerateCircularPath:
     """
-    Test generating circular path with invalid inputs.
+    Test generate_circular_path function.
     """
-    inputs = [
-        (Waypoint("Center", 22.4, -6.7, -0.2), 2, 4),
-        (Waypoint("Center", 3.99, 12.6, 3.4), 0, 10),
-        (Waypoint("Center", 3, 6, 12), 500, 0),
+
+    def test_normal(self) -> None:
+        """
+        Generate a circular path.
+        """
+        # Setup
+        result, centre = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+            0, 0, 1
+        )
+        assert result
+        assert centre is not None
+
+        radius = 111_319
+        num_points = 20
+        expected_points = [
+            (0, 1),
+            (0.309016994, 0.951056516),
+            (0.587785252, 0.809016994),
+            (0.809016994, 0.587785252),
+            (0.951056516, 0.309016994),
+            (1, 6.12574e-17),
+            (0.951056516, -0.309016994),
+            (0.809016994, -0.587785252),
+            (0.587785252, -0.809016994),
+            (0.309016994, -0.951056516),
+            (1.22515e-16, -1),
+            (-0.309016994, -0.951056516),
+            (-0.587785252, -0.809016994),
+            (-0.809016994, -0.587785252),
+            (-0.951056516, -0.309016994),
+            (-1, -1.83772e-16),
+            (-0.951056516, 0.309016994),
+            (-0.809016994, 0.587785252),
+            (-0.587785252, 0.809016994),
+            (-0.309016994, 0.951056516),
+        ]
+        assert len(expected_points) == num_points
+
+        # Run
+        result, waypoints = plot_circular_path.generate_circular_path(centre, radius, num_points)
+
+        # Check
+        assert result
+        assert waypoints is not None
+
+        # Reduced tolerance as the planet is a not a sphere
+        tolerance = 1e-2
+
+        assert len(waypoints) == num_points
+        for i in range(num_points):
+            actual = waypoints[i]
+            assert actual is not None
+
+            expected_latitude, expected_longitude = expected_points[i]
+            result, expected = (
+                position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+                    expected_latitude, expected_longitude, centre.relative_altitude
+                )
+            )
+
+            assert verify_close_enough(actual, expected, tolerance)
+
+    invalid_inputs = [
+        (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+                22.4, -6.7, -0.2
+            ),
+            2,
+            4,
+        ),  # Negative altitude
+        (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+                3.99, 12.6, 3.4
+            ),
+            0,
+            10,
+        ),  # Zero radius
+        (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(3, 6, 12),
+            500,
+            0,
+        ),  # Zero points
     ]
 
-    for center, radius, num_points in inputs:
-        success, waypoints = plot_circular_path.generate_circular_path(center, radius, num_points)
-        assert not success
-        assert waypoints is None
+    @pytest.mark.parametrize("result_centre,radius,num_points", invalid_inputs)
+    def test_invalid_input(
+        self,
+        result_centre: (
+            tuple[True, position_global_relative_altitude.PositionGlobalRelativeAltitude]
+            | tuple[False, None]
+        ),
+        radius: float,
+        num_points: int,
+    ) -> None:
+        """
+        Parameterized test with invalid inputs.
+        """
+        # Setup
+        result, centre = result_centre
+        assert result
+        assert centre is not None
+
+        # Run
+        result, actual = plot_circular_path.generate_circular_path(centre, radius, num_points)
+
+        # Check
+        assert not result
+        assert actual is None
 
 
-def test_save_waypoints_to_csv(tmp_path: str) -> None:
+class TestSaveWaypointsToCsv:
     """
-    Save waypoints to a CSV file
+    Test save_waypoints_to_csv function.
     """
-    waypoints = [
-        Waypoint("WP1", 10, 12, 0),
-        Waypoint("WP2", 10.0001, 12.0001, 0),
-    ]
-    filename = tmp_path / "waypoints.csv"
-    plot_circular_path.save_waypoints_to_csv(waypoints, filename)
 
-    with open(filename, mode="r", encoding="UTF-8") as file:
-        lines = file.readlines()
+    def test_normal(self, tmp_path: pathlib.Path) -> None:
+        """
+        Save waypoints to a CSV file.
+        """
+        # Setup
+        result, waypoint_0 = (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(10, 12, 0)
+        )
+        assert result
+        assert waypoint_0 is not None
 
-    assert lines[0].strip() == "Name,Latitude,Longitude,Altitude"
-    assert lines[1].strip() == "WP1,10,12,0"
-    assert lines[2].strip() == "WP2,10.0001,12.0001,0"
+        result, waypoint_1 = (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+                10.0001, 12.0001, 0
+            )
+        )
+        assert result
+        assert waypoint_1 is not None
+
+        waypoints = [
+            waypoint_0,
+            waypoint_1,
+        ]
+
+        filepath = pathlib.Path(tmp_path, "waypoints.csv")
+
+        # Run
+        result = plot_circular_path.save_waypoints_to_csv(waypoints, filepath)
+
+        # Check
+        assert result
+
+        with open(filepath, mode="r", encoding="utf-8") as file:
+            lines = file.readlines()
+
+        assert lines[0].strip() == "Latitude,Longitude,Altitude"
+        assert lines[1].strip() == "10,12,0"
+        assert lines[2].strip() == "10.0001,12.0001,0"
+
+    def test_nonexistent_path(self) -> None:
+        """
+        Fail on nonexistent path.
+        """
+        # Setup
+        result, waypoint_0 = (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(10, 12, 0)
+        )
+        assert result
+        assert waypoint_0 is not None
+
+        result, waypoint_1 = (
+            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
+                10.0001, 12.0001, 0
+            )
+        )
+        assert result
+        assert waypoint_1 is not None
+
+        waypoints = [
+            waypoint_0,
+            waypoint_1,
+        ]
+
+        filepath = pathlib.Path("nonexistent", "waypoints.csv")
+
+        # Run
+        result = plot_circular_path.save_waypoints_to_csv(waypoints, filepath)
+
+        # Check
+        assert not result

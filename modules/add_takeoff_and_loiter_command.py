@@ -3,7 +3,7 @@ Prefixes a takeoff command and suffixes a loiter command to the end of the list 
 """
 
 from . import generate_command
-from .common.mavlink import dronekit
+from .common.modules.mavlink import dronekit
 
 
 def add_takeoff_and_loiter_command(

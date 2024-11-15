@@ -16,7 +16,8 @@ from modules import waypoints_dict_to_list
 from modules import waypoints_to_commands
 from modules import diversion_waypoints_from_vertices
 from modules import generate_command
-from modules.common.kml.modules.location_ground import LocationGround
+from modules.common.modules import location_global
+
 
 WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "competition_task_1.csv")
 DIVERSION_WAYPOINT_FILE_PATH = pathlib.Path("2023", "waypoints", "diversion_waypoints.csv")
@@ -137,11 +138,16 @@ def main() -> int:
 
             # convert tuple[float, float] to location ground
             current_latitude, current_longitude = location
-            location = LocationGround("current", current_latitude, current_longitude)
+            result, named_location = location_global.LocationGlobal.create(
+                current_latitude, current_longitude
+            )
+            if not result:
+                print("ERROR: Could not create named location")
+                return -1
 
             waypoints_around_diversion = (
                 diversion_waypoints_from_vertices.diversion_waypoints_from_vertices(
-                    location,
+                    named_location,
                     next(iter(rejoin_waypoint_list.values())),
                     diversion_waypoint_values_list,
                 )

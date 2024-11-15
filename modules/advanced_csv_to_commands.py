@@ -6,7 +6,7 @@ import pathlib
 
 from pymavlink import mavutil
 
-from .common.mavlink import dronekit
+from .common.modules.mavlink import dronekit
 
 
 VALID_FRAMES = {
