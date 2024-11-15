@@ -78,7 +78,7 @@ def main() -> int:
         print("ERROR: Unable to convert waypoints from dict to list")
         return -1
 
-    result, _ = kml_conversion.named_positions_to_kml(
+    result, _ = kml_conversion.positions_to_kml(
         waypoints_list,
         KML_FILE_PREFIX,
         LOG_DIRECTORY_PATH,
