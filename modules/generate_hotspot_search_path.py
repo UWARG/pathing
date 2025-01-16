@@ -8,6 +8,7 @@ from . import plot_circular_path
 from .common.modules import position_global_relative_altitude
 
 
+MULTIPLIER = 1.2
 MINIMUM_POINTS = 3
 
 
@@ -41,7 +42,11 @@ def generate_search_path(
 
     while current_radius <= search_radius:
         circumference = 2 * math.pi * current_radius
-        num_points = max(MINIMUM_POINTS, int(circumference / camera_vertical_size))
+
+        num_points_vertical = circumference / camera_vertical_size
+        num_points_horizontal = circumference / camera_horizontal_size
+        num_points = math.ceil(MULTIPLIER * max(num_points_vertical, num_points_horizontal))
+        num_points = max(MINIMUM_POINTS, num_points)
 
         result, waypoints = plot_circular_path.generate_circular_path(
             center, current_radius, num_points
