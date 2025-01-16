@@ -43,7 +43,6 @@ class TestGenerateSearchPath:
         assert result
         assert center is not None
 
-        num_points = 16
         expected_points = [
             (0.0, 2.245788210298689e-05),
             (2.2609236926258363e-05, 1.3751486716526466e-21),
@@ -62,7 +61,6 @@ class TestGenerateSearchPath:
             (-5.874052061493492e-05, 3.368682315447813e-05),
             (-3.391385538936766e-05, 5.8347289249130414e-05),
         ]
-        assert len(expected_points) == num_points
 
         search_radius = 10.0
         search_area_dimensions = (5.0, 5.0)
@@ -76,12 +74,12 @@ class TestGenerateSearchPath:
         # Reduced tolerance as the planet is a not a sphere
         tolerance = 1e-2
 
-        assert len(waypoints) == num_points
-        for i in range(num_points):
+        assert len(waypoints) == len(expected_points)
+        for i, expected_point in enumerate(expected_points):
             actual = waypoints[i]
             assert actual is not None
 
-            expected_latitude, expected_longitude = expected_points[i]
+            expected_latitude, expected_longitude = expected_point
             result, expected = (
                 position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
                     expected_latitude, expected_longitude, center.relative_altitude
