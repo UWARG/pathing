@@ -42,7 +42,7 @@ def main() -> int:
     try:
         # pylint: disable=invalid-name
         TAKEOFF_ALTITUDE = config["takeoff_altitude"]
-        DRONE_TIMEOUT = config["drone_timeout"]
+        # DRONE_TIMEOUT = config["drone_timeout"]
         CONNECTION_ADDRESS = config["connection_address"]
         LOG_DIRECTORY_PATH = pathlib.Path(config["log_directory_path"])
         KML_FILE_PREFIX = config["kml_file_prefix"]
@@ -110,7 +110,7 @@ def main() -> int:
         print("Error: add_takeoff_and_loiter_command")
         return -1
 
-    result = controller.upload_commands(takeoff_loiter_commands, DRONE_TIMEOUT)
+    result = controller.upload_commands(takeoff_loiter_commands)
     if not result:
         print("Error: upload_commands")
         return -1

@@ -108,7 +108,9 @@ def main() -> int:
     """
     # TODO: Fails when wait_ready=True, debugging why this is
     # wait_ready=False is dangerous
-    result, flight_controller_vehicle = flight_controller.FlightController.create(CONNECTION_ADDRESS)
+    result, flight_controller_vehicle = flight_controller.FlightController.create(
+        CONNECTION_ADDRESS
+    )
     if not result:
         print("ERROR: Could not connect to drone.")
         return -1

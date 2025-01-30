@@ -112,7 +112,7 @@ def main() -> int:
         TAKEOFF_ALTITUDE,
     )
 
-    result = controller.upload_commands(takeoff_and_rtl_commands, DRONE_TIMEOUT)
+    result = controller.upload_commands(takeoff_and_rtl_commands)
     if not result:
         print("ERROR: upload_commands")
         return -1
@@ -195,7 +195,7 @@ def main() -> int:
     # Force early RTL
     controller.set_flight_mode("RTL")
     rtl_command = generate_command.return_to_launch()
-    result = controller.upload_commands([rtl_command], DRONE_TIMEOUT)
+    result = controller.upload_commands([rtl_command])
     if not result:
         print("ERROR: Failed to upload RTL command. Manually set RTL.")
 

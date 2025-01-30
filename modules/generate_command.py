@@ -173,7 +173,9 @@ def loiter_timed(
     )
 
 
-def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> flight_controller.dronekit.Command:
+def loiter_unlimited(
+    latitude: float, longitude: float, altitude: float
+) -> flight_controller.dronekit.Command:
     """
     Returns loiter unlimited command.
 

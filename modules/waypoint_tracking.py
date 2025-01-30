@@ -42,7 +42,9 @@ def get_current_waypoint_info(
     return True, waypoint_info
 
 
-def get_current_location(drone: flight_controller.FlightController.drone) -> "tuple[bool, tuple[float, float] | None]":
+def get_current_location(
+    drone: flight_controller.FlightController.drone,
+) -> "tuple[bool, tuple[float, float] | None]":
     """
     Function to retrieve the current location (latitude and longitude) of the drone
 

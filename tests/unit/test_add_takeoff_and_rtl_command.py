@@ -78,7 +78,9 @@ def assert_expected_takeoff_and_rtl_commands(
     assert commands_actual[1:-1] == commands_expected
 
 
-def test_add_takeoff_and_rtl_on_empty_commands(empty_commands: "list[flight_controller.dronekit.Command]") -> None:
+def test_add_takeoff_and_rtl_on_empty_commands(
+    empty_commands: "list[flight_controller.dronekit.Command]",
+) -> None:
     """
     Tests functionality correctness of add_takeoff_and_rtl_command on empty list of commands.
     """

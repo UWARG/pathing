@@ -10,7 +10,10 @@ DRONE_TIMEOUT = 30.0  # seconds
 
 
 def check_stop_condition(
-    start_time: float, current_time: float, drone: flight_controller.FlightController, maximum_flight_time: float
+    start_time: float,
+    current_time: float,
+    drone: flight_controller.FlightController,
+    maximum_flight_time: float,
 ) -> bool:
     """
     Check if drone exceeds the maximum flight time limit and replace with new mission of returning to launch.

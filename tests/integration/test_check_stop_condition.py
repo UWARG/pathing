@@ -56,7 +56,7 @@ def main() -> int:
         print("Unable to add takeoff and landing commands.")
         return -1
 
-    result = controller.upload_commands(commands_with_takeoff_landing, DRONE_TIMEOUT)
+    result = controller.upload_commands(commands_with_takeoff_landing)
     if not result:
         print("Unable to upload commands.")
         return -1
