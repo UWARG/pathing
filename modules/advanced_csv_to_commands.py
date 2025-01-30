@@ -119,7 +119,7 @@ def csv_to_commands_list(
 
     Returns:
         - Whether or not the mission was successfully created
-        - A list of flight_controller (dronekit) commands that represent the mission
+        - A list of dronekit commands that represent the mission
 
     """
     if not mission_file_path.exists():

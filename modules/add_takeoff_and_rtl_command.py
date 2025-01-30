@@ -10,12 +10,12 @@ def add_takeoff_and_rtl_command(
     commands: "list[flight_controller.dronekit.Command]", altitude: float
 ) -> "tuple[bool, list[flight_controller.dronekit.Command] | None]":
     """
-    Prepends a takeoff command and appends a RTL command to a list of flight_controller (dronekit) commands.
+    Prepends a takeoff command and appends a RTL command to a list of dronekit commands.
 
     Parameters
     ----------
     commands: list[flight_controller.dronekit.Command]
-        flight_controller (dronekit) commands that can be sent to the drone.
+        dronekit commands that can be sent to the drone.
     altitude: int
         Altitude in meters to command the drone to.
 
@@ -23,7 +23,7 @@ def add_takeoff_and_rtl_command(
     -------
     tuple[bool, list[flight_controller.dronekit.Command] | None]:
         (False, None) if empty commands list,
-        (True, flight_controller (dronekit) commands with takeoff and land commands that can be sent to the drone) otherwise.
+        (True, dronekit commands with takeoff and land commands that can be sent to the drone) otherwise.
     """
     if len(commands) == 0:
         return False, None

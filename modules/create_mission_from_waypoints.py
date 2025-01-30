@@ -15,7 +15,7 @@ def create_mission_from_waypoints(
     lap_sequence_list: list[location_global.LocationGlobal],
 ) -> tuple[True, list[flight_controller.dronekit.Command]] | tuple[False, None]:
     """
-    Creates a mission(list of flight_controller (dronekit) commands) from starting sequence waypoints
+    Creates a mission(list of dronekit commands) from starting sequence waypoints
     and lap sequence waypoints repeated N times
 
     num_laps: The number of laps to run.
@@ -43,7 +43,7 @@ def create_mission_from_waypoints(
     if not success:
         return False, None
 
-    # Create and return the mission flight_controller (dronekit) commands
+    # Create and return the mission dronekit commands
     mission_waypoints_commands = takeoff_commands + laps_commands
 
     return True, mission_waypoints_commands

@@ -14,12 +14,12 @@ def add_takeoff_and_loiter_command(
     loiter_altitude: float,
 ) -> "tuple[bool, list[flight_controller.dronekit.Command] | None]":
     """
-    Prepends a takeoff command and appends a loiter command to a list of flight_controller (dronekit) commands.
+    Prepends a takeoff command and appends a loiter command to a list of dronekit commands.
 
     Parameters
     ----------
     commands: list[flight_controller.dronekit.Command]
-        flight_controller (dronekit) commands that can be sent to the drone.
+        dronekit commands that can be sent to the drone.
     latitude: float
         Loiter latitude values
     longitude: float
@@ -31,7 +31,7 @@ def add_takeoff_and_loiter_command(
     -------
     tuple[bool, list[flight_controller.dronekit.Command] | None]:
         (False, None) if empty commands list,
-        (True, flight_controller (dronekit) commands with takeoff and land commands that can be sent to the drone) otherwise.
+        (True, dronekit commands with takeoff and land commands that can be sent to the drone) otherwise.
     """
     if len(commands) == 0:
         return False, None

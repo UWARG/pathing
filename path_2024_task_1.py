@@ -36,7 +36,7 @@ def main() -> int:
     Main function.
     """
     # Wait ready is false as the drone may be on the ground
-    result, flight_controller_interface = flight_controller.FlightController.create(CONNECTION_ADDRESS)
+    result, controller = flight_controller.FlightController.create(CONNECTION_ADDRESS)
     if not result:
         print("ERROR: Could not connect to drone.")
         return -1
@@ -112,7 +112,7 @@ def main() -> int:
         TAKEOFF_ALTITUDE,
     )
 
-    result = flight_controller_interface.upload_commands(takeoff_and_rtl_commands, DRONE_TIMEOUT)
+    result = controller.upload_commands(takeoff_and_rtl_commands, DRONE_TIMEOUT)
     if not result:
         print("ERROR: upload_commands")
         return -1
@@ -120,9 +120,9 @@ def main() -> int:
     print("Upload successful, waiting for takeoff ...")
 
     # Wait for the drone to takeoff
-    location_info = flight_controller_interface.drone.location
+    location_info = controller.drone.location
     while location_info.global_relative_frame.alt < MISSION_WAIT_ALTITUDE_THRESHOLD:
-        location_info = flight_controller_interface.drone.location
+        location_info = controller.drone.location
         time.sleep(MISSION_WAIT_TIMEOUT)
 
     start_time = time.time()
@@ -142,7 +142,7 @@ def main() -> int:
 
     while True:
         # Time how long it takes for the drone to fly a lap and decide if there is enough time to fly another lap
-        if flight_controller_interface.drone.commands.next == LAP_START_SEQUENCE_NUMBER:
+        if controller.drone.commands.next == LAP_START_SEQUENCE_NUMBER:
             if starting_lap:
                 if lap_start_time == 0:
                     # Record the start time when running a new lap
@@ -193,9 +193,9 @@ def main() -> int:
             break
 
     # Force early RTL
-    flight_controller_interface.set_flight_mode("RTL")
+    controller.set_flight_mode("RTL")
     rtl_command = generate_command.return_to_launch()
-    result = flight_controller_interface.upload_commands([rtl_command], DRONE_TIMEOUT)
+    result = controller.upload_commands([rtl_command], DRONE_TIMEOUT)
     if not result:
         print("ERROR: Failed to upload RTL command. Manually set RTL.")
 
