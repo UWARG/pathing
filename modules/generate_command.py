@@ -4,7 +4,7 @@ Command generators.
 
 from pymavlink import mavutil
 
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 LANDING_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL
@@ -17,11 +17,11 @@ LOITER_UNLIMITED_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 DO_JUMP_FRAME = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
 
 
-def landing() -> dronekit.Command:
+def landing() -> flight_controller.dronekit.Command:
     """
     Returns landing command.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -39,11 +39,11 @@ def landing() -> dronekit.Command:
     )
 
 
-def return_to_launch() -> dronekit.Command:
+def return_to_launch() -> flight_controller.dronekit.Command:
     """
     Returns RTL command.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -61,13 +61,13 @@ def return_to_launch() -> dronekit.Command:
     )
 
 
-def takeoff(altitude: float) -> dronekit.Command:
+def takeoff(altitude: float) -> flight_controller.dronekit.Command:
     """
     Returns takeoff command.
 
     altitude: Metres.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -87,7 +87,7 @@ def takeoff(altitude: float) -> dronekit.Command:
 
 def waypoint(
     hold_time: float, acceptance_radius: float, latitude: float, longitude: float, altitude: float
-) -> dronekit.Command:
+) -> flight_controller.dronekit.Command:
     """
     Returns waypoint command.
 
@@ -97,7 +97,7 @@ def waypoint(
     longitude: Decimal degrees.
     altitude: Metres.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -117,7 +117,7 @@ def waypoint(
 
 def waypoint_spline(
     hold_time: float, latitude: float, longitude: float, altitude: float
-) -> dronekit.Command:
+) -> flight_controller.dronekit.Command:
     """
     Returns waypoint spline command.
 
@@ -126,7 +126,7 @@ def waypoint_spline(
     longitude: Decimal degrees.
     altitude: Metres.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -146,7 +146,7 @@ def waypoint_spline(
 
 def loiter_timed(
     loiter_time: float, latitude: float, longitude: float, altitude: float
-) -> dronekit.Command:
+) -> flight_controller.dronekit.Command:
     """
     Returns loiter timed command.
 
@@ -155,7 +155,7 @@ def loiter_timed(
     longitude: Decimal degrees.
     altitude: Metres.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -173,7 +173,7 @@ def loiter_timed(
     )
 
 
-def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> dronekit.Command:
+def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> flight_controller.dronekit.Command:
     """
     Returns loiter unlimited command.
 
@@ -181,7 +181,7 @@ def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> dron
     longitude: Decimal degrees.
     altitude: Metres.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -199,14 +199,14 @@ def loiter_unlimited(latitude: float, longitude: float, altitude: float) -> dron
     )
 
 
-def do_jump(waypoint_sequence_number: int, repeat: int) -> dronekit.Command:
+def do_jump(waypoint_sequence_number: int, repeat: int) -> flight_controller.dronekit.Command:
     """
     Returns do jump command.
 
     waypoint_sequence_number: The sequence number of the mission command to jump to.
     repeat: Maximum number of times to perform the jump.
     """
-    return dronekit.Command(
+    return flight_controller.dronekit.Command(
         0,
         0,
         0,

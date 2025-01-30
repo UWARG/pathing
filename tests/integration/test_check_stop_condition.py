@@ -7,7 +7,6 @@ import time
 from modules import add_takeoff_and_landing_command
 from modules import condition_evaluator
 from modules import mission_time_condition
-from modules import upload_commands
 from modules import waypoints_to_commands
 from modules.common.modules import location_global
 from modules.common.modules.mavlink import flight_controller
@@ -57,9 +56,7 @@ def main() -> int:
         print("Unable to add takeoff and landing commands.")
         return -1
 
-    result = upload_commands.upload_commands(
-        controller.drone, commands_with_takeoff_landing, DRONE_TIMEOUT
-    )
+    result = controller.upload_commands(commands_with_takeoff_landing, DRONE_TIMEOUT)
     if not result:
         print("Unable to upload commands.")
         return -1

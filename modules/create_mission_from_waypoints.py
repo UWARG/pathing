@@ -4,7 +4,7 @@ Function that appends waypoints for N laps to create a mission
 
 from . import waypoints_to_commands
 from .common.modules import location_global
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 def create_mission_from_waypoints(
@@ -13,9 +13,9 @@ def create_mission_from_waypoints(
     laps_altitude: int,
     start_sequence_list: list[location_global.LocationGlobal],
     lap_sequence_list: list[location_global.LocationGlobal],
-) -> tuple[True, list[dronekit.Command]] | tuple[False, None]:
+) -> tuple[True, list[flight_controller.dronekit.Command]] | tuple[False, None]:
     """
-    Creates a mission(list of dronekit commands) from starting sequence waypoints
+    Creates a mission(list of flight_controller (dronekit) commands) from starting sequence waypoints
     and lap sequence waypoints repeated N times
 
     num_laps: The number of laps to run.
@@ -43,7 +43,7 @@ def create_mission_from_waypoints(
     if not success:
         return False, None
 
-    # Create and return the mission dronekit commands
+    # Create and return the mission flight_controller (dronekit) commands
     mission_waypoints_commands = takeoff_commands + laps_commands
 
     return True, mission_waypoints_commands

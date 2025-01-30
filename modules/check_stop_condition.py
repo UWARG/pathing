@@ -3,15 +3,14 @@ Checks whether the drone has reached its max flight time and sends it back to la
 """
 
 from . import generate_command
-from . import upload_commands
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 DRONE_TIMEOUT = 30.0  # seconds
 
 
 def check_stop_condition(
-    start_time: float, current_time: float, drone: dronekit.Vehicle, maximum_flight_time: float
+    start_time: float, current_time: float, drone: flight_controller.FlightController, maximum_flight_time: float
 ) -> bool:
     """
     Check if drone exceeds the maximum flight time limit and replace with new mission of returning to launch.
@@ -22,7 +21,7 @@ def check_stop_condition(
         The time the drone started the mission in seconds.
     current_time: float
         Time elapsed in seconds since starting the mission.
-    drone: dronekit.Vehicle
+    drone: flight_controller.FlightController
         The connected drone.
     maximum_flight_time: float
         Max flight time for drone in seconds.
@@ -37,7 +36,7 @@ def check_stop_condition(
     rtl_command = generate_command.return_to_launch()
 
     # Invoke upload_commands to clear previous commands and direct drone back to launch location
-    result = upload_commands.upload_commands(drone, [rtl_command], DRONE_TIMEOUT)
+    result = drone.upload_commands(drone, [rtl_command], DRONE_TIMEOUT)
     if not result:
         print("Unable to upload RTL command to drone command sequence.")
 

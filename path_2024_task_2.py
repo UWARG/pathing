@@ -9,12 +9,11 @@ import yaml
 from modules import add_takeoff_and_loiter_command
 from modules import check_stop_condition
 from modules import load_waypoint_name_to_coordinates_map
-from modules import upload_commands
 from modules import waypoints_to_commands
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
 from modules.common.modules.kml import kml_conversion
-from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
 
 WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "wrestrc.csv")
@@ -57,7 +56,10 @@ def main() -> int:
     pathlib.Path(LOG_DIRECTORY_PATH).mkdir(exist_ok=True)
 
     # Wait ready is false as the drone may be on the ground
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
+    result, flight_controller_interface = flight_controller.FlightController.create(CONNECTION_ADDRESS)
+    if not result:
+        print("ERROR: Could not connect to drone.")
+        return -1
 
     # Read in hardcoded waypoints from CSV file
     # Waypoints are stored in order of insertion, starting with the top row
@@ -108,20 +110,20 @@ def main() -> int:
         print("Error: add_takeoff_and_loiter_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_loiter_commands, DRONE_TIMEOUT)
+    result = flight_controller_interface.upload_commands(takeoff_loiter_commands, DRONE_TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
 
     start_time = time.time()
     while True:
-        result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
+        result, waypoint_info = waypoint_tracking.get_current_waypoint_info(flight_controller_interface.drone)
         if not result:
             print("Error: waypoint_tracking (waypoint_info)")
         else:
             print(f"Current waypoint sequence: {waypoint_info}")
 
-        result, location = waypoint_tracking.get_current_location(drone)
+        result, location = waypoint_tracking.get_current_location(flight_controller_interface.drone)
         if not result:
             print("Error: waypoint_tracking (get_current_location)")
         else:
@@ -130,7 +132,7 @@ def main() -> int:
         # Send drone back to launch if exceeds time limit
         current_time = time.time()
         is_returning_to_launch = check_stop_condition.check_stop_condition(
-            start_time, current_time, drone, MAXIMUM_FLIGHT_TIME
+            start_time, current_time, flight_controller_interface.drone, MAXIMUM_FLIGHT_TIME
         )
         if is_returning_to_launch:
             break
