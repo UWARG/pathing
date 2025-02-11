@@ -3,7 +3,23 @@ Test finding optimal itinerary of waypoints to visit.
 """
 
 from modules.common.modules.position_global import PositionGlobal
-from modules.visit_water_buckets import find_optimal_path
+from modules.visit_waypoints_from_origin import find_optimal_path
+
+
+def test_obvious_path() -> None:
+    """
+    Test an obvious case, where two buckets are close by and a third one is much
+    further.
+    """
+    origin = PositionGlobal.create(0, 0, 1)[1]
+    buckets = [
+        PositionGlobal.create(1, 1, 1)[1],
+        PositionGlobal.create(1.001, 1.001, 1)[1],
+        PositionGlobal.create(20, 20, 1)[1],
+    ]
+
+    path = find_optimal_path(origin, buckets, 3)
+    assert path == [origin, buckets[0], buckets[1], buckets[2], origin]
 
 
 def test_2_buckets_at_once() -> None:
@@ -19,15 +35,14 @@ def test_2_buckets_at_once() -> None:
         PositionGlobal.create(43.47076658531946, -80.54311788821606, 1)[1],  # STC
     ]
 
-    success, path = find_optimal_path(origin, buckets, 2)
-    assert success
+    path = find_optimal_path(origin, buckets, 2)
     assert path == [
         origin,
         buckets[4],
         buckets[3],
         origin,
-        buckets[2],
         buckets[1],
+        buckets[2],
         origin,
         buckets[0],
         origin,
@@ -47,8 +62,7 @@ def test_3_buckets_at_once() -> None:
         PositionGlobal.create(43.47076658531946, -80.54311788821606, 1)[1],  # STC
     ]
 
-    success, path = find_optimal_path(origin, buckets, 3)
-    assert success
+    path = find_optimal_path(origin, buckets, 3)
     assert path == [
         origin,
         buckets[0],
