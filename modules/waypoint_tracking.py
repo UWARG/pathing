@@ -16,7 +16,7 @@ def get_current_waypoint_info(
 
     Parameters
     ----------
-    drone: dronekit.Vehicle
+    drone: flight_controller.FlightController.drone
         The connected drone.
 
     Returns
@@ -50,7 +50,7 @@ def get_current_location(
 
     Parameters
     ----------
-    drone: dronekit.Vehicle
+    drone: flight_controller.FlightController.drone
         The connected drone.
 
     Returns
