@@ -5,7 +5,7 @@ Function to convert list of waypoints to dronekit commands.
 from . import generate_command
 from .common.modules import location_global
 from .common.modules import position_global_relative_altitude
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 ACCEPT_RADIUS = 5.0  # metres
@@ -13,7 +13,7 @@ ACCEPT_RADIUS = 5.0  # metres
 
 def waypoints_to_commands(
     waypoints: list[location_global.LocationGlobal], altitude: float
-) -> tuple[True, list[dronekit.Command]] | tuple[False, None]:
+) -> tuple[True, list[flight_controller.dronekit.Command]] | tuple[False, None]:
     """
     Convert list of waypoints to dronekit commands.
 
@@ -39,7 +39,7 @@ def waypoints_to_commands(
 
 def waypoints_with_altitude_to_commands(
     waypoints: list[position_global_relative_altitude.PositionGlobalRelativeAltitude],
-) -> tuple[True, list[dronekit.Command]] | tuple[False, None]:
+) -> tuple[True, list[flight_controller.dronekit.Command]] | tuple[False, None]:
     """
     Convert list of waypoints to dronekit commands.
 
