@@ -4,6 +4,8 @@ For testing MAVLink connection with FlightController.
 
 import time
 
+from pymavlink import mavutil
+
 from modules.common.modules.mavlink import flight_controller
 
 
@@ -21,24 +23,64 @@ def write_test_mission(drone: flight_controller.FlightController) -> bool:
     """
     Creates and sends a hardcoded test mission to the drone.
     """
+    commands = []
 
-    result = drone.drone.commands.clear()
+    # Create and add commands
+    command0 = flight_controller.dronekit.Command(
+        0,
+        0,
+        0,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+        0,
+        0,
+        0,  # param1
+        10,
+        0,
+        0,
+        -35.3632610,
+        149.1691446,
+        ALTITUDE,
+    )
+
+    commands.append(command0)
+
+    command1 = flight_controller.dronekit.Command(
+        0,
+        0,
+        0,
+        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
+        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
+        0,
+        0,
+        0,  # param1
+        10,
+        10,
+        0,
+        -35.3603736,
+        149.1689944,
+        ALTITUDE,
+    )
+
+    commands.append(command1)
+
+    # Get the set of commands from the drone
+    result, command_sequence = drone.download_commands()
 
     if not result:
-        print("ERROR: Could not clear mission.")
+        print("ERROR: Could not download commands.")
         return False
 
-    # Create and upload commands
-    result = drone.insert_waypoint(0, -35.3632610, 149.1691446, ALTITUDE)
+    command_sequence.clear()
+
+    for command in commands:
+        command_sequence.add(command)
+
+    # Upload commands to drone
+    result = drone.upload_commands(command_sequence)
 
     if not result:
-        print("ERROR: Could not upload command 0.")
-        return False
-
-    result = drone.insert_waypoint(1, -35.3603736, 149.1689944, ALTITUDE)
-
-    if not result:
-        print("ERROR: Could not upload command 1.")
+        print("ERROR: Could not upload commands.")
         return False
 
     return True
