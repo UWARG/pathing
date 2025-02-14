@@ -96,9 +96,6 @@ def read_data(drone: flight_controller.FlightController) -> bool:
         print("ERROR: Could not get odometry.")
         return False
 
-    print("Odometry:")
-    print("Position:")
-
     print("------")
     print("Position:")
     print(odometry.position.altitude)
