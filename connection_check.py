@@ -78,7 +78,7 @@ def read_data(drone: flight_controller.FlightController) -> bool:
 
     print("Command information:")
     print("Waypoint total count: " + str(commands.count()))
-    print("Next waypoint index: " + str(next_waypoint))
+    print("Next waypoint index: " + str(commands.index(next_waypoint)))
 
     return True
 
