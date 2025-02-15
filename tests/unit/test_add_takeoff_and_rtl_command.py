@@ -9,7 +9,7 @@ import pytest
 
 from modules import add_takeoff_and_rtl_command
 from modules import generate_command
-from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
 
 ALTITUDE = 50.0  # metres
@@ -26,7 +26,7 @@ SECOND_WAYPOINT_LONGITUDE = -73.987
 
 
 @pytest.fixture
-def non_empty_commands() -> "list[dronekit.Command]":  # type: ignore
+def non_empty_commands() -> "list[flight_controller.dronekit.Command]":  # type: ignore
     """
     Fixture for a list of commands.
     """
@@ -42,7 +42,7 @@ def non_empty_commands() -> "list[dronekit.Command]":  # type: ignore
 
 
 @pytest.fixture
-def empty_commands() -> "list[dronekit.Command]":  # type: ignore
+def empty_commands() -> "list[flight_controller.dronekit.Command]":  # type: ignore
     """
     Fixture for an empty list of commands.
     """
@@ -51,8 +51,8 @@ def empty_commands() -> "list[dronekit.Command]":  # type: ignore
 
 
 def assert_expected_takeoff_and_rtl_commands(
-    commands_actual: "list[dronekit.Command]",
-    commands_expected: "list[dronekit.Command]",
+    commands_actual: "list[flight_controller.dronekit.Command]",
+    commands_expected: "list[flight_controller.dronekit.Command]",
     altitude: float,
 ) -> None:
     """
@@ -62,14 +62,14 @@ def assert_expected_takeoff_and_rtl_commands(
 
     # Test takeoff command
     takeoff_command = commands_actual[0]
-    assert isinstance(takeoff_command, dronekit.Command)
+    assert isinstance(takeoff_command, flight_controller.dronekit.Command)
     assert takeoff_command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
     assert takeoff_command.command == mavutil.mavlink.MAV_CMD_NAV_TAKEOFF
     assert takeoff_command.z == altitude
 
     # Test RTL command
     rtl_command = commands_actual[-1]
-    assert isinstance(rtl_command, dronekit.Command)
+    assert isinstance(rtl_command, flight_controller.dronekit.Command)
     assert rtl_command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL
     assert rtl_command.command == mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH
 
@@ -78,7 +78,9 @@ def assert_expected_takeoff_and_rtl_commands(
     assert commands_actual[1:-1] == commands_expected
 
 
-def test_add_takeoff_and_rtl_on_empty_commands(empty_commands: "list[dronekit.Command]") -> None:
+def test_add_takeoff_and_rtl_on_empty_commands(
+    empty_commands: "list[flight_controller.dronekit.Command]",
+) -> None:
     """
     Tests functionality correctness of add_takeoff_and_rtl_command on empty list of commands.
     """
@@ -91,7 +93,7 @@ def test_add_takeoff_and_rtl_on_empty_commands(empty_commands: "list[dronekit.Co
 
 
 def test_add_takeoff_and_rtl_on_nonempty_commands(
-    non_empty_commands: "list[dronekit.Command]",
+    non_empty_commands: "list[flight_controller.dronekit.Command]",
 ) -> None:
     """
     Tests functionality correctness of add_takeoff_and_rtl_command on non-empty list of commands.
