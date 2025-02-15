@@ -4,8 +4,6 @@ For testing MAVLink connection with FlightController.
 
 import time
 
-from pymavlink import mavutil
-
 from modules.common.modules.mavlink import flight_controller
 
 
@@ -23,7 +21,7 @@ def write_test_mission(drone: flight_controller.FlightController) -> bool:
     """
     Creates and sends a hardcoded test mission to the drone.
     """
-    
+
     result = drone.drone.commands.clear()
 
     if not result:
@@ -71,7 +69,7 @@ def read_data(drone: flight_controller.FlightController) -> bool:
     if not result:
         print("ERROR: Could not get commands.")
         return False
-    
+
     result, next_waypoint = drone.get_next_waypoint()
 
     if not result:
@@ -80,7 +78,7 @@ def read_data(drone: flight_controller.FlightController) -> bool:
 
     print("Command information:")
     print("Waypoint total count: " + str(commands.count()))
-    print("Next waypoint index: " + str(drone.get_next_waypoint().index()))
+    print("Next waypoint index: " + str(next_waypoint.index()))
 
     return True
 
