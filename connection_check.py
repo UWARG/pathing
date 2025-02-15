@@ -23,64 +23,24 @@ def write_test_mission(drone: flight_controller.FlightController) -> bool:
     """
     Creates and sends a hardcoded test mission to the drone.
     """
-    commands = []
-
-    # Create and add commands
-    command0 = flight_controller.dronekit.Command(
-        0,
-        0,
-        0,
-        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
-        0,
-        0,
-        0,  # param1
-        10,
-        0,
-        0,
-        -35.3632610,
-        149.1691446,
-        ALTITUDE,
-    )
-
-    commands.append(command0)
-
-    command1 = flight_controller.dronekit.Command(
-        0,
-        0,
-        0,
-        mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT,
-        mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
-        0,
-        0,
-        0,  # param1
-        10,
-        10,
-        0,
-        -35.3603736,
-        149.1689944,
-        ALTITUDE,
-    )
-
-    commands.append(command1)
-
-    # Get the set of commands from the drone
-    result, command_sequence = drone.download_commands()
+    
+    result = drone.drone.commands.clear()
 
     if not result:
-        print("ERROR: Could not download commands.")
+        print("ERROR: Could not clear mission.")
         return False
 
-    command_sequence.clear()
-
-    for command in commands:
-        command_sequence.add(command)
-
-    # Upload commands to drone
-    result = drone.upload_commands(command_sequence)
+    # Create and upload commands
+    result = drone.insert_waypoint(0, -35.3632610, 149.1691446, ALTITUDE)
 
     if not result:
-        print("ERROR: Could not upload commands.")
+        print("ERROR: Could not upload command 0.")
+        return False
+
+    result = drone.insert_waypoint(1, -35.3603736, 149.1689944, ALTITUDE)
+
+    if not result:
+        print("ERROR: Could not upload command 1.")
         return False
 
     return True
@@ -106,9 +66,21 @@ def read_data(drone: flight_controller.FlightController) -> bool:
     print(odometry.orientation.roll)
     print(odometry.orientation.yaw)
 
+    result, commands = drone.download_commands()
+
+    if not result:
+        print("ERROR: Could not get commands.")
+        return False
+    
+    result, next_waypoint = drone.get_next_waypoint()
+
+    if not result:
+        print("ERROR: Could not get next waypoint.")
+        return False
+
     print("Command information:")
-    print("Waypoint total count: " + str(drone.drone.commands.count))
-    print("Next waypoint index: " + str(drone.drone.commands.next))
+    print("Waypoint total count: " + str(commands.count()))
+    print("Next waypoint index: " + str(drone.get_next_waypoint().index()))
 
     return True
 
