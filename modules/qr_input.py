@@ -3,8 +3,9 @@ Function to read camera input until valid QR code.
 """
 
 import cv2
+import sys
 
-from .common.modules.camera import camera_device
+from .common.modules.camera import camera_factory
 from .common.modules.qr import qr_scanner
 
 
@@ -22,7 +23,13 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
     tuple[bool, str | None]
         A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
     """
-    camera = camera_device.CameraDevice(device)
+    # camera = camera_device.CameraDevice(device)
+    camera = camera_factory.create_camera(
+        camera_factory.CameraOption.OPENCV,
+        sys.maxsize,
+        sys.maxsize,
+        camera_factory.camera_opencv.ConfigOpenCV(device),
+    )
     scanner = qr_scanner.QrScanner()
 
     is_qr_text_found = False
