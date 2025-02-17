@@ -1,5 +1,6 @@
 """
 Should write located IR beacons to a kml file for task 1
+File is a work in progress and should not be run yet 
 """
 
 import pathlib
@@ -37,9 +38,13 @@ def main() -> int:
         LOG_DIRECTORY_PATH = pathlib.Path(config["log_directory_path"])
         DELAY = config["delay"]
         MAXIMUM_FLIGHT_TIME = config["maximum_flight_time"]
+        # pylint: disable=unused-variable
+        DRONE_TIMEOUT = config["drone_timeout"]
+        TAKEOFF_ALTITUDE = config["takeoff_altitude"]
+        # pylint: enable=unused-variable
         # pylint: enable=invalid-name
     except KeyError:
-        print(f"Error when opening file: {exc}")
+        print(f"Unable to find key in yaml file: {exc}")
         return -1
 
     pathlib.Path(LOG_DIRECTORY_PATH).mkdir(exist_ok=True)
