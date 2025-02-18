@@ -23,7 +23,6 @@ def qr_input(device: "int | str") -> "tuple[bool, str | None]":
     tuple[bool, str | None]
         A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
     """
-    # camera = camera_device.CameraDevice(device)
     camera = camera_factory.create_camera(
         camera_factory.CameraOption.OPENCV,
         sys.maxsize,
