@@ -2,10 +2,11 @@
 Function to read camera input until valid QR code.
 """
 
+import sys
 import cv2
 
+from modules.common.modules.camera import camera_factory
 from modules.common.modules.qr import qr_scanner
-from modules.common.modules.camera import camera_device
 
 
 def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
@@ -22,7 +23,12 @@ def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
     tuple[bool, str | None]
         A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
     """
-    camera = camera_device.CameraDevice(device)
+    camera = camera_factory.create_camera(
+        camera_factory.CameraOption.OPENCV,
+        sys.maxsize,
+        sys.maxsize,
+        camera_factory.camera_opencv.ConfigOpenCV(device),
+    )
     scanner = qr_scanner.QrScanner()
 
     qr_text = None

@@ -2,8 +2,8 @@
 Function to read camera input until valid QR code.
 """
 
-import cv2
 import sys
+import cv2
 
 from .common.modules.camera import camera_factory
 from .common.modules.qr import qr_scanner
