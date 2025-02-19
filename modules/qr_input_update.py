@@ -35,12 +35,16 @@ def camera_capture_thread(
     ----------
     None
     """
-    camera = camera_factory.create_camera(
+    result, camera = camera_factory.create_camera(
         camera_factory.CameraOption.OPENCV,
         CAMERA_WIDTH,
         CAMERA_HEIGHT,
         camera_factory.camera_opencv.ConfigOpenCV(device),
     )
+    if not result:
+        print("OpenCV camera creation error.")
+        return
+
     while not stop_event.is_set():
         is_image_found, frame = camera.get_image()
         if is_image_found:
