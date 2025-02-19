@@ -25,6 +25,7 @@ def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
     tuple[bool, str | None]
         A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
     """
+    # pylint: disable=duplicate-code
     result, camera = camera_factory.create_camera(
         camera_factory.CameraOption.OPENCV,
         CAMERA_WIDTH,
@@ -34,6 +35,7 @@ def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
     if not result:
         print("OpenCV camera creation error.")
         return False, None
+    # pylint: enable=duplicate-code
 
     scanner = qr_scanner.QrScanner()
 
