@@ -13,7 +13,6 @@ if($?) {
     git submodule update --init --recursive --remote
     git submodule foreach --recursive "pip install -r requirements.txt"
     
-    deactivate
     ""
     "Seutp complete!"
 } else {
