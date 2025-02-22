@@ -4,8 +4,11 @@ Function to read camera input until valid QR code.
 
 import cv2
 
+from modules.common.modules.camera import camera_factory
 from modules.common.modules.qr import qr_scanner
-from modules.common.modules.camera import camera_device
+
+CAMERA_WIDTH = 1920
+CAMERA_HEIGHT = 1080
 
 
 def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
@@ -22,7 +25,19 @@ def diversion_qr_input(device: "int | str") -> "tuple[bool, str | None]":
     tuple[bool, str | None]
         A tuple indicating the success of the operation and the decoded QR code string, or None if unsuccessful.
     """
-    camera = camera_device.CameraDevice(device)
+    # Camera also created in qr_input.py with similar code, hence the the next line to make pylint shut up
+    # pylint: disable=duplicate-code
+    result, camera = camera_factory.create_camera(
+        camera_factory.CameraOption.OPENCV,
+        CAMERA_WIDTH,
+        CAMERA_HEIGHT,
+        camera_factory.camera_opencv.ConfigOpenCV(device),
+    )
+    if not result:
+        print("OpenCV camera creation error.")
+        return False, None
+    # pylint: enable=duplicate-code
+
     scanner = qr_scanner.QrScanner()
 
     qr_text = None

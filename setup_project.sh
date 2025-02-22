@@ -11,10 +11,9 @@ if [ $? -eq 0 ]; then
 
     echo ""
     echo "Installing submodules and their dependencies..."
-    git submodule update --init --recursive
+    git submodule update --init --recursive --remote
     git submodule foreach --recursive "pip install -r requirements.txt"
 
-    deactivate
     echo ""
     echo "Setup complete!"
 else
