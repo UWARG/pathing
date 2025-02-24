@@ -6,7 +6,7 @@ import pathlib
 
 from pymavlink import mavutil
 
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 VALID_FRAMES = {
@@ -71,7 +71,7 @@ def generate_command_advanced(
     param5: float,
     param6: float,
     param7: float,
-) -> "tuple[bool,dronekit.Command | None]":
+) -> "tuple[bool,flight_controller.dronekit.Command | None]":
     """
     Parameters: See documentation: https://uwarg-docs.atlassian.net/wiki/spaces/CV/pages/2567274629/Encoded+MAVLink+commands
 
@@ -91,7 +91,7 @@ def generate_command_advanced(
     if not check_validity(params, COMMAND_TO_PARAMETER_MATRIX[command_type]):
         return False, None
 
-    return True, dronekit.Command(
+    return True, flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -111,7 +111,7 @@ def generate_command_advanced(
 
 def csv_to_commands_list(
     mission_file_path: pathlib.Path,
-) -> "tuple[bool, list[dronekit.Command] | None]":
+) -> "tuple[bool, list[flight_controller.dronekit.Command] | None]":
     """
     A method that reads a list of advanced commands from a csv file and generates a mission.
     Parameters:

@@ -1,12 +1,12 @@
 """
-For testing MAVLink connection with DroneKit-Python.
+For testing MAVLink connection with FlightController-Python.
 """
 
 import time
 
 from pymavlink import mavutil
 
-from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
 
 # Set these to test what you want to test
@@ -19,14 +19,14 @@ CONNECTION_ADDRESS = "tcp:localhost:14550"
 ALTITUDE = 40  # metres
 
 
-def write_test_mission(drone: dronekit.Vehicle) -> bool:
+def write_test_mission(vehicle: flight_controller.FlightController) -> bool:
     """
     Creates and sends a hardcoded test mission to the drone.
     """
     commands = []
 
     # Create and add commands
-    command0 = dronekit.Command(
+    command0 = flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -45,7 +45,7 @@ def write_test_mission(drone: dronekit.Vehicle) -> bool:
 
     commands.append(command0)
 
-    command1 = dronekit.Command(
+    command1 = flight_controller.dronekit.Command(
         0,
         0,
         0,
@@ -65,7 +65,7 @@ def write_test_mission(drone: dronekit.Vehicle) -> bool:
     commands.append(command1)
 
     # Get the set of commands from the drone
-    command_sequence = drone.commands
+    command_sequence = vehicle.drone.commands
     command_sequence.download()
     command_sequence.wait_ready()
     command_sequence.clear()
@@ -78,21 +78,21 @@ def write_test_mission(drone: dronekit.Vehicle) -> bool:
     return True
 
 
-def read_data(drone: dronekit.Vehicle) -> bool:
+def read_data(vehicle: flight_controller.FlightController) -> bool:
     """
     Prints drone telemetry and mission status.
     """
     print("------")
     print("Position:")
-    print(drone.location.global_frame.alt)
-    print(drone.location.global_frame.lat)
-    print(drone.location.global_frame.lon)
+    print(vehicle.drone.location.global_frame.alt)
+    print(vehicle.drone.location.global_frame.lat)
+    print(vehicle.drone.location.global_frame.lon)
     print("Attitude:")
-    print(drone.attitude.pitch)
-    print(drone.attitude.roll)
-    print(drone.attitude.yaw)
+    print(vehicle.drone.attitude.pitch)
+    print(vehicle.drone.attitude.roll)
+    print(vehicle.drone.attitude.yaw)
 
-    command_sequence = drone.commands
+    command_sequence = vehicle.drone.commands
 
     command_sequence.download()
     command_sequence.wait_ready()
@@ -108,17 +108,22 @@ def main() -> int:
     """
     # TODO: Fails when wait_ready=True, debugging why this is
     # wait_ready=False is dangerous
-    dronekit_vehicle = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
+    result, flight_controller_vehicle = flight_controller.FlightController.create(
+        CONNECTION_ADDRESS
+    )
+    if not result:
+        print("ERROR: Could not connect to drone.")
+        return -1
 
     if WRITE_TEST:
-        write_test_mission(dronekit_vehicle)
+        write_test_mission(flight_controller_vehicle)
 
     if READ_TEST:
         for _ in range(0, 40):
-            read_data(dronekit_vehicle)
+            read_data(flight_controller_vehicle)
             time.sleep(0.5)
 
-    dronekit_vehicle.close()
+    flight_controller_vehicle.drone.close()
 
     return 0
 

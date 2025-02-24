@@ -13,8 +13,7 @@ from modules import waypoints_to_commands
 from modules import waypoints_to_spline_commands
 from modules import generate_command
 from modules import add_takeoff_and_rtl_command
-from modules import upload_commands
-from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
 
 TAKEOFF_WAYPOINT_FILE_PATH = pathlib.Path("2024", "waypoints", "takeoff_waypoint_task_1.csv")
@@ -37,7 +36,10 @@ def main() -> int:
     Main function.
     """
     # Wait ready is false as the drone may be on the ground
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
+    result, controller = flight_controller.FlightController.create(CONNECTION_ADDRESS)
+    if not result:
+        print("ERROR: Could not connect to drone.")
+        return -1
 
     # Create waypoint name to coordinate dictionary for takeoff waypoint
     (
@@ -110,11 +112,7 @@ def main() -> int:
         TAKEOFF_ALTITUDE,
     )
 
-    result = upload_commands.upload_commands(
-        drone,
-        takeoff_and_rtl_commands,
-        DRONE_TIMEOUT,
-    )
+    result = controller.upload_commands(takeoff_and_rtl_commands)
     if not result:
         print("ERROR: upload_commands")
         return -1
@@ -122,9 +120,9 @@ def main() -> int:
     print("Upload successful, waiting for takeoff ...")
 
     # Wait for the drone to takeoff
-    location_info = drone.location
+    location_info = controller.drone.location
     while location_info.global_relative_frame.alt < MISSION_WAIT_ALTITUDE_THRESHOLD:
-        location_info = drone.location
+        location_info = controller.drone.location
         time.sleep(MISSION_WAIT_TIMEOUT)
 
     start_time = time.time()
@@ -144,7 +142,7 @@ def main() -> int:
 
     while True:
         # Time how long it takes for the drone to fly a lap and decide if there is enough time to fly another lap
-        if drone.commands.next == LAP_START_SEQUENCE_NUMBER:
+        if controller.drone.commands.next == LAP_START_SEQUENCE_NUMBER:
             if starting_lap:
                 if lap_start_time == 0:
                     # Record the start time when running a new lap
@@ -195,13 +193,9 @@ def main() -> int:
             break
 
     # Force early RTL
-    drone.mode = dronekit.VehicleMode("RTL")
+    controller.set_flight_mode("RTL")
     rtl_command = generate_command.return_to_launch()
-    result = upload_commands.upload_commands(
-        drone,
-        [rtl_command],
-        DRONE_TIMEOUT,
-    )
+    result = controller.upload_commands([rtl_command])
     if not result:
         print("ERROR: Failed to upload RTL command. Manually set RTL.")
 

@@ -5,18 +5,18 @@ including the current waypoint sequence, location, and destination.
 
 from pymavlink import mavutil
 
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 def get_current_waypoint_info(
-    drone: dronekit.Vehicle,
+    drone: flight_controller.FlightController.drone,
 ) -> "tuple[bool, tuple[int, tuple[float, float] | None] | None]":
     """
     Function to retrieve information about the current waypoint sequence and destination
 
     Parameters
     ----------
-    drone: dronekit.Vehicle
+    drone: flight_controller.FlightController.drone
         The connected drone.
 
     Returns
@@ -42,13 +42,15 @@ def get_current_waypoint_info(
     return True, waypoint_info
 
 
-def get_current_location(drone: dronekit.Vehicle) -> "tuple[bool, tuple[float, float] | None]":
+def get_current_location(
+    drone: flight_controller.FlightController.drone,
+) -> "tuple[bool, tuple[float, float] | None]":
     """
     Function to retrieve the current location (latitude and longitude) of the drone
 
     Parameters
     ----------
-    drone: dronekit.Vehicle
+    drone: flight_controller.FlightController.drone
         The connected drone.
 
     Returns

@@ -6,11 +6,10 @@ import pathlib
 import time
 import msvcrt
 
-import dronekit
+import flight_controller
 
 from modules import add_takeoff_and_landing_command
 from modules import load_waypoint_name_to_coordinates_map
-from modules import upload_commands
 from modules import waypoint_tracking
 from modules import waypoints_dict_to_list
 from modules import waypoints_to_commands
@@ -40,7 +39,10 @@ def main() -> int:
     pathlib.Path(LOG_DIRECTORY_PATH).mkdir(exist_ok=True)
 
     # Wait ready is false as the drone may be on the ground
-    drone = dronekit.connect(CONNECTION_ADDRESS, wait_ready=False)
+    result, controller = flight_controller.FlightController.create(CONNECTION_ADDRESS)
+    if not result:
+        print("ERROR: Could not connect to drone.")
+        return -1
 
     # Read in hardcoded waypoints from CSV file
     # Waypoints are stored in order of insertion, starting with the top row
@@ -78,7 +80,7 @@ def main() -> int:
         print("Error: add_takeoff_and_landing_command")
         return -1
 
-    result = upload_commands.upload_commands(drone, takeoff_landing_commands, DRONE_TIMEOUT)
+    result = controller.upload_commands(takeoff_landing_commands, DRONE_TIMEOUT)
     if not result:
         print("Error: upload_commands")
         return -1
@@ -86,13 +88,13 @@ def main() -> int:
     is_qr_text_found = False
     # Drone starts flying
     while True:
-        result, waypoint_info = waypoint_tracking.get_current_waypoint_info(drone)
+        result, waypoint_info = waypoint_tracking.get_current_waypoint_info(controller.drone)
         if not result:
             print("Error: waypoint_tracking (waypoint_info)")
         else:
             print(f"Current waypoint sequence: {waypoint_info}")
 
-        result, location = waypoint_tracking.get_current_location(drone)
+        result, location = waypoint_tracking.get_current_location(controller.drone)
         if not result:
             print("Error: waypoint_tracking (get_current_location)")
         else:
@@ -185,7 +187,7 @@ def main() -> int:
 
             print("Commands ready to upload")
             # upload waypoint_around_diversion + waypoints_after_diversion as new ones
-            result = upload_commands.upload_commands(drone, diversion_route_commands, DRONE_TIMEOUT)
+            result = controller.upload_commands(diversion_route_commands, DRONE_TIMEOUT)
             if not result:
                 print("Error: diversion_route_upload_commands")
                 return -1

@@ -7,7 +7,7 @@ from pymavlink import mavutil
 from modules import waypoints_to_commands
 from modules.common.modules import location_global
 from modules.common.modules import position_global_relative_altitude
-from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
 
 # Test functions use test fixture signature names and access class privates
@@ -68,7 +68,7 @@ def test_waypoints_to_commands() -> None:
         expected_latitude = waypoints[i].latitude
         expected_longitude = waypoints[i].longitude
 
-        assert isinstance(command, dronekit.Command)
+        assert isinstance(command, flight_controller.dronekit.Command)
         assert command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
         assert command.command == mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
         assert command.param1 == 0
@@ -120,7 +120,7 @@ def test_waypoints_with_altitude_to_commands() -> None:
         expected_longitude = waypoints[i].longitude
         expected_altitude = waypoints[i].relative_altitude
 
-        assert isinstance(command, dronekit.Command)
+        assert isinstance(command, flight_controller.dronekit.Command)
         assert command.frame == mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT
         assert command.command == mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
         assert command.param1 == 0
