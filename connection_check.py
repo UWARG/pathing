@@ -22,11 +22,7 @@ def write_test_mission(drone: flight_controller.FlightController) -> bool:
     Creates and sends a hardcoded test mission to the drone.
     """
 
-    result = drone.drone.commands.clear()
-
-    if not result:
-        print("ERROR: Could not clear mission.")
-        return False
+    drone.drone.commands.clear()
 
     # Create and upload commands
     result = drone.insert_waypoint(0, -35.3632610, 149.1691446, ALTITUDE)
