@@ -6,7 +6,7 @@ import pathlib
 
 from modules import advanced_csv_to_commands
 from modules import generate_command
-from modules.common.modules.mavlink import dronekit
+from modules.common.modules.mavlink import flight_controller
 
 
 def test_normal_file() -> None:
@@ -36,7 +36,7 @@ def test_normal_file() -> None:
     assert len(mission) == len(expected_mission)
 
     for idx, command in enumerate(mission):
-        assert isinstance(command, dronekit.Command)
+        assert isinstance(command, flight_controller.dronekit.Command)
         assert command.frame == expected_mission[idx].frame
         assert command.command == expected_mission[idx].command
         assert command.param1 == expected_mission[idx].param1

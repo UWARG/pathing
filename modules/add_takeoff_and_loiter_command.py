@@ -3,22 +3,22 @@ Prefixes a takeoff command and suffixes a loiter command to the end of the list 
 """
 
 from . import generate_command
-from .common.modules.mavlink import dronekit
+from .common.modules.mavlink import flight_controller
 
 
 def add_takeoff_and_loiter_command(
-    commands: "list[dronekit.Command]",
+    commands: "list[flight_controller.dronekit.Command]",
     latitude: float,
     longitude: float,
     takeoff_altitude: float,
     loiter_altitude: float,
-) -> "tuple[bool, list[dronekit.Command] | None]":
+) -> "tuple[bool, list[flight_controller.dronekit.Command] | None]":
     """
     Prepends a takeoff command and appends a loiter command to a list of dronekit commands.
 
     Parameters
     ----------
-    commands: list[dronekit.Command]
+    commands: list[flight_controller.dronekit.Command]
         Dronekit commands that can be sent to the drone.
     latitude: float
         Loiter latitude values
@@ -29,7 +29,7 @@ def add_takeoff_and_loiter_command(
 
     Returns
     -------
-    tuple[bool, list[dronekit.Command] | None]:
+    tuple[bool, list[flight_controller.dronekit.Command] | None]:
         (False, None) if empty commands list,
         (True, dronekit commands with takeoff and land commands that can be sent to the drone) otherwise.
     """
