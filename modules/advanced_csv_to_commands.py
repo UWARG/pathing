@@ -6,7 +6,7 @@ import pathlib
 
 from pymavlink import mavutil
 
-from .common.modules.mavlink import flight_controller
+from .common.modules.mavlink import dronekit
 
 
 VALID_FRAMES = {
@@ -91,7 +91,7 @@ def generate_command_advanced(
     if not check_validity(params, COMMAND_TO_PARAMETER_MATRIX[command_type]):
         return False, None
 
-    return True, flight_controller.dronekit.Command(
+    return True, dronekit.Command(
         0,
         0,
         0,
