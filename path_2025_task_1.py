@@ -1,6 +1,6 @@
 """
 Should write located IR beacons to a kml file for task 1
-File is a work in progress and should not be run yet 
+File is a work in progress and should not be run yet
 """
 
 import pathlib
@@ -43,7 +43,7 @@ def main() -> int:
         TAKEOFF_ALTITUDE = config["takeoff_altitude"]
         # pylint: enable=unused-variable
         # pylint: enable=invalid-name
-    except KeyError:
+    except KeyError as exc:
         print(f"Unable to find key in yaml file: {exc}")
         return -1
 
@@ -71,7 +71,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     result_main = main()
-    if result_main < 0:
+    if result_main != 0:
         print(f"ERROR: Status Code: {result_main}")
 
     print("Done!")
