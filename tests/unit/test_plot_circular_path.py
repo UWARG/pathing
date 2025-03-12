@@ -125,8 +125,9 @@ class TestGenerateCircularPath:
             (-0.809016994, 0.587785252),
             (-0.587785252, 0.809016994),
             (-0.309016994, 0.951056516),
+            (0, 1),
         ]
-        assert len(expected_points) == num_points
+        assert len(expected_points) == num_points + 1
 
         # Run
         result, waypoints = plot_circular_path.generate_circular_path(centre, radius, num_points)
@@ -138,7 +139,7 @@ class TestGenerateCircularPath:
         # Reduced tolerance as the planet is a not a sphere
         tolerance = 1e-2
 
-        assert len(waypoints) == num_points
+        assert len(waypoints) == num_points + 1
         for i in range(num_points):
             actual = waypoints[i]
             assert actual is not None
