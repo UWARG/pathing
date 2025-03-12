@@ -14,6 +14,7 @@ from modules import generate_hotspot_search_path
 from modules import upload_commands
 from modules import waypoints_to_commands
 from modules.common.modules.mavlink import dronekit
+from modules.common.modules.position_global_relative_altitude import PositionGlobalRelativeAltitude
 
 CONFIG_FILE_PATH = pathlib.Path("config.yaml")
 
@@ -44,11 +45,14 @@ def main() -> int:
         DELAY = config["delay"]
         MAXIMUM_FLIGHT_TIME = config["maximum_flight_time"]
         # pylint: disable=unused-variable
-        SEARCH_CENTRE = config["search_centre"]
-        SEARCH_RADIUS = config["search_radius"]
-        CAMERA_HORIZONTAL_FOV, CAMERA_VERTICAL_FOV = config["camera"]  # degrees
-        DRONE_TIMEOUT = config["drone_timeout"]
-        TAKEOFF_ALTITUDE = config["takeoff_altitude"]
+        SEARCH_CENTRE = PositionGlobalRelativeAltitude(
+            float(config["search_centre"][0]), float(config["search_centre"][1]), 0
+        )[1]
+        SEARCH_RADIUS = float(config["search_radius"])
+        CAMERA_HORIZONTAL_FOV = float(config["camera"]["horizontal_fov"])
+        CAMERA_VERTICAL_FOV = float(config["camera"]["vertical_fov"])
+        DRONE_TIMEOUT = float(config["drone_timeout"])
+        TAKEOFF_ALTITUDE = float(config["takeoff_altitude"])
         # pylint: enable=unused-variable
         # pylint: enable=invalid-name
     except KeyError as exc:
