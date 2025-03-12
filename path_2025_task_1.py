@@ -45,7 +45,7 @@ def main() -> int:
         DELAY = config["delay"]
         MAXIMUM_FLIGHT_TIME = config["maximum_flight_time"]
         # pylint: disable=unused-variable
-        SEARCH_CENTRE = PositionGlobalRelativeAltitude(
+        SEARCH_CENTRE = PositionGlobalRelativeAltitude.create(
             float(config["search_centre"][0]), float(config["search_centre"][1]), 0
         )[1]
         SEARCH_RADIUS = float(config["search_radius"])
