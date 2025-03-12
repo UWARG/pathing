@@ -30,9 +30,6 @@ def move_coordinates_by_offset(
 
     Return: Success, waypoint.
     """
-    if start_point.relative_altitude <= 0.0:
-        return False, None
-
     result, offset_local = location_local.LocationLocal.create(offset_y, offset_x)
     if not result:
         return False, None

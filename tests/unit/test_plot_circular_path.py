@@ -69,22 +69,6 @@ class TestMoveOffset:
 
         assert verify_close_enough(actual, expected, DEFAULT_TOLERANCE)
 
-    def test_move_north_east_altitude_zero(self) -> None:
-        """
-        Test that moving with a waypoint of 0 altitude fails.
-        """
-        # Setup
-        result, start_point = (
-            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(12, 36, 0)
-        )
-
-        # Run
-        result, actual = plot_circular_path.move_coordinates_by_offset(start_point, -0.2, 3.6)
-
-        # Check
-        assert not result
-        assert actual is None
-
 
 class TestGenerateCircularPath:
     """
@@ -154,13 +138,6 @@ class TestGenerateCircularPath:
             assert verify_close_enough(actual, expected, tolerance)
 
     invalid_inputs = [
-        (
-            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
-                22.4, -6.7, -0.2
-            ),
-            2,
-            4,
-        ),  # Negative altitude
         (
             position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
                 3.99, 12.6, 3.4
