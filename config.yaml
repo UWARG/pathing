@@ -1,6 +1,6 @@
-takeoff_altitude: 40
+takeoff_altitude: 10
 
-drone_timeout: 30.0 # seconds
+drone_timeout: 120.0 # seconds
 
 connection_address: "tcp:localhost:14550"
 
