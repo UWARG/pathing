@@ -18,7 +18,7 @@ maximum_flight_time: 1800 # seconds
 
 # `search_centre` is in the form [latitude, longitude]
 # Comment/Uncomment the appropriate line for the search centre you want to use.
-search_centre: [43.43390289597297, -80.57693504758389] # Random point in wrestrc
+search_centre: [43.4338578, -80.5769261] # Random point in wrestrc
 # search_centre: [50.10360724605018, -110.7378630019976] # Random point in comp
 search_radius: 20 # meters
 camera:
