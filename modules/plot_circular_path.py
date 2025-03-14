@@ -30,9 +30,6 @@ def move_coordinates_by_offset(
 
     Return: Success, waypoint.
     """
-    if start_point.relative_altitude <= 0.0:
-        return False, None
-
     result, offset_local = location_local.LocationLocal.create(offset_y, offset_x)
     if not result:
         return False, None
@@ -68,6 +65,8 @@ def generate_circular_path(
 ):
     """
     Generate a list of `num_points` evenly-separated waypoints given a centre and radius.
+    The first point is appended as an extra point at the end of the itinerary,
+    so that the drone completes a full circle.
 
     centre: The centre of the circular path.
     radius: The length of the radius, in metres.
@@ -95,6 +94,9 @@ def generate_circular_path(
             return False, None
 
         waypoints.append(waypoint)
+
+    # The drone should return back to the same point to complete a full circle
+    waypoints.append(waypoints[0])
 
     return True, waypoints
 

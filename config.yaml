@@ -1,6 +1,6 @@
-takeoff_altitude: 40
+takeoff_altitude: 10
 
-drone_timeout: 30.0  # seconds
+drone_timeout: 120.0 # seconds
 
 connection_address: "tcp:localhost:14550"
 
@@ -8,7 +8,19 @@ log_directory_path: "logs"
 
 kml_file_prefix: "waypoints"
 
-delay: 0.1  # seconds
+delay: 0.1 # seconds
 
-maximum_flight_time: 1800  # seconds
+maximum_flight_time: 1800 # seconds
 
+# We are searching for hotspots in a circular manner around a search centre,
+# within a search_radius of the centre.
+# Centre with an "re" because superior spelling (L American).
+
+# `search_centre` is in the form [latitude, longitude]
+# Comment/Uncomment the appropriate line for the search centre you want to use.
+search_centre: [43.43412311111351, -80.57757380861236] # Random point in wrestrc
+# search_centre: [50.10360724605018, -110.7378630019976] # Random point in comp
+search_radius: 100 # meters
+camera:
+  horizontal_fov: 66 # degrees
+  vertical_fov: 41 # degrees

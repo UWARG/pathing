@@ -69,22 +69,6 @@ class TestMoveOffset:
 
         assert verify_close_enough(actual, expected, DEFAULT_TOLERANCE)
 
-    def test_move_north_east_altitude_zero(self) -> None:
-        """
-        Test that moving with a waypoint of 0 altitude fails.
-        """
-        # Setup
-        result, start_point = (
-            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(12, 36, 0)
-        )
-
-        # Run
-        result, actual = plot_circular_path.move_coordinates_by_offset(start_point, -0.2, 3.6)
-
-        # Check
-        assert not result
-        assert actual is None
-
 
 class TestGenerateCircularPath:
     """
@@ -125,8 +109,9 @@ class TestGenerateCircularPath:
             (-0.809016994, 0.587785252),
             (-0.587785252, 0.809016994),
             (-0.309016994, 0.951056516),
+            (0, 1),
         ]
-        assert len(expected_points) == num_points
+        assert len(expected_points) == num_points + 1
 
         # Run
         result, waypoints = plot_circular_path.generate_circular_path(centre, radius, num_points)
@@ -138,7 +123,7 @@ class TestGenerateCircularPath:
         # Reduced tolerance as the planet is a not a sphere
         tolerance = 1e-2
 
-        assert len(waypoints) == num_points
+        assert len(waypoints) == num_points + 1
         for i in range(num_points):
             actual = waypoints[i]
             assert actual is not None
@@ -153,13 +138,6 @@ class TestGenerateCircularPath:
             assert verify_close_enough(actual, expected, tolerance)
 
     invalid_inputs = [
-        (
-            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
-                22.4, -6.7, -0.2
-            ),
-            2,
-            4,
-        ),  # Negative altitude
         (
             position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
                 3.99, 12.6, 3.4
