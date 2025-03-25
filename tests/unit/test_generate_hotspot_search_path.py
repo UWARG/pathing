@@ -66,7 +66,7 @@ class TestGenerateSearchPath:
 
         search_radius = 10.0
         search_area_dimensions = (5.0, 5.0)
-        result, waypoints = generate_hotspot_search_path.generate_search_path(
+        result, waypoints, _ = generate_hotspot_search_path.generate_search_path(
             center, search_radius, search_area_dimensions
         )
 
@@ -100,7 +100,7 @@ class TestGenerateSearchPath:
         search_radius = 0.0
         search_area_dimensions = (3.0, 3.0)
 
-        result, waypoints = generate_hotspot_search_path.generate_search_path(
+        result, waypoints, _ = generate_hotspot_search_path.generate_search_path(
             center, search_radius, search_area_dimensions
         )
 
@@ -117,7 +117,7 @@ class TestGenerateSearchPath:
         search_radius = -10.0
         search_area_dimensions = (3.0, 3.0)
 
-        result, waypoints = generate_hotspot_search_path.generate_search_path(
+        result, waypoints, _ = generate_hotspot_search_path.generate_search_path(
             center, search_radius, search_area_dimensions
         )
 
@@ -134,7 +134,7 @@ class TestGenerateSearchPath:
         search_radius = 10.0
         search_area_dimensions = (-3, 3.0)
 
-        result, waypoints = generate_hotspot_search_path.generate_search_path(
+        result, waypoints, _ = generate_hotspot_search_path.generate_search_path(
             center, search_radius, search_area_dimensions
         )
 

@@ -68,7 +68,7 @@ def main() -> int:
     )
 
     # Generate itinerary to find hotspots
-    result, waypoints = generate_hotspot_search_path.generate_search_path(
+    result, waypoints, _ = generate_hotspot_search_path.generate_search_path(
         SEARCH_CENTRE, SEARCH_RADIUS, (visible_horizontal_length, visible_vertical_length)
     )
     if not result:
