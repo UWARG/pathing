@@ -5,13 +5,22 @@ An additional buffer altitude (defaults to 0.0) is given (an initial height wher
 """
 
 import math
+
+from modules.waypoints_to_commands import ACCEPT_RADIUS
+
 from . import generate_command
 from .common.modules.mavlink import flight_controller
 from .common.modules import position_global_relative_altitude
 
 
 def add_takeoff_and_landing_optimized_command(
-    commands: "list[flight_controller.dronekit.Command]", landing_pad: position_global_relative_altitude.PositionGlobalRelativeAltitude, first_waypoint: position_global_relative_altitude.PositionGlobalRelativeAltitude, last_waypoint: position_global_relative_altitude.PositionGlobalRelativeAltitude, distance: float, altitude: float, altitude_buffer: float = 1.0,
+    commands: "list[flight_controller.dronekit.Command]",
+    landing_pad: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    first_waypoint: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    last_waypoint: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    distance: float,
+    altitude: float,
+    altitude_buffer: float = 1.0,
 ) -> "tuple[bool, list[flight_controller.dronekit.Command] | None]":
     """
     Prepends a takeoff command and appends a landing command to a list of dronekit commands with additional horizontal movement.
@@ -56,6 +65,8 @@ def add_takeoff_and_landing_optimized_command(
 
     # Find first intermediary waypoint
     first_intermediate_waypoint = generate_command.waypoint(
+        0.0,
+        ACCEPT_RADIUS,
         landing_pad.latitude + distance * math.sin(first_heading),
         landing_pad.longitude + distance * math.cos(first_heading),
         altitude,
@@ -71,6 +82,8 @@ def add_takeoff_and_landing_optimized_command(
 
     # Find last intermediary waypoint
     last_intermediate_waypoint = generate_command.waypoint(
+        0.0,
+        ACCEPT_RADIUS,
         landing_pad.latitude + distance * math.sin(last_heading),
         landing_pad.longitude + distance * math.cos(last_heading),
         altitude_buffer,
