@@ -105,7 +105,7 @@ def get_search_path_sector(
 
         if drone_index == total_drones - 1:
             waypoints_per_drone += len(waypoints[i]) % total_drones  # Last drone handles extras
-            
+
         end = start + waypoints_per_drone
         sector_waypoints.extend(waypoints[i][start:end])
 

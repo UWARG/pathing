@@ -3,7 +3,6 @@ Hotspot search path generation unit tests.
 """
 
 import pytest
-import math
 
 from modules import generate_hotspot_search_path
 from modules.common.modules import position_global_relative_altitude
@@ -144,10 +143,13 @@ class TestGenerateSearchPath:
         assert result is False
         assert waypoints is None
 
-def generate_waypoints(number_of_circles: int, points_per_circle: list[int]) -> list[list[position_global_relative_altitude.PositionGlobalRelativeAltitude]]:
+
+def generate_waypoints(
+    number_of_circles: int, points_per_circle: list[int]
+) -> list[list[position_global_relative_altitude.PositionGlobalRelativeAltitude]]:
     """
     Generates dummy values for testing purposes. For simplicity, each waypoint longitude
-    starts from 0 and increments by 1 for each concentric circle. The latitude is just the index of 
+    starts from 0 and increments by 1 for each concentric circle. The latitude is just the index of
     the circle and the altitude is constant.
 
     number_of_circles: number of concentric circles
@@ -167,9 +169,7 @@ def generate_waypoints(number_of_circles: int, points_per_circle: list[int]) -> 
             latitude = i
 
             _, waypoint = position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
-                latitude,
-                logitude,
-                100
+                latitude, logitude, 100
             )
 
             circle_waypoints.append(waypoint)
@@ -208,9 +208,11 @@ class TestGetSearchPathSector:
 
                 current_longitudes.extend(circle[i].longitude for i in range(start, end))
             expected_longitudes.append(current_longitudes)
-        
+
         for drone_index in range(total_drones):
-            sector = generate_hotspot_search_path.get_search_path_sector(waypoints, total_drones, drone_index)
+            sector = generate_hotspot_search_path.get_search_path_sector(
+                waypoints, total_drones, drone_index
+            )
 
             if drone_index == 0 or drone_index == 1:
                 assert len(sector) == 16
@@ -218,7 +220,7 @@ class TestGetSearchPathSector:
                 assert len(sector) == 23
 
             assert [waypoint.longitude for waypoint in sector] == expected_longitudes[drone_index]
-    
+
     def test_get_search_path_sector_one_drone(self) -> None:
         """
         Test successful generation of search path sector for one drone.
@@ -247,8 +249,10 @@ class TestGetSearchPathSector:
         drone_index = 0
 
         waypoints = []
-        sector = generate_hotspot_search_path.get_search_path_sector(waypoints, total_drones, drone_index)
-        assert sector == []
+        sector = generate_hotspot_search_path.get_search_path_sector(
+            waypoints, total_drones, drone_index
+        )
+        assert not sector
 
     def test_get_search_path_sector_invalid_index(self) -> None:
         """
@@ -261,5 +265,7 @@ class TestGetSearchPathSector:
         total_drones = 3
         drone_index = 3
 
-        sector = generate_hotspot_search_path.get_search_path_sector(waypoints, total_drones, drone_index)
-        assert sector == []
+        sector = generate_hotspot_search_path.get_search_path_sector(
+            waypoints, total_drones, drone_index
+        )
+        assert not sector
