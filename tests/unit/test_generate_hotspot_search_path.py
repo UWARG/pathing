@@ -214,7 +214,7 @@ class TestGetSearchPathSector:
                 waypoints, total_drones, drone_index
             )
 
-            if drone_index == 0 or drone_index == 1:
+            if drone_index in (0, 1):
                 assert len(sector) == 16
             elif drone_index == 2:
                 assert len(sector) == 23
