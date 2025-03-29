@@ -68,12 +68,14 @@ def main() -> int:
     )
 
     # Generate itinerary to find hotspots
-    result, waypoints, _ = generate_hotspot_search_path.generate_search_path(
+    result, waypoints = generate_hotspot_search_path.generate_search_path(
         SEARCH_CENTRE, SEARCH_RADIUS, (visible_horizontal_length, visible_vertical_length)
     )
     if not result:
         print("ERROR: generating search itinerary failed.")
         return -1
+
+    waypoints = generate_hotspot_search_path.flatten_waypoints(waypoints)
 
     result, waypoint_commands = waypoints_to_commands.waypoints_with_altitude_to_commands(waypoints)
     if not result:
