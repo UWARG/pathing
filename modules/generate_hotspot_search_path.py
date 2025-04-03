@@ -12,7 +12,7 @@ MULTIPLIER = 1.2
 MINIMUM_POINTS = 3
 
 
-def generate_search_path(
+def generate_search_paths(
     center: position_global_relative_altitude.PositionGlobalRelativeAltitude,
     search_radius: float,
     search_area_dimensions: "tuple[float, float]",
@@ -60,11 +60,11 @@ def generate_search_path(
     return True, all_waypoints
 
 
-def flatten_waypoints(
+def __flatten_waypoints(
     waypoints: list[list[position_global_relative_altitude.PositionGlobalRelativeAltitude]],
 ) -> list[position_global_relative_altitude.PositionGlobalRelativeAltitude]:
     """
-    Transforms the list of list of all waypoints by circle into a linear list.
+    Private function that transforms the list of list of all waypoints by circle into a linear list.
 
     waypoints: list of list of all waypoints by circle
 
@@ -74,6 +74,26 @@ def flatten_waypoints(
     flattened_waypoints = [waypoint for circle in waypoints for waypoint in circle]
 
     return flattened_waypoints
+
+
+def generate_search_path(
+    center: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    search_radius: float,
+    search_area_dimensions: "tuple[float, float]",
+) -> "tuple[bool, list[position_global_relative_altitude.PositionGlobalRelativeAltitude] | None]":
+    """
+    Wrapper function that generates list of spline waypoints representing concentric rings for drone search path.
+
+    center: waypoint for center of circle.
+    search_radius: drone search radius.
+    search_area_dimensions: search area width, height
+
+    Returns: Success, list of waypoints.
+    """
+    result, waypoints = generate_search_paths(center, search_radius, search_area_dimensions)
+    if not result:
+        return False, None
+    return True, __flatten_waypoints(waypoints)
 
 
 def get_search_path_sector(

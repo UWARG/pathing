@@ -73,8 +73,6 @@ class TestGenerateSearchPath:
         assert result
         assert waypoints is not None
 
-        waypoints = generate_hotspot_search_path.flatten_waypoints(waypoints)
-
         # Reduced tolerance as the planet is a not a sphere
         tolerance = 1e-2
 

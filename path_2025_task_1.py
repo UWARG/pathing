@@ -75,8 +75,6 @@ def main() -> int:
         print("ERROR: generating search itinerary failed.")
         return -1
 
-    waypoints = generate_hotspot_search_path.flatten_waypoints(waypoints)
-
     result, waypoint_commands = waypoints_to_commands.waypoints_with_altitude_to_commands(waypoints)
     if not result:
         print("ERROR: Converting waypoints to commands failed.")
