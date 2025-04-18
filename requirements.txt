@@ -1,4 +1,5 @@
 # Packages listed in alphabetical order
+haversine
 pymavlink
 pytest
 pyyaml
