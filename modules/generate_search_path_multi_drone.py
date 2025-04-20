@@ -15,6 +15,25 @@ def generate_search_path(
     drone_index: int,
     drone_count: int,
 ) -> tuple[bool, list[position_global_relative_altitude.PositionGlobalRelativeAltitude]]:
+    """
+    Generate a search path for a single drone in a multi-drone system.
+
+    The function divides a circular search area into equal sectors, with each drone
+    assigned one sector. It generates waypoints for the drone to follow along an arc
+    within its assigned sector, ensuring even coverage of the area.
+
+    center: The center of the circular search area.
+    search_radius: The maximum radius of the search area, in meters.
+    camera_area_dimensions: A tuple (width, height) representing the dimensions of the camera's field of view, in meters.
+    drone_index: The index of the drone (0-based) in the multi-drone system.
+    drone_count: The total number of drones in the system.
+
+    Return: A tuple containing:
+        - A boolean indicating success (True) or failure (False).
+        - A list of waypoints (PositionGlobalRelativeAltitude) if successful, or an
+          empty list if the operation fails.
+    """
+
     # Initialize the waypoints list with the starting center position
     waypoints = [center]
 
@@ -34,10 +53,16 @@ def generate_search_path(
     # Define the offset for waypoints along the arc
     waypoint_offset = camera_area_width / 2
 
+    # Flag for reversing the ring of waypoints for every other loop
+    direction_flag = False
+
     while current_radius <= search_radius:
         # Initialize angle and step size
         current_angle = 0
         angle_step = waypoint_offset / current_radius
+
+        # waypoints for the current radius
+        arc_waypoints = []
 
         # Generate points along the arc using while loop
         while current_angle <= angle_to_cover:
@@ -54,7 +79,7 @@ def generate_search_path(
                 )
             )
             if success and new_point is not None:
-                waypoints.append(new_point)
+                arc_waypoints.append(new_point)
             else:
                 return (False, [])
 
@@ -71,10 +96,16 @@ def generate_search_path(
             )
         )
         if success and final_point is not None:
-            waypoints[-1] = final_point  # Replace the last point with the exact boundary point
+            arc_waypoints[-1] = final_point  # Replace the last point with the exact boundary point
         else:
             return (False, [])
 
+        if direction_flag:
+            arc_waypoints.reverse()
+
+        waypoints.extend(arc_waypoints)
+
+        direction_flag = not direction_flag
         current_radius += radius_step_size
 
     return (True, waypoints)

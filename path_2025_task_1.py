@@ -3,7 +3,6 @@ Should write located IR beacons to a kml file for task 1
 File is a work in progress and should not be run yet
 """
 
-from csv import Error
 import pathlib
 import time
 import yaml
@@ -77,7 +76,7 @@ def main() -> int:
     result, waypoints = generate_search_path_multi_drone.generate_search_path(
         center=SEARCH_CENTRE,
         search_radius=SEARCH_RADIUS,
-        camera_area_dimensions=(CAMERA_HORIZONTAL_FOV, CAMERA_VERTICAL_FOV),
+        camera_area_dimensions=(visible_horizontal_length, visible_vertical_length),
         drone_index=DRONE_INDEX,
         drone_count=DRONE_COUNT,
     )
