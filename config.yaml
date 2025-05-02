@@ -1,6 +1,6 @@
 takeoff_altitude: 10
 
-drone_timeout: 120.0 # seconds
+drone_timeout: 120 # seconds
 
 connection_address: "tcp:localhost:14550"
 
@@ -23,7 +23,7 @@ search_centre: [43.43412311111351, -80.57757380861236] # Random point in wrestrc
 search_radius: 100 # meters
 
 drones:
-  count: 1
+  count: 3
   index: 0 # 0-indexed
 
 camera:

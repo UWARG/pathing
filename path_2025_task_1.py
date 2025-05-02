@@ -29,7 +29,7 @@ def main() -> int:
                 config = yaml.safe_load(file)
             except yaml.YAMLError as exc:
                 print(f"Error parsing the YAML file: {exc}")
-
+                return -1
     except FileNotFoundError:
         print(f"File not found: {CONFIG_FILE_PATH}")
         return -1
@@ -53,10 +53,10 @@ def main() -> int:
         SEARCH_RADIUS = float(config["search_radius"])
         CAMERA_HORIZONTAL_FOV = float(config["camera"]["horizontal_fov"])
         CAMERA_VERTICAL_FOV = float(config["camera"]["vertical_fov"])
-        DRONE_TIMEOUT = float(config["drone_timeout"])
+        DRONE_TIMEOUT = int(config["drone_timeout"])
         TAKEOFF_ALTITUDE = float(config["takeoff_altitude"])
-        DRONE_INDEX = int(config["drone"]["index"])
-        DRONE_COUNT = int(config["drone"]["count"])
+        DRONE_INDEX = int(config["drones"]["index"])
+        DRONE_COUNT = int(config["drones"]["count"])
         # pylint: enable=invalid-name
     except KeyError as exc:
         print(f"Unable to find key in yaml file: {exc}")
@@ -74,32 +74,32 @@ def main() -> int:
 
     # Generate itinerary to find hotspots
     result, waypoints = generate_search_path_multi_drone.generate_search_path(
-        center=SEARCH_CENTRE,
+        centre=SEARCH_CENTRE,
         search_radius=SEARCH_RADIUS,
         camera_area_dimensions=(visible_horizontal_length, visible_vertical_length),
         drone_index=DRONE_INDEX,
         drone_count=DRONE_COUNT,
     )
-    if not result:
-        print("ERROR: generating search itinerary failed.")
+    if not result or not waypoints:
+        print("ERROR: Generating search path failed.")
         return -1
 
     result, waypoint_commands = waypoints_to_commands.waypoints_with_altitude_to_commands(waypoints)
-    if not result:
+    if not result or not waypoint_commands:
         print("ERROR: Converting waypoints to commands failed.")
         return -1
 
     result, takeoff_rtl_commands = add_takeoff_and_rtl_command.add_takeoff_and_rtl_command(
         waypoint_commands, TAKEOFF_ALTITUDE
     )
-    if not result:
+    if not result or not takeoff_rtl_commands:
         print("ERROR: Adding takeoff/RTL commands failed.")
-        return False, None
+        return -1
 
     result = upload_commands.upload_commands(drone, takeoff_rtl_commands, DRONE_TIMEOUT)
     if not result:
         print("ERROR: Uploading drone commands failed.")
-        return False, None
+        return -1
 
     start_time = time.time()
     while True:

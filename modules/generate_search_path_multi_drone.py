@@ -6,10 +6,12 @@ import math
 from .common.modules import position_global_relative_altitude
 
 CAMERA_VIEW_MARGIN = 1
+METERS_PER_LAT = 111319.9  # Meters per degree of latitude
+ARC_RESOLUTION = 5  # Lower is better
 
 
 def generate_search_path(
-    center: position_global_relative_altitude.PositionGlobalRelativeAltitude,
+    centre: position_global_relative_altitude.PositionGlobalRelativeAltitude,
     search_radius: float,
     camera_area_dimensions: tuple[float, float],
     drone_index: int,
@@ -30,12 +32,13 @@ def generate_search_path(
 
     Return: A tuple containing:
         - A boolean indicating success (True) or failure (False).
-        - A list of waypoints (PositionGlobalRelativeAltitude) if successful, or an
+        - A list of waypoints (PositionGlobalRelativeAltitude) if succescentresful, or an
           empty list if the operation fails.
     """
+    meters_per_lon = METERS_PER_LAT * math.cos(math.radians(centre.latitude))
 
     # Initialize the waypoints list with the starting center position
-    waypoints = [center]
+    waypoints = []
 
     # Extract camera area dimensions and adjust for the margin
     camera_area_width, camera_area_height = camera_area_dimensions
@@ -51,31 +54,37 @@ def generate_search_path(
     current_radius = radius_step_size
 
     # Define the offset for waypoints along the arc
-    waypoint_offset = camera_area_width / 2
+    waypoint_offset = camera_area_height
 
     # Flag for reversing the ring of waypoints for every other loop
     direction_flag = False
 
-    while current_radius <= search_radius:
+    while current_radius < search_radius + radius_step_size:
+        # clamp radius to search radius
+        current_radius = min(current_radius, search_radius)
+
         # Initialize angle and step size
         current_angle = 0
-        angle_step = waypoint_offset / current_radius
+        angle_step = ARC_RESOLUTION * math.asin(waypoint_offset / (2 * current_radius))
 
         # waypoints for the current radius
         arc_waypoints = []
 
         # Generate points along the arc using while loop
-        while current_angle <= angle_to_cover:
+        while current_angle < angle_to_cover + angle_step:
+            # clamp angle to angle to cover
+            current_angle = min(current_angle, angle_to_cover)
+
             # Apply drone's offset angle
             total_angle = current_angle + offset_angle
 
             # Calculate new position
-            new_lat = center.latitude + current_radius * math.sin(total_angle)
-            new_lon = center.longitude + current_radius * math.cos(total_angle)
+            new_lat = centre.latitude + (current_radius * math.sin(total_angle)) / METERS_PER_LAT
+            new_lon = centre.longitude + (current_radius * math.cos(total_angle)) / meters_per_lon
 
             success, new_point = (
                 position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
-                    new_lat, new_lon, center.relative_altitude
+                    new_lat, new_lon, centre.relative_altitude
                 )
             )
             if success and new_point is not None:
@@ -84,21 +93,6 @@ def generate_search_path(
                 return (False, [])
 
             current_angle += angle_step
-
-        # Replace the last point with the exact boundary point manually
-        final_angle = angle_to_cover + offset_angle
-        final_lat = center.latitude + current_radius * math.sin(final_angle)
-        final_lon = center.longitude + current_radius * math.cos(final_angle)
-
-        success, final_point = (
-            position_global_relative_altitude.PositionGlobalRelativeAltitude.create(
-                final_lat, final_lon, center.relative_altitude
-            )
-        )
-        if success and final_point is not None:
-            arc_waypoints[-1] = final_point  # Replace the last point with the exact boundary point
-        else:
-            return (False, [])
 
         if direction_flag:
             arc_waypoints.reverse()
