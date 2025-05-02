@@ -11,7 +11,7 @@ FIELD_OF_VISION_Y = 0.41438
 
 
 def search_area_dimensions(
-    height: int,
+    height: float,
     frustum_angle_x: float,
     frustum_angle_y: float,
     frustum_radians: bool = True,
